@@ -25228,46 +25228,43 @@
 /* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	var React = __webpack_require__(1);
+	var Search = __webpack_require__(256);
 	
 	var Navigation = React.createClass({
-	  displayName: "Navigation",
+	  displayName: 'Navigation',
 	
 	  render: function render() {
 	    return React.createElement(
-	      "nav",
-	      { className: "site-navigation" },
+	      'nav',
+	      { className: 'site-navigation' },
 	      React.createElement(
-	        "div",
-	        { className: "navigation-primary" },
-	        React.createElement("div", { className: "navigation-logo" }),
+	        'div',
+	        { className: 'navigation-primary' },
+	        React.createElement('div', { className: 'navigation-logo' }),
 	        React.createElement(
-	          "div",
-	          { className: "navigation-user" },
-	          React.createElement("div", { className: "user-picture" }),
+	          'div',
+	          { className: 'navigation-user' },
+	          React.createElement('div', { className: 'user-picture' }),
 	          React.createElement(
-	            "div",
-	            { className: "user-name" },
-	            "Charles Jackson"
+	            'div',
+	            { className: 'user-name' },
+	            'Charles Jackson'
 	          )
 	        ),
 	        React.createElement(
-	          "div",
-	          { className: "navigation-notify" },
-	          React.createElement("span", { className: "notify-trigger fa fa-globe" }),
+	          'div',
+	          { className: 'navigation-notify' },
+	          React.createElement('span', { className: 'notify-trigger fa fa-globe' }),
 	          React.createElement(
-	            "span",
-	            { className: "notify-count" },
-	            "12"
+	            'span',
+	            { className: 'notify-count' },
+	            '12'
 	          )
 	        ),
-	        React.createElement(
-	          "div",
-	          { className: "navigation-search" },
-	          React.createElement("input", { type: "text", className: "search-field", placeholder: "Search for schedules, people, events and more..." })
-	        )
+	        React.createElement(Search, null)
 	      )
 	    );
 	  }
@@ -25425,37 +25422,22 @@
 /* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	var React = __webpack_require__(1);
+	var ProfileHero = __webpack_require__(249);
+	var ProfileAbout = __webpack_require__(248);
+	var ProfileMembers = __webpack_require__(253);
 	
 	var Profile = React.createClass({
-	  displayName: "Profile",
+	  displayName: 'Profile',
 	
 	  render: function render() {
 	    return React.createElement(
-	      "aside",
-	      { className: "site-profile" },
-	      React.createElement(
-	        "div",
-	        { className: "profile-hero" },
-	        React.createElement(
-	          "div",
-	          { className: "hero-cover" },
-	          React.createElement(
-	            "div",
-	            { className: "hero-details" },
-	            React.createElement("div", { className: "hero-picture" }),
-	            React.createElement(
-	              "div",
-	              { className: "hero-name" },
-	              "Charles Jackson"
-	            )
-	          )
-	        ),
-	        React.createElement("div", { className: "hero-sections" })
-	      ),
-	      React.createElement("div", { className: "profile-section" })
+	      'aside',
+	      { className: 'site-profile' },
+	      React.createElement(ProfileHero, null),
+	      React.createElement(ProfileMembers, null)
 	    );
 	  }
 	});
@@ -26853,6 +26835,484 @@
 	});
 	
 	module.exports = ChatBar;
+
+/***/ },
+/* 248 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var ProfileNavigation = __webpack_require__(252);
+	var ProfileAboutAddItem = __webpack_require__(250);
+	
+	var ProfileAbout = React.createClass({
+	  displayName: 'ProfileAbout',
+	
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'profile-section' },
+	      React.createElement(ProfileNavigation, null),
+	      React.createElement(
+	        'div',
+	        { className: 'profile-content' },
+	        React.createElement(
+	          'ul',
+	          { className: 'content-set' },
+	          React.createElement(
+	            'li',
+	            { className: 'set-item' },
+	            React.createElement('div', { className: 'item-picture' }),
+	            React.createElement(
+	              'div',
+	              { className: 'item-details' },
+	              React.createElement(
+	                'div',
+	                { className: 'detail-title' },
+	                'Cursuum'
+	              ),
+	              React.createElement(
+	                'div',
+	                { className: 'detail-other' },
+	                React.createElement(
+	                  'span',
+	                  { className: 'other-detail' },
+	                  'Developer since 2012'
+	                )
+	              )
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          'ul',
+	          { className: 'content-set' },
+	          React.createElement(
+	            'li',
+	            { className: 'set-item' },
+	            React.createElement('div', { className: 'item-picture' }),
+	            React.createElement(
+	              'div',
+	              { className: 'item-details' },
+	              React.createElement(
+	                'div',
+	                { className: 'detail-title' },
+	                'Concordia University'
+	              ),
+	              React.createElement(
+	                'div',
+	                { className: 'detail-other' },
+	                React.createElement(
+	                  'span',
+	                  { className: 'other-detail' },
+	                  'Class of 2013'
+	                ),
+	                React.createElement(
+	                  'span',
+	                  { className: 'other-detail' },
+	                  'Economics'
+	                ),
+	                React.createElement(
+	                  'span',
+	                  { className: 'other-detail' },
+	                  'Montreal, Quebec'
+	                )
+	              )
+	            )
+	          ),
+	          React.createElement(
+	            'li',
+	            { className: 'set-item' },
+	            React.createElement('div', { className: 'item-picture' }),
+	            React.createElement(
+	              'div',
+	              { className: 'item-details' },
+	              React.createElement(
+	                'div',
+	                { className: 'detail-title' },
+	                'Collège Jean-de-Brébeuf'
+	              ),
+	              React.createElement(
+	                'div',
+	                { className: 'detail-other' },
+	                React.createElement(
+	                  'span',
+	                  { className: 'other-detail' },
+	                  'Class of 2008'
+	                ),
+	                React.createElement(
+	                  'span',
+	                  { className: 'other-detail' },
+	                  'Health sciences'
+	                ),
+	                React.createElement(
+	                  'span',
+	                  { className: 'other-detail' },
+	                  'Montreal, Quebec'
+	                )
+	              )
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          'button',
+	          { className: 'add-item-trigger active' },
+	          'ADD ITEM'
+	        ),
+	        React.createElement(ProfileAboutAddItem, null)
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = ProfileAbout;
+
+/***/ },
+/* 249 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var React = __webpack_require__(1);
+	
+	var ProfileHero = React.createClass({
+	  displayName: "ProfileHero",
+	
+	  render: function render() {
+	    return React.createElement(
+	      "div",
+	      { className: "profile-hero" },
+	      React.createElement(
+	        "div",
+	        { className: "hero-cover" },
+	        React.createElement(
+	          "div",
+	          { className: "hero-details" },
+	          React.createElement("div", { className: "hero-picture" }),
+	          React.createElement(
+	            "div",
+	            { className: "hero-name" },
+	            "Charles Jackson"
+	          )
+	        )
+	      ),
+	      React.createElement(
+	        "div",
+	        { className: "hero-tabs" },
+	        React.createElement(
+	          "div",
+	          { className: "hero-tab" },
+	          "About"
+	        ),
+	        React.createElement(
+	          "div",
+	          { className: "hero-tab" },
+	          "Schedule"
+	        ),
+	        React.createElement(
+	          "div",
+	          { className: "hero-tab" },
+	          "Friends"
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = ProfileHero;
+
+/***/ },
+/* 250 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var Dropdown = __webpack_require__(251);
+	
+	var ProfileAboutAddItem = React.createClass({
+	  displayName: 'ProfileAboutAddItem',
+	
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'profile-about-add-item' },
+	      React.createElement(
+	        'div',
+	        { className: 'item-details' },
+	        React.createElement(
+	          'div',
+	          { className: 'details-set' },
+	          React.createElement(Dropdown, { label: 'Category' }),
+	          React.createElement('input', { type: 'text', placeholder: 'Give it a title', className: 'detail-field' })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'details-set' },
+	          React.createElement('input', { type: 'text', placeholder: 'When was it?', className: 'detail-field half-field when' }),
+	          React.createElement('input', { type: 'text', placeholder: 'What was the subject?', className: 'detail-field half-field what' })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'details-set' },
+	          React.createElement('input', { type: 'text', placeholder: 'Where was it?', className: 'detail-field where' })
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'submit-options' },
+	        React.createElement(
+	          'button',
+	          { className: 'item-cancel' },
+	          'CANCEL'
+	        ),
+	        React.createElement(
+	          'button',
+	          { className: 'item-submit' },
+	          'ADD'
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = ProfileAboutAddItem;
+
+/***/ },
+/* 251 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var React = __webpack_require__(1);
+	
+	var Dropdown = React.createClass({
+	  displayName: "Dropdown",
+	
+	  render: function render() {
+	    return React.createElement(
+	      "div",
+	      { className: "dropdown" },
+	      React.createElement(
+	        "div",
+	        { className: "dropdown-header" },
+	        React.createElement(
+	          "div",
+	          { className: "dropdown-label" },
+	          this.props.label
+	        ),
+	        React.createElement("div", { className: "dropdown-caret fa fa-chevron-down" })
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = Dropdown;
+
+/***/ },
+/* 252 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var React = __webpack_require__(1);
+	
+	var ProfileNavigation = React.createClass({
+	  displayName: "ProfileNavigation",
+	
+	  render: function render() {
+	    return React.createElement(
+	      "ul",
+	      { className: "profile-navigation" },
+	      React.createElement(
+	        "li",
+	        { className: "navigation-tab" },
+	        "Overview"
+	      ),
+	      React.createElement(
+	        "li",
+	        { className: "navigation-tab" },
+	        "Education and work"
+	      ),
+	      React.createElement(
+	        "li",
+	        { className: "navigation-tab" },
+	        "Achievements and goals"
+	      ),
+	      React.createElement(
+	        "li",
+	        { className: "navigation-tab" },
+	        "Places you've lived"
+	      ),
+	      React.createElement(
+	        "li",
+	        { className: "navigation-tab" },
+	        "Places you've been"
+	      ),
+	      React.createElement(
+	        "li",
+	        { className: "navigation-tab" },
+	        "Family and relationships"
+	      ),
+	      React.createElement(
+	        "li",
+	        { className: "navigation-tab" },
+	        "Details about you"
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = ProfileNavigation;
+
+/***/ },
+/* 253 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var ProfileNavigation = __webpack_require__(252);
+	var ProfileMember = __webpack_require__(254);
+	
+	var Navigation = React.createClass({
+	  displayName: 'Navigation',
+	
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'profile-section' },
+	      React.createElement(ProfileNavigation, null),
+	      React.createElement(
+	        'div',
+	        { className: 'profile-content' },
+	        React.createElement(ProfileMember, { name: 'Deborah Miller' }),
+	        React.createElement(ProfileMember, { name: 'Caleb Freeman' }),
+	        React.createElement(ProfileMember, { name: 'Nicholas Brown' }),
+	        React.createElement(ProfileMember, { name: 'Harry Hill' }),
+	        React.createElement(ProfileMember, { name: 'Julian Dennis' }),
+	        React.createElement(ProfileMember, { name: 'Angelo Foster' }),
+	        React.createElement(ProfileMember, { name: 'Norma Shelton' }),
+	        React.createElement(ProfileMember, { name: 'Christie Duncan' }),
+	        React.createElement(ProfileMember, { name: 'Terrel Carpenter' }),
+	        React.createElement(ProfileMember, { name: 'Mack Wong' }),
+	        React.createElement(ProfileMember, { name: 'Alvin Swanson' }),
+	        React.createElement(ProfileMember, { name: 'Jean Klein' }),
+	        React.createElement(ProfileMember, { name: 'Wesley Harris' }),
+	        React.createElement(ProfileMember, { name: 'Nathan Holt' }),
+	        React.createElement(ProfileMember, { name: 'Lena Murray' })
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = Navigation;
+
+/***/ },
+/* 254 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var ConnectionButton = __webpack_require__(255);
+	
+	var ProfileMember = React.createClass({
+	  displayName: 'ProfileMember',
+	
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'profile-member' },
+	      React.createElement('div', { className: 'member-picture' }),
+	      React.createElement(
+	        'div',
+	        { className: 'member-details' },
+	        React.createElement(
+	          'div',
+	          { className: 'detail-name' },
+	          this.props.name
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'detail-mutual' },
+	          '18 mutual friends'
+	        ),
+	        React.createElement(ConnectionButton, null)
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = ProfileMember;
+
+/***/ },
+/* 255 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var React = __webpack_require__(1);
+	
+	var ConnectionButton = React.createClass({
+	  displayName: "ConnectionButton",
+	
+	  render: function render() {
+	    return React.createElement(
+	      "div",
+	      { className: "connection-button" },
+	      React.createElement(
+	        "div",
+	        { className: "button-add-friend" },
+	        "ADD FRIEND"
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = ConnectionButton;
+
+/***/ },
+/* 256 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var SearchResults = __webpack_require__(257);
+	
+	var Navigation = React.createClass({
+	  displayName: 'Navigation',
+	
+	  render: function render() {
+	    return React.createElement(
+	      'nav',
+	      { className: 'site-search' },
+	      React.createElement('input', { type: 'text', className: 'search-field', placeholder: 'Search for schedules, people, events and more...' }),
+	      React.createElement(SearchResults, null)
+	    );
+	  }
+	});
+	
+	module.exports = Navigation;
+
+/***/ },
+/* 257 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var React = __webpack_require__(1);
+	
+	var SearchResults = React.createClass({
+	  displayName: "SearchResults",
+	
+	  render: function render() {
+	    return React.createElement("div", { className: "site-search-results" });
+	  }
+	});
+	
+	module.exports = SearchResults;
 
 /***/ }
 /******/ ]);

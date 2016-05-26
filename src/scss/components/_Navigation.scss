@@ -53,21 +53,5 @@
         cursor: pointer;
       }
     }
-    .navigation-search {
-      margin-left:15px;
-      .search-field {
-        width:410px;
-        height:24px;
-        color:HSLA(216, 13%, 6%, 1);
-        font-size:13px;
-        font-weight:400;
-        padding:0 7px;
-        border:none;
-        outline:none;
-        @include placeholder {
-          color:HSLA(216, 13%, 50%, 1);
-        }
-      }
-    }
   }
 }

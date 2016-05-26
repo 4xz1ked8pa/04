@@ -1,4 +1,5 @@
 var React = require('react');
+var Search = require('./Search.js');
 
 var Navigation = React.createClass({
   render: function() {
@@ -14,9 +15,7 @@ var Navigation = React.createClass({
             <span className="notify-trigger fa fa-globe"></span>
             <span className="notify-count">12</span>
           </div>
-          <div className="navigation-search">
-            <input type="text" className="search-field" placeholder="Search for schedules, people, events and more..." />
-          </div>
+          <Search />
         </div>
       </nav>
     );

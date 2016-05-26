@@ -1,0 +1,30 @@
+.profile-member {
+  display: inline-block;
+  width:33%;
+  margin-bottom:30px;
+  .member-picture {
+    float:left;
+    width:69px;
+    height:69px;
+    background: #999999;
+    margin-right:6.5px;
+  }
+  .member-details {
+    float:left;
+    .detail-name {
+      color:darken(white,77%);
+      font-size:16px;
+      font-weight:500;
+      margin-bottom:6.5px;
+    }
+    .detail-mutual {
+      color:darken(white,77%);
+      font-size:14px;
+      font-weight:300;
+      margin-bottom:9px;
+    }
+    .detail-connection {
+
+    }
+  }
+}

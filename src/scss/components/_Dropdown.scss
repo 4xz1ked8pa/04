@@ -1,0 +1,37 @@
+.dropdown {
+  .dropdown-header {
+    float:left;
+    background: white;
+    padding-right:7px;
+    box-shadow:0 1px 0 rgba(black,.035);
+    .dropdown-picture {
+      float:left;
+      width:26px;
+      height:26px;
+      background: HSLA(0, 0%, 79%, 1);
+    }
+    .dropdown-label {
+      float:left;
+      font-size:14px;
+      font-weight:200;
+      padding:6px 6px 5px 6px;
+    }
+    .dropdown-caret {
+      float:left;
+      color:HSLA(200, 2%, 32%, .7);
+      font-size:10px;
+      font-weight:200;
+      margin-top:8px;
+    }
+    &:hover {
+      box-shadow:0 1px 0 rgba(black,.055);
+      cursor:pointer;
+      .dropdown-label {
+        color:HSLA(200, 2%, 20%, 1);
+      }
+      .dropdown-caret {
+        color:HSLA(200, 2%, 32%, .9);
+      }
+    }
+  }
+}
