@@ -1,5 +1,6 @@
 var React = require('react');
 var Search = require('./Search.js');
+var Notify = require('./Notify.js');
 
 var Navigation = React.createClass({
   render: function() {
@@ -11,10 +12,7 @@ var Navigation = React.createClass({
             <div className="user-picture"></div>
             <div className="user-name">Charles Jackson</div>
           </div>
-          <div className="navigation-notify">
-            <span className="notify-trigger fa fa-globe"></span>
-            <span className="notify-count">12</span>
-          </div>
+          <Notify />
           <Search />
         </div>
       </nav>

@@ -38,12 +38,13 @@
             align-items: center;
             width:100%;
             color: darken(white,70%);
-            padding:7px 7px 6px 7px;
+            padding:6px 7px 5px 7px;
             .feature-label {
               font-size:13px;
               font-weight:500;
+              line-height: 1.4;
               margin-right:auto;
-              @include ellipsis(91%);
+              @include ellipsis(87%);
             }
             .feature-notify-count {
               font-size:11px;

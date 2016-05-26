@@ -4,7 +4,7 @@ var ConnectionButton = React.createClass({
   render: function() {
     return (
       <div className="connection-button">
-        <div className="button-add-friend">ADD FRIEND</div>
+        <div className="button-add-friend">{this.props.label}</div>
       </div>
     );
   }

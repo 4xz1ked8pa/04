@@ -35,23 +35,5 @@
         text-shadow:0 .5px 0 rgba(black,.2);
       }
     }
-    .navigation-notify {
-      position: relative;
-      display: flex;
-      align-items: center;
-      height:100%;
-      .notify-count {
-        position: absolute;
-        bottom:-1px; right:-8px;
-        background: #426A41;
-        color:#DBE7DC;
-        font-size:12px;
-        padding:2px 2px 2px 1px;
-        border-radius:2px;
-      }
-      &:hover {
-        cursor: pointer;
-      }
-    }
   }
 }

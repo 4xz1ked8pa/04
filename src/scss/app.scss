@@ -2,6 +2,9 @@
 @import "./vendors/bourbon/app/assets/stylesheets/_bourbon.scss";
 @import "./vendors/_normalize.scss";
 
+/* utilities */
+@import './utilities/_shapes.scss';
+
 /* components */
 @import './components/_Navigation.scss';
 @import './components/_SideNavigation.scss';
@@ -14,6 +17,9 @@
 @import './components/_Search.scss';
 @import './components/_SearchResult.scss';
 @import './components/_Notify.scss';
+@import './components/_NotifyResult.scss';
+@import './components/_CreateEvent.scss';
+@import './components/_Calendar.scss';
 
 /* ./utilities/_grid.scss */
 #root {
@@ -28,5 +34,11 @@
   overflow:hidden;
   * {
     box-sizing: border-box;
+  }
+
+  .site-main {
+    padding-top:40px;
+    padding-left:180px + 10px;
+    padding-right:180px + 10px;
   }
 }

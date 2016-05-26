@@ -35,6 +35,25 @@ var SideNavigation = React.createClass({
                 </li>
               </ul>
             </li>
+            <li className="module">
+              <header className="module-header">
+                <div className="header-label">EVENTS</div>
+              </header>
+              <ul className="module-features">
+                <li className="feature">
+                  <span className="feature-label">Meeting with Harris</span><span className="feature-notify-count">2&#58;15pm</span>
+                </li>
+                <li className="feature">
+                  <span className="feature-label">Work on Cursuum</span><span className="feature-notify-count">3&#58;30pm</span>
+                </li>
+                <li className="feature">
+                  <span className="feature-label">Meeting Andy</span><span className="feature-notify-count">4&#58;10pm</span>
+                </li>
+                <li className="feature">
+                  <span className="feature-label">Supper with mom</span><span className="feature-notify-count">7&#58;15pm</span>
+                </li>
+              </ul>
+            </li>
           </ul>
           <ul className="site-options">
             <li className="option-create-event fa fa-plus"></li>

@@ -9,7 +9,7 @@ var ProfileMember = React.createClass({
         <div className="member-details">
           <div className="detail-name">{this.props.name}</div>
           <div className="detail-mutual">18 mutual friends</div>
-          <ConnectionButton />
+          <ConnectionButton label='ADD FRIEND' />
         </div>
       </div>
     );

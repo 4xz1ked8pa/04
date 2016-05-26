@@ -1,7 +1,12 @@
-.site-search-result {
+.site-notify-result {
+  position: relative;
   display: flex;
   padding:0 5.5px;
   margin-bottom:5.5px;
+  .connection-button {
+    position: absolute;
+    top:9px; right:6px;
+  }
   .result-picture {
     width:41px;
     height:41px;
@@ -15,7 +20,7 @@
     .detail-title {
       width:100%;
       color:darken(white,70%);
-      font-size:14px;
+      font-size:15px;
       font-weight:500;
     }
     .detail-network {

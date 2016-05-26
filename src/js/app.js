@@ -14,6 +14,13 @@ var Register = require('./components/Register.js');
 var Login = require('./components/Login.js');
 var NotFound = require('./components/NotFound.js');
 
+var moment = require('moment');
+var BigCalendar = require('react-big-calendar');
+
+BigCalendar.setLocalizer(
+  BigCalendar.momentLocalizer(moment)
+);
+
 var routes = (
   <Router history={browserHistory}>
     <Route path="/" component={App}>

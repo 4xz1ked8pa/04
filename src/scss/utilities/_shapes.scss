@@ -1,0 +1,35 @@
+@mixin triangle() {
+  .tri {
+    /* Styling block element, not required */
+    position: relative;
+  }
+
+  /* Required for Down Triangle */
+  .tri:before, .tri:after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-color: transparent;
+    border-bottom: 0;
+  }
+
+  /* Stroke */
+  .tri:before {
+    bottom: -16px;
+    left: 21px;
+
+    /* If 1px darken stroke slightly */
+    border-top-color: #666666;
+    border-width: 9px;
+  }
+
+  /* Fill */
+  .tri:after {
+    bottom: -15px;
+    left: 22px;
+    border-top-color: #F2F2F2;
+    border-width: 8px;
+  }
+}
