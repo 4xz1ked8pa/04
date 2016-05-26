@@ -1,0 +1,82 @@
+.site-chat-bar {
+  position: fixed;
+  top:0; right:0;
+  width:180px;
+  height:100%;
+  background: HSLA(0, 0%, 98%, 1);
+  padding-top:40px;
+  border-left: 1px solid HSLA(0, 0%, 84%, 1);
+  .chat-bar-primary {
+    display: flex;
+    flex-wrap: wrap;
+    width:100%;
+    height:100%;
+    padding-top:5px;
+    .chat-bar-users {
+      width:100%;
+      .chat-bar-user {
+        display: flex;
+        align-items: center;
+        width:100%;
+        padding:0 7px 0 5px;
+        margin-bottom:5px;
+        .user-picture {
+          width:26px;
+          height:26px;
+          background-color: HSLA(0, 0%, 80%, 1);
+          margin-right:5px;
+        }
+        .user-name {
+          color:darken(white,75%);
+          font-size:13px;
+          font-weight:300;
+        }
+        &:hover {
+          background: darken(white,4%);
+          cursor: pointer;
+        }
+      }
+    }
+    .chat-bar-options {
+      display: flex;
+      align-self: flex-end;
+      align-items: center;
+      width:100%;
+      height:32px;
+      background: darken(white,1%);
+      border-top:1px solid HSLA(0, 0%, 84%, 1);
+      .option-search {
+        width:90%;
+        height:100%;
+        border-right:1px solid darken(white,9%);
+        margin-right:auto;
+        input {
+          width:100%;
+          height:100%;
+          font-size:13px;
+          padding-left:6px;
+          border:none;
+          outline:none;
+          @include placeholder {
+            color:darken(white,50%);
+            font-weight:400;
+          }
+        }
+      }
+      .option-status {
+        display: flex;
+        width:32px;
+        height:100%;
+        border-left: HSLA(0, 0%, 84%, 1);
+        .status-tick {
+          align-self: center;
+          width:8px;
+          height:8px;
+          background: #648966;
+          border-radius:5000px;
+          margin-left:9.5px;
+        }
+      }
+    }
+  }
+}

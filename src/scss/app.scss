@@ -1,0 +1,25 @@
+/* vendors */
+@import "./vendors/bourbon/app/assets/stylesheets/_bourbon.scss";
+@import "./vendors/_normalize.scss";
+
+/* components */
+@import './components/_Navigation.scss';
+@import './components/_SideNavigation.scss';
+@import './components/_ChatBar.scss';
+@import './components/_Profile.scss';
+
+/* ./utilities/_grid.scss */
+#root {
+  position: absolute;
+  top:0;
+  width:100%;
+  height:100%;
+  background: HSLA(0, 0%, 97%, 1);
+  font-family:'Helvetica';
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow:hidden;
+  * {
+    box-sizing: border-box;
+  }
+}
