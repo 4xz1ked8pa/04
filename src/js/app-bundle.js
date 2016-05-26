@@ -27287,7 +27287,7 @@
 	  render: function render() {
 	    return React.createElement(
 	      'nav',
-	      { className: 'site-search' },
+	      { className: 'site-search active' },
 	      React.createElement('input', { type: 'text', className: 'search-field', placeholder: 'Search for schedules, people, events and more...' }),
 	      React.createElement(SearchResults, null)
 	    );
@@ -27300,19 +27300,64 @@
 /* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	var React = __webpack_require__(1);
+	var SearchResult = __webpack_require__(258);
 	
 	var SearchResults = React.createClass({
-	  displayName: "SearchResults",
+	  displayName: 'SearchResults',
 	
 	  render: function render() {
-	    return React.createElement("div", { className: "site-search-results" });
+	    return React.createElement(
+	      'div',
+	      { className: 'site-search-results' },
+	      React.createElement(SearchResult, { title: 'Nathan Holt', network: 'Concordia University' }),
+	      React.createElement(SearchResult, { title: 'Deborah Miller', network: 'University of Montreal' }),
+	      React.createElement(SearchResult, { title: 'Julian Dennis', network: 'Thirdshelf' }),
+	      React.createElement(SearchResult, { title: 'Jean Klein', network: 'Collège Jean-de-Brébeuf' }),
+	      React.createElement(SearchResult, { title: 'Christie Duncan', network: 'Startup Festival' })
+	    );
 	  }
 	});
 	
 	module.exports = SearchResults;
+
+/***/ },
+/* 258 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var React = __webpack_require__(1);
+	
+	var SearchResult = React.createClass({
+	  displayName: "SearchResult",
+	
+	  render: function render() {
+	    return React.createElement(
+	      "div",
+	      { className: "site-search-result" },
+	      React.createElement("div", { className: "result-picture" }),
+	      React.createElement(
+	        "div",
+	        { className: "result-details" },
+	        React.createElement(
+	          "div",
+	          { className: "detail-title" },
+	          this.props.title
+	        ),
+	        React.createElement(
+	          "div",
+	          { className: "detail-network" },
+	          this.props.network
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = SearchResult;
 
 /***/ }
 /******/ ]);

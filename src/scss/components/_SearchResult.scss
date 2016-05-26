@@ -1,0 +1,33 @@
+.site-search-result {
+  display: flex;
+  padding:0 5.5px;
+  margin-bottom:5.5px;
+  .result-picture {
+    width:41px;
+    height:41px;
+    background: #BFBFBF;
+    margin-right:5px;
+  }
+  .result-details {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    .detail-title {
+      width:100%;
+      color:darken(white,70%);
+      font-size:15px;
+      font-weight:500;
+    }
+    .detail-network {
+      width:100%;
+      color:darken(white,52%);
+      font-size:14.5px;
+      font-weight:400;
+      margin-top:3.5px;
+    }
+  }
+  &:hover {
+    background: darken(white,3%);
+    cursor: pointer;
+  }
+}
