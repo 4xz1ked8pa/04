@@ -8,7 +8,7 @@ var Profile = React.createClass({
     return (
       <aside className="site-profile">
         <ProfileHero />
-        <ProfileAbout />
+        <ProfileMembers />
       </aside>
     );
   }

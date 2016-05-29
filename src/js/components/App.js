@@ -3,7 +3,7 @@ var Navigation = require('./Navigation.js');
 var SideNavigation = require('./SideNavigation.js')
 var ChatBar = require('./ChatBar.js')
 var CreateEvent = require('./CreateEvent.js')
-var TestCalendar = require('./TestCalendar.js')
+var Calendar = require('./Calendar.js')
 var MainHeader = require('./MainHeader.js')
 
 // The main application layout
@@ -16,7 +16,7 @@ var App = React.createClass({
         <SideNavigation />
         <main className="site-main">
           <MainHeader title="Charles Jackson" />
-          <TestCalendar />
+          <Calendar />
         </main>
         <ChatBar />
         <CreateEvent />
