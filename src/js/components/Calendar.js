@@ -25,7 +25,7 @@ var Calendar  = React.createClass({
   },
   select: function(day) {
     this.props.selected = day.date;
-    this.forceUpdate();
+    //this.forceUpdate();
   },
   renderWeeks: function() {
       var weeks = [],

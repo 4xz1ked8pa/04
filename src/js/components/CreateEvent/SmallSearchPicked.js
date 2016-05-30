@@ -1,7 +1,7 @@
 var React = require('react');
 var SmallSearchUnit = require('./SmallSearchUnit.js');
 
-var CreateEventSearchPicked = React.createClass({
+var SmallSearchPicked = React.createClass({
   render: function() {
     var that = this;
     var members = this.props.members;
@@ -18,4 +18,4 @@ var CreateEventSearchPicked = React.createClass({
   }
 });
 
-module.exports = CreateEventSearchPicked;
+module.exports = SmallSearchPicked;

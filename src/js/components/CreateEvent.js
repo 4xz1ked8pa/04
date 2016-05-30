@@ -4,7 +4,7 @@ var Dropdown = require('./Dropdown.js');
 var SmallSearchUnit = require('./CreateEvent/SmallSearchUnit.js');
 var SmallSearchPicked = require('./CreateEvent/SmallSearchPicked.js');
 var SmallSearchSuggested = require('./CreateEvent/SmallSearchSuggested.js');
-var EventDates = require('./CreateEvent/EventDates.js');
+var EventDateSet = require('./CreateEvent/EventDateSet.js');
 var moment = require('moment');
 moment().format();
 
@@ -14,7 +14,7 @@ var CreateEvent  = React.createClass({
       moment: moment(),
       showEventCategoryDropdown: false,
       showEventMembersSuggestions: false,
-      showEventLocationSuggestions:false,
+      showEventLocationSuggestions: false,
       eventData: {
         title: '',
         description: '',
@@ -31,7 +31,14 @@ var CreateEvent  = React.createClass({
             lastName:'Saab'
           }
         ],
-        dates: [],
+        dates: [
+          {
+            start_date: '1463555682',
+            from_hour: '1464555682',
+            to_hour: '1464555682',
+            end_date: '1464555682'
+          }
+        ],
         coordinates: {
           lng: '',
           lat: ''
@@ -51,10 +58,15 @@ var CreateEvent  = React.createClass({
     }
   },
   handleMembersSearch: function(e) {
-    if (e.target.value.length > 0) {
-      this.state.showEventMembersSuggestions == true;
+    if (e.target.value.length > 0 && e.target.value != ' ') {
+      this.state.showEventMembersSuggestions = true;
       this.setState(this.state);
     }
+    else {
+      this.state.showEventMembersSuggestions = false;
+      this.setState(this.state);
+    }
+    console.log(this.state.showEventMembersSuggestions);
   },
   handleEventDataChange: function(key, e) {
     this.state.eventData[key] = e.target.value;
@@ -84,7 +96,7 @@ var CreateEvent  = React.createClass({
                     <div className="detail-search">
                       <input onChange={this.handleMembersSearch} type="text" placeholder="Invite members" className="search-field" />
                       {(this.state.eventData.members.length > 0) ? <SmallSearchPicked onDeleteMember={this.deleteMember} members={this.state.eventData.members} /> : ''}
-                      {(this.state.showEventMembersSuggestions === true) ? <SmallSearchSuggested /> : 'false'}
+                      {(this.state.showEventMembersSuggestions === true) ? <SmallSearchSuggested /> : ''}
                     </div>
                   </div>
                   <div className="event-detail location">
@@ -105,7 +117,13 @@ var CreateEvent  = React.createClass({
                 <button className="submit-button" onClick={this.createEvent}>CREATE EVENT</button>
               </div>
             </div>
-            <EventDates />
+            <div className="create-event-dates">
+              {
+                this.state.eventData.dates.map(function(selectedDate) {
+                  return <EventDateSet date={selectedDate} key={selectedDate.from_date} />;
+                })
+              }
+            </div>
           </div>
         </div>
       </div>

@@ -839,7 +839,7 @@ textarea {
                   width: 100%;
                   padding-top: 5px;
                   margin-top: 5px; }
-                .site-create-event .modal-frame .create-event-window .window-left .window-details .details-left .event-detail .detail-search .search-results {
+                .site-create-event .modal-frame .create-event-window .window-left .window-details .details-left .event-detail .detail-search .search-suggested {
                   position: absolute;
                   top: 37px;
                   width: 100%;
@@ -954,60 +954,6 @@ textarea {
         width: 20%;
         height: 480px;
         border-left: 1px solid #E0E0E0; }
-        .site-create-event .modal-frame .create-event-window .create-event-dates .create-date-set {
-          width: 100%;
-          border-top: 1px dashed #fafafa;
-          margin-bottom: 8px; }
-          .site-create-event .modal-frame .create-event-window .create-event-dates .create-date-set .date-value {
-            display: flex;
-            width: 100%;
-            background: #fafafa;
-            color: #666666;
-            font-size: 14px;
-            font-weight: 400;
-            padding: 8px 6px 6px 6px;
-            border-bottom: 1px solid #E0E0E0; }
-            .site-create-event .modal-frame .create-event-window .create-event-dates .create-date-set .date-value .value-literal {
-              margin-right: auto; }
-            .site-create-event .modal-frame .create-event-window .create-event-dates .create-date-set .date-value .remove-date {
-              color: #d4d4d4;
-              font-size: 12px; }
-              .site-create-event .modal-frame .create-event-window .create-event-dates .create-date-set .date-value .remove-date:hover {
-                color: #b3b3b3;
-                cursor: pointer; }
-          .site-create-event .modal-frame .create-event-window .create-event-dates .create-date-set .date-hours {
-            width: 100%;
-            padding-top: 3px; }
-            .site-create-event .modal-frame .create-event-window .create-event-dates .create-date-set .date-hours .hour-set {
-              display: flex;
-              flex-wrap: wrap;
-              align-items: center;
-              width: 100%;
-              padding: 4px 6px; }
-              .site-create-event .modal-frame .create-event-window .create-event-dates .create-date-set .date-hours .hour-set .set-label {
-                width: 30%;
-                color: #4d4d4d;
-                font-size: 14px;
-                font-weight: 300; }
-              .site-create-event .modal-frame .create-event-window .create-event-dates .create-date-set .date-hours .hour-set .set-options {
-                display: flex;
-                width: 70%;
-                color: gray;
-                align-items: center; }
-                .site-create-event .modal-frame .create-event-window .create-event-dates .create-date-set .date-hours .hour-set .set-options .hour, .site-create-event .modal-frame .create-event-window .create-event-dates .create-date-set .date-hours .hour-set .set-options .minutes {
-                  width: 40px;
-                  font-size: 12px;
-                  font-weight: 300;
-                  text-align: center;
-                  padding: 2px 2px 1px 2px;
-                  border: 1px solid #e6e6e6;
-                  border-radius: 1px; }
-                .site-create-event .modal-frame .create-event-window .create-event-dates .create-date-set .date-hours .hour-set .set-options .hour {
-                  margin-right: 3px; }
-                .site-create-event .modal-frame .create-event-window .create-event-dates .create-date-set .date-hours .hour-set .set-options .minutes {
-                  margin-left: 5px; }
-          .site-create-event .modal-frame .create-event-window .create-event-dates .create-date-set:first-child {
-            border-top: none; }
 
 .site-calendar {
   display: flex;
@@ -1094,6 +1040,90 @@ textarea {
           cursor: pointer; }
       .site-calendar .calendar-month .calendar-week:first-child .calendar-weekday {
         border-top: none; }
+
+.create-date-set {
+  width: 100%;
+  margin-bottom: 11px; }
+  .create-date-set .date-value {
+    display: flex;
+    width: 100%;
+    background: #fafafa;
+    color: #666666;
+    font-size: 13px;
+    font-weight: 400;
+    padding: 8px 6px 7px 6px; }
+    .create-date-set .date-value .value-literal {
+      margin-right: auto; }
+    .create-date-set .date-value .remove-date {
+      color: #d4d4d4;
+      font-size: 12px; }
+      .create-date-set .date-value .remove-date:hover {
+        color: #b3b3b3;
+        cursor: pointer; }
+  .create-date-set .date-hours {
+    width: 100%;
+    padding-top: 3.5px; }
+    .create-date-set .date-hours .hour-set, .create-date-set .date-hours .until-date {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      width: 100%;
+      padding: 4px 6px; }
+      .create-date-set .date-hours .hour-set .set-label, .create-date-set .date-hours .until-date .set-label {
+        width: 30%;
+        color: #4d4d4d;
+        font-size: 14px;
+        font-weight: 300; }
+      .create-date-set .date-hours .hour-set .set-options, .create-date-set .date-hours .until-date .set-options {
+        display: flex;
+        width: 70%;
+        color: gray;
+        align-items: center; }
+    .create-date-set .date-hours .until-date {
+      margin-top: 4px; }
+      .create-date-set .date-hours .until-date .select-date-trigger {
+        display: flex;
+        background: #8C938C;
+        color: #f8f8f8;
+        font-size: 11px;
+        font-weight: 500;
+        text-transform: uppercase;
+        padding: 4px 3px 3px 4px;
+        border-top: 1px solid #828882;
+        border-bottom: 1px solid #636963;
+        border-left: 1px solid #7B827B;
+        border-right: 1px solid #798079;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+        opacity: .4; }
+        .create-date-set .date-hours .until-date .select-date-trigger:hover {
+          opacity: .8;
+          cursor: pointer; }
+    .create-date-set .date-hours .hour-set .set-options .hour, .create-date-set .date-hours .hour-set .set-options .minutes {
+      width: 31.5px;
+      background: #f7f7f7;
+      font-size: 12px;
+      font-weight: 300;
+      text-align: center;
+      padding: 2px 0 1px 0;
+      border-radius: 1px; }
+      .create-date-set .date-hours .hour-set .set-options .hour::-webkit-input-placeholder, .create-date-set .date-hours .hour-set .set-options .minutes::-webkit-input-placeholder {
+        color: #a1a1a1;
+        font-weight: 400; }
+      .create-date-set .date-hours .hour-set .set-options .hour::-moz-placeholder, .create-date-set .date-hours .hour-set .set-options .minutes::-moz-placeholder {
+        color: #a1a1a1;
+        font-weight: 400; }
+      .create-date-set .date-hours .hour-set .set-options .hour:-moz-placeholder, .create-date-set .date-hours .hour-set .set-options .minutes:-moz-placeholder {
+        color: #a1a1a1;
+        font-weight: 400; }
+      .create-date-set .date-hours .hour-set .set-options .hour:-ms-input-placeholder, .create-date-set .date-hours .hour-set .set-options .minutes:-ms-input-placeholder {
+        color: #a1a1a1;
+        font-weight: 400; }
+    .create-date-set .date-hours .hour-set .set-options .hour {
+      margin-right: 3px; }
+    .create-date-set .date-hours .hour-set .set-options .minutes {
+      margin-left: 5px; }
+  .create-date-set:first-child {
+    border-top: none; }
 
 /* ./utilities/_grid.scss */
 #root {

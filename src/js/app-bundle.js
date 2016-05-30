@@ -25810,7 +25810,7 @@
 	var SmallSearchUnit = __webpack_require__(374);
 	var SmallSearchPicked = __webpack_require__(375);
 	var SmallSearchSuggested = __webpack_require__(376);
-	var EventDates = __webpack_require__(378);
+	var EventDateSet = __webpack_require__(379);
 	var moment = __webpack_require__(236);
 	moment().format();
 	
@@ -25836,7 +25836,12 @@
 	          firstName: 'Ziad',
 	          lastName: 'Saab'
 	        }],
-	        dates: [],
+	        dates: [{
+	          start_date: '1463555682',
+	          from_hour: '1464555682',
+	          to_hour: '1464555682',
+	          end_date: '1464555682'
+	        }],
 	        coordinates: {
 	          lng: '',
 	          lat: ''
@@ -25856,10 +25861,14 @@
 	    }
 	  },
 	  handleMembersSearch: function handleMembersSearch(e) {
-	    if (e.target.value.length > 0) {
-	      this.state.showEventMembersSuggestions == true;
+	    if (e.target.value.length > 0 && e.target.value != ' ') {
+	      this.state.showEventMembersSuggestions = true;
+	      this.setState(this.state);
+	    } else {
+	      this.state.showEventMembersSuggestions = false;
 	      this.setState(this.state);
 	    }
+	    console.log(this.state.showEventMembersSuggestions);
 	  },
 	  handleEventDataChange: function handleEventDataChange(key, e) {
 	    this.state.eventData[key] = e.target.value;
@@ -25910,7 +25919,7 @@
 	                    { className: 'detail-search' },
 	                    React.createElement('input', { onChange: this.handleMembersSearch, type: 'text', placeholder: 'Invite members', className: 'search-field' }),
 	                    this.state.eventData.members.length > 0 ? React.createElement(SmallSearchPicked, { onDeleteMember: this.deleteMember, members: this.state.eventData.members }) : '',
-	                    this.state.showEventMembersSuggestions === true ? React.createElement(SmallSearchSuggested, null) : 'false'
+	                    this.state.showEventMembersSuggestions === true ? React.createElement(SmallSearchSuggested, null) : ''
 	                  )
 	                ),
 	                React.createElement(
@@ -25949,7 +25958,13 @@
 	              )
 	            )
 	          ),
-	          React.createElement(EventDates, null)
+	          React.createElement(
+	            'div',
+	            { className: 'create-event-dates' },
+	            this.state.eventData.dates.map(function (selectedDate) {
+	              return React.createElement(EventDateSet, { date: selectedDate, key: selectedDate.from_date });
+	            })
+	          )
 	        )
 	      )
 	    );
@@ -25993,7 +26008,7 @@
 	  },
 	  select: function select(day) {
 	    this.props.selected = day.date;
-	    this.forceUpdate();
+	    //this.forceUpdate();
 	  },
 	  renderWeeks: function renderWeeks() {
 	    var weeks = [],
@@ -26128,7 +26143,7 @@
 	            };
 	            days.push(React.createElement(
 	                "div",
-	                { key: day.date.toString(), className: "calendar-weekday" + (day.isToday ? " today" : "") + (day.isCurrentMonth ? "" : " different-month") + (day.date.isSame(this.props.selected) ? " selected" : ""), onClick: this.props.select.bind(null, day) },
+	                { onClick: this.props.select.bind(null, day), key: day.date.toString(), className: "calendar-weekday" + (day.isToday ? " today" : "") + (day.isCurrentMonth ? "" : " different-month") + (day.date.isSame(this.props.selected) ? " selected" : "") },
 	                React.createElement(
 	                    "div",
 	                    { className: "weekday-header" },
@@ -41776,8 +41791,8 @@
 	var React = __webpack_require__(1);
 	var SmallSearchUnit = __webpack_require__(374);
 	
-	var CreateEventSearchPicked = React.createClass({
-	  displayName: 'CreateEventSearchPicked',
+	var SmallSearchPicked = React.createClass({
+	  displayName: 'SmallSearchPicked',
 	
 	  render: function render() {
 	    var that = this;
@@ -41793,7 +41808,7 @@
 	  }
 	});
 	
-	module.exports = CreateEventSearchPicked;
+	module.exports = SmallSearchPicked;
 
 /***/ },
 /* 376 */
@@ -41808,7 +41823,13 @@
 	  displayName: 'SmallSearchSuggested',
 	
 	  render: function render() {
-	    return React.createElement('div', { className: 'search-picked' });
+	    return React.createElement(
+	      'div',
+	      { className: 'search-suggested' },
+	      React.createElement(SmallSearchUnit, { title: 'Nathan Holt' }),
+	      React.createElement(SmallSearchUnit, { title: 'Nicholas Brown' }),
+	      React.createElement(SmallSearchUnit, { title: 'Norma Shelton' })
+	    );
 	  }
 	});
 	
@@ -41816,103 +41837,100 @@
 
 /***/ },
 /* 377 */,
-/* 378 */
+/* 378 */,
+/* 379 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var EventDateSet = __webpack_require__(379);
+	var moment = __webpack_require__(236);
+	moment().format();
 	
-	var EventDates = React.createClass({
-	  displayName: 'EventDates',
+	var EventDateSet = React.createClass({
+	  displayName: 'EventDateSet',
 	
+	  getInitialState: function getInitialState() {
+	    return {
+	      selectEndDateActive: false
+	    };
+	  },
+	  handleClickEndDate: function handleClickEndDate() {
+	    if (this.state.selectEndDateActive === true) {
+	      this.state.selectEndDateActive = false;
+	    } else if (this.state.selectEndDateActive === false) {
+	      this.state.selectEndDateActive = true;
+	    }
+	    console.log(this.state.selectEndDateActive);
+	  },
 	  render: function render() {
 	    return React.createElement(
 	      'div',
-	      { className: 'create-event-dates' },
-	      React.createElement(EventDateSet, null)
-	    );
-	  }
-	});
-	
-	module.exports = EventDates;
-
-/***/ },
-/* 379 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var React = __webpack_require__(1);
-	
-	var EventDateSet = React.createClass({
-	  displayName: "EventDateSet",
-	
-	  render: function render() {
-	    return React.createElement(
-	      "div",
-	      { className: "create-date-set" },
+	      { className: 'create-date-set' },
 	      React.createElement(
-	        "div",
-	        { className: "date-value" },
+	        'div',
+	        { className: 'date-value' },
 	        React.createElement(
-	          "div",
-	          { className: "value-literal" },
-	          "May 27 2015"
+	          'div',
+	          { className: 'value-literal' },
+	          moment.unix(this.props.date.start_date).format('MMMM DD YYYY')
 	        ),
-	        React.createElement("div", { className: "remove-date fa fa-times" })
+	        React.createElement('div', { className: 'remove-date fa fa-times' })
 	      ),
 	      React.createElement(
-	        "div",
-	        { className: "date-hours" },
+	        'div',
+	        { className: 'date-hours' },
 	        React.createElement(
-	          "div",
-	          { className: "hour-set" },
+	          'div',
+	          { className: 'hour-set' },
 	          React.createElement(
-	            "div",
-	            { className: "set-label" },
-	            "From:"
+	            'div',
+	            { className: 'set-label' },
+	            'From:'
 	          ),
 	          React.createElement(
-	            "div",
-	            { className: "set-options" },
-	            React.createElement("input", { type: "text", placeholder: "00", className: "hour" }),
-	            ":",
-	            React.createElement("input", { type: "text", placeholder: "00", className: "minutes" })
+	            'div',
+	            { className: 'set-options' },
+	            React.createElement('input', { type: 'text', placeholder: '00', className: 'hour' }),
+	            ':',
+	            React.createElement('input', { type: 'text', placeholder: '00', className: 'minutes' })
 	          )
 	        ),
 	        React.createElement(
-	          "div",
-	          { className: "hour-set" },
+	          'div',
+	          { className: 'hour-set' },
 	          React.createElement(
-	            "div",
-	            { className: "set-label" },
-	            "To:"
+	            'div',
+	            { className: 'set-label' },
+	            'To:'
 	          ),
 	          React.createElement(
-	            "div",
-	            { className: "set-options" },
-	            React.createElement("input", { type: "text", placeholder: "00", className: "hour" }),
-	            ":",
-	            React.createElement("input", { type: "text", placeholder: "00", className: "minutes" })
+	            'div',
+	            { className: 'set-options' },
+	            React.createElement('input', { type: 'text', placeholder: '00', className: 'hour' }),
+	            ':',
+	            React.createElement('input', { type: 'text', placeholder: '00', className: 'minutes' })
 	          )
 	        ),
 	        React.createElement(
-	          "div",
-	          { className: "hour-set" },
+	          'div',
+	          { className: 'until-date' },
 	          React.createElement(
-	            "div",
-	            { className: "set-label" },
-	            "Until:"
+	            'div',
+	            { className: 'set-label' },
+	            'Ends:'
 	          ),
 	          React.createElement(
-	            "div",
-	            { className: "set-options" },
+	            'div',
+	            { className: 'set-options' },
 	            React.createElement(
-	              "div",
-	              { className: "add-until-date" },
-	              "SELECT DATE"
+	              'div',
+	              { className: 'add-until-date' },
+	              React.createElement(
+	                'div',
+	                { onClick: this.handleClickEndDate, className: 'select-date-trigger before' },
+	                moment.unix(this.props.date.start_date).format('MMMM DD YYYY')
+	              )
 	            )
 	          )
 	        )

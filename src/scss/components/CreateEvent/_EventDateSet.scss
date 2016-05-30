@@ -1,0 +1,98 @@
+.create-date-set {
+  width:100%;
+  margin-bottom:11px;
+  .date-value {
+    display: flex;
+    width:100%;
+    background: darken(white,2%);
+    color:darken(white,60%);
+    font-size:13px;
+    font-weight:400;
+    padding:8px 6px 7px 6px;
+    .value-literal {
+      margin-right:auto;
+    }
+    .remove-date {
+      color:darken(white,17%);
+      font-size:12px;
+      &:hover {
+        color:darken(white,30%);
+        cursor: pointer;
+      }
+    }
+  }
+  .date-hours {
+    width:100%;
+    padding-top:3.5px;
+    .hour-set, .until-date {
+      display: flex;
+      flex-wrap:wrap;
+      align-items: center;
+      width:100%;
+      padding:4px 6px;
+      .set-label {
+        width:30%;
+        color:darken(white,70%);
+        font-size:14px;
+        font-weight:300;
+      }
+      .set-options {
+        display: flex;
+        width:70%;
+        color:darken(white,50%);
+        align-items: center;
+      }
+    }
+    .until-date {
+      margin-top:4px;
+      .select-date-trigger {
+        display: flex;
+        background: #8C938C;
+        color: lighten(#E7E7E7,6.5%);
+        font-size: 11px;
+        font-weight: 500;
+        text-transform: uppercase;
+        padding: 4px 3px 3px 4px;
+        border-top: 1px solid #828882;
+        border-bottom: 1px solid #636963;
+        border-left: 1px solid #7B827B;
+        border-right: 1px solid #798079;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+        opacity:.4;
+        &:hover {
+          opacity:.8;
+          cursor: pointer;
+        }
+        &.after {
+
+        }
+      }
+    }
+    .hour-set {
+      .set-options {
+        .hour, .minutes {
+          width:31.5px;
+          background: darken(white,3%);
+          font-size:12px;
+          font-weight:300;
+          text-align:center;
+          padding:2px 0 1px 0;
+          border-radius:1px;
+          @include placeholder {
+            color:darken(white,37%);
+            font-weight:400;
+          }
+        }
+        .hour {
+          margin-right:3px;
+        }
+        .minutes {
+          margin-left:5px;
+        }
+      }
+    }
+  }
+  &:first-child {
+    border-top:none;
+  }
+}
