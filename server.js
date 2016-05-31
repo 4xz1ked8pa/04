@@ -43,13 +43,14 @@ function checkLoginToken(request, response, next) {
 app.use(checkLoginToken);
 
 /* Routes */
-app.get('/getUserFriends/:userId', function(req, res) {
-  if (req.params.userId) {
-    var userId = req.params.userId;
+app.get('/getUserFriends', function(req, res) {
+  if (req.query.userId) {
+    var userId = req.query.userId;
   }
   else {
-    var userId = request.loggedInUser.id;
+    var userId = req.loggedInUser.id;
   }
+  console.log(req.loggedInUser);
   CursuumAPI.getFriendsForUser(userId, function(err, friends) {
     if (err) {
       res.status(500).send(err);
@@ -60,7 +61,6 @@ app.get('/getUserFriends/:userId', function(req, res) {
   });
 });
 app.get('/me', function(req, res) {
-  console.log(req.loggedInUser);
   if (req.loggedInUser) {
     res.send(req.loggedInUser);
   }
@@ -110,6 +110,37 @@ app.post('/login', function(request, response) {
       });
     }
   });
+})
+app.get('/profile/:userId', function(request, response) {
+  CursuumAPI.getUserInfos(request.params.userId, function(err, infos) {
+    if (err) {
+      response.send(err.stack);
+    }
+    else {
+      response.send(infos);
+    }
+  });
+})
+app.post('/createEvent', function(request, response) {
+  Cursuum.createEvent(
+    {
+      title: request.body.title,
+      description: request.body.title,
+      categoryId: request.body.categoryId,
+      userId: request.body.userId,
+      locationLat: request.body.locationLat,
+      locationLng: request.body.locationLng,
+      dates: request.body.dates,
+      member: request.body.members
+    },
+    function(err, event) {
+      if (err) {
+        response.status(500).send(err);
+      }
+      else {
+        response.send('event created!');
+      }
+    });
 })
 app.get('/*', function(request, response) {
   response.sendFile(__dirname + '/src/index.html');

@@ -20,18 +20,7 @@ var CreateEvent  = React.createClass({
         title: '',
         description: '',
         category: 'social',
-        members: [
-          {
-            userId:1,
-            firstName:'Charles',
-            lastName:'Jackson'
-          },
-          {
-            userId:2,
-            firstName:'Ziad',
-            lastName:'Saab'
-          }
-        ],
+        members: [],
         dates: [
         ],
         coordinates: {
@@ -41,7 +30,9 @@ var CreateEvent  = React.createClass({
       },
       selectedDate: {},
       checkNext: false,
-      searchMembers: []
+      searchMembers: [],
+      searchParameter: ""
+
     }
   },
   deleteMember: function(key) {
@@ -56,29 +47,60 @@ var CreateEvent  = React.createClass({
     }
   },
   handleMembersSearch: function(e) {
+    this.state.searchParameter = e.target.value;
+    console.log(e.target.value, "THIS SHOULD BE WHAT I TYPE")
     var that = this;
     if (e.target.value.length > 0 && e.target.value != ' ') {
-      this.state.showEventMembersSuggestions = true;
+      that.state.showEventMembersSuggestions = true;
       axios({
         method: 'get',
-        url: '/getUserFriends/14'
+        url: '/getUserFriends'
       }).then(function(friends) {
-        that.state.searchMembers = friends;
+        friends.data.forEach(function(friend) {
+          var nameToCheck = that.state.searchParameter.toLowerCase();
+          if (friend.firstName.toLowerCase().indexOf(nameToCheck) !== -1) {
+              if(that.state.searchMembers.length !== 0){
+                that.state.searchMembers.forEach(function(m){
+                  if(m.firstName !== friend.firstName){
+                    that.state.searchMembers.push(friend);
+                    that.setState(that.state);
+                  }
+                })
+              }
+              else {
+                that.state.searchMembers.push(friend);
+                that.setState(that.state)
+              }
+          }
+        });
       });
-      this.setState(this.state);
+    } else if(e.target.value === ""){
+      that.setState({searchMembers: []})
     }
     else {
       this.state.showEventMembersSuggestions = false;
       this.setState(this.state);
     }
-    console.log(this.state.showEventMembersSuggestions);
   },
   handleEventDataChange: function(key, e) {
     this.state.eventData[key] = e.target.value;
     this.setState(this.state);
   },
   createEvent: function() {
-    console.log('EVENT CREATED!',this.state.eventData);
+    axios({
+      method: 'post',
+      url: '/createEvent',
+      data: {
+        userId: axios.get('/me').id,
+        title: this.state.eventData.title,
+        description: this.state.eventData.description,
+        categoryId: this.state.eventData.categoryId,
+        location: this.state.eventData.location
+      }
+    }).then(function() {
+
+    });
+    // console.log('EVENT CREATED!',this.state.eventData);
   },
   setSelectedDate: function(date, nextDay){
     var that = this;
@@ -89,7 +111,7 @@ var CreateEvent  = React.createClass({
 
       newDate.forEach(function(d){
         if(d.id === that.state.selectedDate.id)
-          console.log("MATCH FOUND")
+          // console.log("MATCH FOUND")
           var stop = date.date.unix();
           d.end = stop;
       })
@@ -108,11 +130,6 @@ var CreateEvent  = React.createClass({
         eventData: newEvenData
       })
     }
-
-
-      // this.setState({
-      //   selectedDate: date
-      // })
   },
   deleteDate: function(data){
     var newEvenData = this.state.eventData;
@@ -128,7 +145,7 @@ var CreateEvent  = React.createClass({
   },
   setFromTime: function(data, hours, nextDay, nextDate){
     var that = this;
-    console.log(nextDay, "THESE ARE THE TIMES COMMING IN")
+    // console.log(nextDay, "THESE ARE THE TIMES COMMING IN")
     var newEvenData = this.state.eventData;
     var newDates = newEvenData.dates;
 
@@ -167,13 +184,14 @@ var CreateEvent  = React.createClass({
   },
 
   render: function() {
-    console.log('THIS IS THE STATE!',this.state);
-    this.state.eventData.dates.forEach(function(date){
-      console.log(date)
-      console.log(moment.unix(date.end).format("MMMM DD YYYY"))
-    })
+    console.log(this.state.searchMembers)
+    // console.log('THIS IS THE STATE!',this.state);
+    // this.state.eventData.dates.forEach(function(date){
+    //   console.log(date)
+    //   console.log(moment.unix(date.end).format("MMMM DD YYYY"))
+    // })
     var that = this;
-    //console.log(this.props, "HERE BE PROPS")
+    // console.log(this.props, "HERE BE PROPS")
     return (
       <div className={!this.props.hide ? "hide site-create-event" : "site-create-event"}>
         <div onClick={this.props.showCreateEvent} ref="modal-close" className="modal-close"></div>
@@ -195,7 +213,7 @@ var CreateEvent  = React.createClass({
                     <div className="detail-search">
                       <input onChange={this.handleMembersSearch} type="text" placeholder="Invite members" className="search-field" />
                       {(this.state.eventData.members.length > 0) ? <SmallSearchPicked onDeleteMember={this.deleteMember} members={this.state.eventData.members} /> : ''}
-                      {(this.state.showEventMembersSuggestions === true) ? <SmallSearchSuggested list={this.state.searchMembers} /> : ''}
+                      {(this.state.searchMembers.length > 0) ? <SmallSearchSuggested onAddMember={this.addMember} listy={this.state.searchMembers} /> : ''}
                     </div>
                   </div>
                   <div className="event-detail location">

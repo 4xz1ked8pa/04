@@ -6,6 +6,19 @@ var HASH_ROUNDS = 10;
 // Export
 module.exports = function CursuumAPI(conn) {
   return {
+    getUserInfos: function(userId, callback) {
+      conn.query(
+        `SELECT id, firstName, lastName, email, createdAt, updatedAt FROM users WHERE id = ?`,
+        [userId], function(err, userInfos) {
+          if (err) {
+            callback(err);
+          }
+          else {
+            callback(null, userInfos);
+          }
+        }
+      );
+    },
     getFriendsForUser: function(userId, callback) {
       conn.query(
         `SELECT *
@@ -121,43 +134,51 @@ module.exports = function CursuumAPI(conn) {
         }
       })
     },
-    createEvent: function(event, callback) {
+    createEvent: function(eventData, callback) {
       conn.query(
         `INSERT INTO events (
           userId,
-          startDate,
-          endDate,
           title,
           description,
           categoryId,
           locationLat,
-          locationLng) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-          [event.userId, event.startDate, event.endDate, event.title, event.description, event.categoryId, event.locationLat, event.locationLng],
+          locationLng) VALUES (?, ?, ?, ?, ?, ?)`,
+          [eventData.userId, eventData.title, eventData.description, eventData.categoryId, eventData.locationLat, eventData.locationLng],
         function(err, result) {
           if (err) {
             callback(err);
           }
           else {
             conn.query(
-              `SELECT id,
-                      userId,
-                      startDate,
-                      endDate,
-                      title,
-                      description,
-                      categoryId,
-                      locationLat,
-                      locationLng FROM posts WHERE id = ?`,
-                      [result.insertId],
+              `INSERT INTO dates (
+                eventId,
+                startDate,
+                endDate) VALUES (?,?,?)`,
+              [result.insertId, eventData.startDate, eventData.endDate],
               function(err, result) {
                 if (err) {
                   callback(err);
                 }
                 else {
-                  callback(null, result);
+                  eventData.members.forEach(function(member) {
+                    conn.query(
+                      `INSERT INTO requests (
+                        fromId,
+                        toId,
+                        requestType) VALUES (?,?,?)`,
+                        /* HOW DO I GET MY OWN userId ??????????????????????? */
+                      [member.id, me.userId, 'event'],
+                      function(err, result) {
+                        if (err) {
+                          callback(err);
+                        }
+                        else {
+
+                        }
+                    });
+                  });
                 }
-              }
-            );
+              });
           }
         }
       );

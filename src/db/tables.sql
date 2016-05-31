@@ -15,8 +15,8 @@ CREATE TABLE users (
 -- This creates the Events table --
 CREATE TABLE events (
   `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  `startDate` TIMESTAMP NOT NULL,
-  `endDate` TIMESTAMP NOT NULL,
+  --`startDate` TIMESTAMP NOT NULL,--
+  --`endDate` TIMESTAMP NOT NULL,--
   `title` VARCHAR(255) NOT NULL,
   `description` TEXT NOT NULL,
   `categoryId` INT NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE events (
 -- This creates the Dates table --
 CREATE TABLE dates (
   `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  `eventId` INT NOT NULL,
+  `eventId` TIMESTAMP NOT NULL,
   `startDate` TIMESTAMP NOT NULL,
   `endDate` TIMESTAMP NOT NULL,
   FOREIGN KEY (eventId) REFERENCES events(id)
@@ -40,9 +40,12 @@ CREATE TABLE dates (
 -- This creates the Requests table --
 CREATE TABLE requests (
   `id` INT PRIMARY KEY AUTO_INCREMENT,
-  `requestId` INT NOT NULL,
-  `targetId` INT NOT NULL,
-  `requestId` DATE
+  `fromId` INT NOT NULL,
+  `toId` INT NOT NULL,
+  `eventId` INT NOT NULL,
+  `requestType` VARCHAR(100),
+  FOREIGN KEY (fromId) REFERENCES users(id),
+  FOREIGN KEY (toId) REFERENCES users(id)
 );
 
 -- This creates the Friends table --
