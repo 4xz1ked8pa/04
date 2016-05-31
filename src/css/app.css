@@ -109,13 +109,14 @@ textarea {
 /* ./components/_Navigation.scss */
 .site-side-navigation {
   position: fixed;
-  top: 0;
+  top: 40px;
   left: 0;
   width: 180px;
   height: 100%;
   background: HSLA(0, 0%, 98%, 1);
-  padding-top: 40px;
-  border-right: 1px solid HSLA(0, 0%, 84%, 1); }
+  padding-bottom: 40px;
+  border-right: 1px solid HSLA(0, 0%, 84%, 1);
+  z-index: 3; }
   .site-side-navigation .side-navigation-primary {
     display: flex;
     flex-wrap: wrap;
@@ -723,15 +724,20 @@ textarea {
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
   z-index: 999; }
-  .site-create-event .modal-frame {
-    display: flex;
+  .site-create-event .modal-close {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    -webkit-box-pack: center;
-    justify-content: center;
-    -webkit-box-align: center;
-    -ms-grid-row-align: center;
-    align-items: center; }
+    z-index: 20; }
+  .site-create-event .modal-frame {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 820px;
+    transform: translate(-50%, -50%);
+    z-index: 21; }
     .site-create-event .modal-frame .create-event-window {
       display: flex;
       flex-wrap: wrap;
@@ -953,7 +959,8 @@ textarea {
         flex-direction: column;
         width: 20%;
         height: 480px;
-        border-left: 1px solid #E0E0E0; }
+        border-left: 1px solid #E0E0E0;
+        overflow-y: auto; }
 
 .site-calendar {
   display: flex;
@@ -1040,6 +1047,61 @@ textarea {
           cursor: pointer; }
       .site-calendar .calendar-month .calendar-week:first-child .calendar-weekday {
         border-top: none; }
+
+.site-authenticate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Helvetica'; }
+  .site-authenticate * {
+    box-sizing: border-box; }
+  .site-authenticate .auth-register {
+    width: 400px;
+    margin-top: 10%; }
+    .site-authenticate .auth-register h1 {
+      font-size: 18px;
+      font-weight: 600; }
+    .site-authenticate .auth-register form {
+      display: flex;
+      flex-wrap: wrap; }
+      .site-authenticate .auth-register form button {
+        background: #8E968E;
+        color: #F3F4F3;
+        font-size: 12px;
+        font-weight: 300;
+        text-transform: uppercase;
+        padding: 3px 5px 2px 6px;
+        border-top: 1px solid #777A77;
+        border-bottom: 1px solid #777A77;
+        border-left: 1px solid #777A77;
+        border-right: 1px solid #777A77;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1); }
+        .site-authenticate .auth-register form button:hover {
+          background: #7b857b;
+          cursor: pointer; }
+      .site-authenticate .auth-register form .form-fields {
+        margin: 10px 0; }
+        .site-authenticate .auth-register form .form-fields input {
+          width: 100%;
+          background: #fafafa;
+          font-weight: 400;
+          padding: 5px 7px; }
+          .site-authenticate .auth-register form .form-fields input::-webkit-input-placeholder {
+            color: gray;
+            font-size: 15px;
+            font-weight: 300; }
+          .site-authenticate .auth-register form .form-fields input::-moz-placeholder {
+            color: gray;
+            font-size: 15px;
+            font-weight: 300; }
+          .site-authenticate .auth-register form .form-fields input:-moz-placeholder {
+            color: gray;
+            font-size: 15px;
+            font-weight: 300; }
+          .site-authenticate .auth-register form .form-fields input:-ms-input-placeholder {
+            color: gray;
+            font-size: 15px;
+            font-weight: 300; }
 
 .create-date-set {
   width: 100%;

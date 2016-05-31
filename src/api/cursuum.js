@@ -10,8 +10,8 @@ module.exports = function CursuumAPI(conn) {
       conn.query(
         `SELECT *
         FROM friends
-        WHERE friend1Id = ?
-        JOIN users ON users.id = ?`, [userId], function(err, friends) {
+        JOIN users ON users.id = friends.friend2Id
+        WHERE friend1Id = ?`, [userId], function(err, friends) {
           if (err) {
             callback(err);
           }
@@ -53,9 +53,9 @@ module.exports = function CursuumAPI(conn) {
         `INSERT INTO users (
           firstName,
           lastName,
-          email,
-          password) VALUES (?, ?, ?, ?)`,
-          [user.firstName, user.lastName, user.email, user.password],
+          password,
+          email) VALUES (?, '', ?, ?)`,
+          [user.fullName, user.password, user.email],
         function(err, result) {
           if (err) {
             callback(err);
@@ -68,20 +68,58 @@ module.exports = function CursuumAPI(conn) {
                       email,
                       password,
                       createdAt,
-                      updatedAt FROM posts WHERE id = ?`,
+                      updatedAt FROM users WHERE id = ?`,
                       [result.insertId],
               function(err, result) {
                 if (err) {
                   callback(err);
                 }
                 else {
-                  callback(null, result);
+                  callback(null, result[0]);
                 }
               }
             )
           }
         }
       )
+    },
+    checkLogin: function checkLogin(email, pass, callback) {
+      conn.query('SELECT * FROM users WHERE email = ? AND password = ?', [email,pass], function(err, result) {
+        if (err) {
+          callback(err)
+        }
+        else if (result.length === 0) {
+          callback(new Error('username or password incorrect')); // in this case the user does not exists
+        }
+        else {
+          var user = result[0];
+          callback(null, user);
+        }
+      });
+    },
+    createSession: function createSession(userId, callback) {
+      var token = Math.random();
+      conn.query('INSERT INTO sessions SET userId = ?, token = ?', [userId, token], function(err, result) {
+        if (err) {
+          callback(err);
+        }
+        else {
+          callback(null, token); // this is the secret session token :)
+        }
+      })
+    },
+    getUserFromSession: function(token, callback) {
+      conn.query('SELECT users.* FROM users JOIN sessions ON users.id = sessions.userId WHERE sessions.token = ?', [token], function(err, res) {
+        if (err) {
+          callback(err)
+        }
+        else if (res.length === 0) {
+          callback(new Error('session not found'))
+        }
+        else {
+          callback(null, res[0]);
+        }
+      })
     },
     createEvent: function(event, callback) {
       conn.query(

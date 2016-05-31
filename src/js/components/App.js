@@ -9,17 +9,19 @@ var MainHeader = require('./MainHeader.js')
 // The main application layout
 // this.props.children will be set by React Router depending on the current route
 var App = React.createClass({
+  componentDidMount: function() {
+    var logged = localStorage.getItem('logged_in');
+    if (logged !== 'TRUE') {
+      this.props.history.push('/login');
+    }
+  },
   render: function() {
     return (
       <div id="root">
         <Navigation />
         <SideNavigation />
-        <main className="site-main">
-          <MainHeader title="Charles Jackson" />
-          <Calendar />
-        </main>
+        {this.props.children}
         <ChatBar />
-        <CreateEvent />
       </div>
     );
   }

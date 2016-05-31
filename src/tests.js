@@ -25,7 +25,7 @@ var cursuumAPI = new cursuum(connection);
 // });
 
 
-// cursuumAPI.createFriendship(1,5, function(err, friendship) {
+// cursuumAPI.createFriendship(14,8, function(err, friendship) {
 //   if (err) {
 //     console.log(err.stack);
 //   }
@@ -33,3 +33,16 @@ var cursuumAPI = new cursuum(connection);
 //     console.log(friendship);
 //   }
 // });
+
+// cursuumAPI.getFriendsForUser(14, function(err, friends) {
+//   if (err) {
+//     console.log(err.stack);
+//   }
+//   else {
+//     console.log(friends);
+//   }
+// });
+
+cursuumAPI.createEvent({}, function(err, result) {
+
+});

@@ -57,9 +57,11 @@
 	
 	var App = __webpack_require__(220);
 	var Home = __webpack_require__(345);
+	var Schedule = __webpack_require__(382);
 	var Profile = __webpack_require__(346);
 	var Register = __webpack_require__(353);
 	var Login = __webpack_require__(372);
+	var CreateEvent = __webpack_require__(232);
 	var NotFound = __webpack_require__(373);
 	
 	var moment = __webpack_require__(236);
@@ -69,11 +71,17 @@
 	  { history: browserHistory },
 	  React.createElement(
 	    Route,
-	    { path: '/', component: App },
+	    { path: '/' },
 	    React.createElement(IndexRoute, { component: Home }),
-	    React.createElement(Route, { path: 'profile', component: Profile }),
 	    React.createElement(Route, { path: 'register', component: Register }),
 	    React.createElement(Route, { path: 'login', component: Login }),
+	    React.createElement(
+	      Route,
+	      { component: App },
+	      React.createElement(Route, { path: 'create', component: CreateEvent }),
+	      React.createElement(Route, { path: 'schedule', component: Schedule }),
+	      React.createElement(Route, { path: 'profile', component: Profile })
+	    ),
 	    React.createElement(Route, { path: '*', component: NotFound })
 	  )
 	);
@@ -25215,20 +25223,20 @@
 	var App = React.createClass({
 	  displayName: 'App',
 	
+	  componentDidMount: function componentDidMount() {
+	    var logged = localStorage.getItem('logged_in');
+	    if (logged !== 'TRUE') {
+	      this.props.history.push('/login');
+	    }
+	  },
 	  render: function render() {
 	    return React.createElement(
 	      'div',
 	      { id: 'root' },
 	      React.createElement(Navigation, null),
 	      React.createElement(SideNavigation, null),
-	      React.createElement(
-	        'main',
-	        { className: 'site-main' },
-	        React.createElement(MainHeader, { title: 'Charles Jackson' }),
-	        React.createElement(Calendar, null)
-	      ),
-	      React.createElement(ChatBar, null),
-	      React.createElement(CreateEvent, null)
+	      this.props.children,
+	      React.createElement(ChatBar, null)
 	    );
 	  }
 	});
@@ -25244,10 +25252,29 @@
 	var React = __webpack_require__(1);
 	var Search = __webpack_require__(222);
 	var Notify = __webpack_require__(225);
+	var axios = __webpack_require__(354);
 	
 	var Navigation = React.createClass({
 	  displayName: 'Navigation',
 	
+	  getInitialState: function getInitialState() {
+	    return {
+	      name: ''
+	    };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    var that = this;
+	    axios({
+	      method: 'get',
+	      url: '/me'
+	    }).then(function (response) {
+	      if (response.data) {
+	        that.setState({
+	          name: response.data.firstName + response.data.lastName
+	        });
+	      }
+	    });
+	  },
 	  render: function render() {
 	    return React.createElement(
 	      'nav',
@@ -25263,7 +25290,7 @@
 	          React.createElement(
 	            'div',
 	            { className: 'user-name' },
-	            'Charles Jackson'
+	            this.state.name
 	          )
 	        ),
 	        React.createElement(Notify, null),
@@ -25514,10 +25541,19 @@
 	"use strict";
 	
 	var React = __webpack_require__(1);
+	var CreateEvent = __webpack_require__(232);
 	
 	var SideNavigation = React.createClass({
 	  displayName: "SideNavigation",
 	
+	  getInitialState: function getInitialState() {
+	    return { createEvent: false };
+	  },
+	  showCreateEvent: function showCreateEvent(e) {
+	    e ? e.stopPropagation() : null;
+	    this.setState({ createEvent: !this.state.createEvent });
+	    var that = this;
+	  },
 	  render: function render() {
 	    return React.createElement(
 	      "aside",
@@ -25550,74 +25586,6 @@
 	                  "span",
 	                  { className: "feature-label" },
 	                  "Compare"
-	                )
-	              )
-	            )
-	          ),
-	          React.createElement(
-	            "li",
-	            { className: "module" },
-	            React.createElement(
-	              "header",
-	              { className: "module-header" },
-	              React.createElement(
-	                "div",
-	                { className: "header-label" },
-	                "GROUPS"
-	              )
-	            ),
-	            React.createElement(
-	              "ul",
-	              { className: "module-features" },
-	              React.createElement(
-	                "li",
-	                { className: "feature" },
-	                React.createElement(
-	                  "span",
-	                  { className: "feature-label" },
-	                  "McGill University Association"
-	                ),
-	                React.createElement(
-	                  "span",
-	                  { className: "feature-notify-count" },
-	                  "2"
-	                )
-	              ),
-	              React.createElement(
-	                "li",
-	                { className: "feature" },
-	                React.createElement(
-	                  "span",
-	                  { className: "feature-label" },
-	                  "Code jams"
-	                )
-	              ),
-	              React.createElement(
-	                "li",
-	                { className: "feature" },
-	                React.createElement(
-	                  "span",
-	                  { className: "feature-label" },
-	                  "2600 The Hacker Quartely"
-	                ),
-	                React.createElement(
-	                  "span",
-	                  { className: "feature-notify-count" },
-	                  "1"
-	                )
-	              ),
-	              React.createElement(
-	                "li",
-	                { className: "feature" },
-	                React.createElement(
-	                  "span",
-	                  { className: "feature-label" },
-	                  "Web Cats Community"
-	                ),
-	                React.createElement(
-	                  "span",
-	                  { className: "feature-notify-count" },
-	                  "7"
 	                )
 	              )
 	            )
@@ -25694,12 +25662,81 @@
 	                )
 	              )
 	            )
+	          ),
+	          React.createElement(
+	            "li",
+	            { className: "module" },
+	            React.createElement(
+	              "header",
+	              { className: "module-header" },
+	              React.createElement(
+	                "div",
+	                { className: "header-label" },
+	                "GROUPS"
+	              )
+	            ),
+	            React.createElement(
+	              "ul",
+	              { className: "module-features" },
+	              React.createElement(
+	                "li",
+	                { className: "feature" },
+	                React.createElement(
+	                  "span",
+	                  { className: "feature-label" },
+	                  "McGill University Association"
+	                ),
+	                React.createElement(
+	                  "span",
+	                  { className: "feature-notify-count" },
+	                  "2"
+	                )
+	              ),
+	              React.createElement(
+	                "li",
+	                { className: "feature" },
+	                React.createElement(
+	                  "span",
+	                  { className: "feature-label" },
+	                  "Code jams"
+	                )
+	              ),
+	              React.createElement(
+	                "li",
+	                { className: "feature" },
+	                React.createElement(
+	                  "span",
+	                  { className: "feature-label" },
+	                  "2600 The Hacker Quartely"
+	                ),
+	                React.createElement(
+	                  "span",
+	                  { className: "feature-notify-count" },
+	                  "1"
+	                )
+	              ),
+	              React.createElement(
+	                "li",
+	                { className: "feature" },
+	                React.createElement(
+	                  "span",
+	                  { className: "feature-label" },
+	                  "Web Cats Community"
+	                ),
+	                React.createElement(
+	                  "span",
+	                  { className: "feature-notify-count" },
+	                  "7"
+	                )
+	              )
+	            )
 	          )
 	        ),
 	        React.createElement(
 	          "ul",
 	          { className: "site-options" },
-	          React.createElement("li", { className: "option-create-event fa fa-plus" })
+	          React.createElement(CreateEvent, { showCreateEvent: this.showCreateEvent, hide: this.state.createEvent }),
+	          React.createElement("li", { onClick: this.showCreateEvent, className: "option-create-event fa fa-plus" })
 	        )
 	      )
 	    );
@@ -25716,10 +25753,29 @@
 	
 	var React = __webpack_require__(1);
 	var ChatBarUser = __webpack_require__(231);
+	var axios = __webpack_require__(354);
 	
 	var ChatBar = React.createClass({
 	  displayName: 'ChatBar',
 	
+	  getInitialState: function getInitialState() {
+	    return {
+	      userFriends: []
+	    };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    var that = this;
+	    axios({
+	      method: 'get',
+	      url: '/getUserFriends'
+	    }).then(function (response) {
+	      if (response.data) {
+	        that.setState({
+	          userFriends: response.data
+	        });
+	      }
+	    });
+	  },
 	  render: function render() {
 	    return React.createElement(
 	      'aside',
@@ -25730,25 +25786,9 @@
 	        React.createElement(
 	          'div',
 	          { className: 'chat-bar-users' },
-	          React.createElement(ChatBarUser, { name: 'Nathan Holt' }),
-	          React.createElement(ChatBarUser, { name: 'Deborah Miller' }),
-	          React.createElement(ChatBarUser, { name: 'Julian Dennis' }),
-	          React.createElement(ChatBarUser, { name: 'Jean Klein' }),
-	          React.createElement(ChatBarUser, { name: 'Christie Duncan' }),
-	          React.createElement(ChatBarUser, { name: 'Angelo Foster' }),
-	          React.createElement(ChatBarUser, { name: 'Nicholas Brown' }),
-	          React.createElement(ChatBarUser, { name: 'Harry Hill' }),
-	          React.createElement(ChatBarUser, { name: 'Jesse Smith' }),
-	          React.createElement(ChatBarUser, { name: 'Howard Foster' }),
-	          React.createElement(ChatBarUser, { name: 'Jason Craig' }),
-	          React.createElement(ChatBarUser, { name: 'Terrel Carpenter' }),
-	          React.createElement(ChatBarUser, { name: 'Caleb Freeman' }),
-	          React.createElement(ChatBarUser, { name: 'Norma Shelton' }),
-	          React.createElement(ChatBarUser, { name: 'Wesley Harris' }),
-	          React.createElement(ChatBarUser, { name: 'Lena Murray' }),
-	          React.createElement(ChatBarUser, { name: 'Mack Wong' }),
-	          React.createElement(ChatBarUser, { name: 'Alvin Swanson' }),
-	          React.createElement(ChatBarUser, { name: 'Barry Clarke' })
+	          this.state.userFriends.map(function (friend) {
+	            return React.createElement(ChatBarUser, { key: friend.id, name: friend.firstName });
+	          })
 	        ),
 	        React.createElement(
 	          'ul',
@@ -25811,6 +25851,7 @@
 	var SmallSearchPicked = __webpack_require__(375);
 	var SmallSearchSuggested = __webpack_require__(376);
 	var EventDateSet = __webpack_require__(379);
+	var axios = __webpack_require__(354);
 	var moment = __webpack_require__(236);
 	moment().format();
 	
@@ -25836,17 +25877,15 @@
 	          firstName: 'Ziad',
 	          lastName: 'Saab'
 	        }],
-	        dates: [{
-	          start_date: '1463555682',
-	          from_hour: '1464555682',
-	          to_hour: '1464555682',
-	          end_date: '1464555682'
-	        }],
+	        dates: [],
 	        coordinates: {
 	          lng: '',
 	          lat: ''
 	        }
-	      }
+	      },
+	      selectedDate: {},
+	      checkNext: false,
+	      searchMembers: []
 	    };
 	  },
 	  deleteMember: function deleteMember(key) {
@@ -25861,8 +25900,15 @@
 	    }
 	  },
 	  handleMembersSearch: function handleMembersSearch(e) {
+	    var that = this;
 	    if (e.target.value.length > 0 && e.target.value != ' ') {
 	      this.state.showEventMembersSuggestions = true;
+	      axios({
+	        method: 'get',
+	        url: '/getUserFriends/14'
+	      }).then(function (friends) {
+	        that.state.searchMembers = friends;
+	      });
 	      this.setState(this.state);
 	    } else {
 	      this.state.showEventMembersSuggestions = false;
@@ -25877,10 +25923,101 @@
 	  createEvent: function createEvent() {
 	    console.log('EVENT CREATED!', this.state.eventData);
 	  },
+	  setSelectedDate: function setSelectedDate(date, nextDay) {
+	    var that = this;
+	    var newDate = this.state.eventData.dates;
+	    var newEvenData = this.state.eventData;
+	    //CHECK IF NEXT DAY IS TRUE HERE! IF TRUE DO NO PUSH BUT GET DATE!
+	    if (this.state.checkNext) {
+	
+	      newDate.forEach(function (d) {
+	        if (d.id === that.state.selectedDate.id) console.log("MATCH FOUND");
+	        var stop = date.date.unix();
+	        d.end = stop;
+	      });
+	
+	      this.setState({
+	        eventData: newEvenData,
+	        checkNext: false
+	      });
+	    } else {
+	      date.id = Math.random();
+	      date.start = date.date.unix();
+	      date.end = date.start + 1;
+	      newEvenData.dates = newDate.concat([date]);
+	      this.setState({
+	        eventData: newEvenData
+	      });
+	    }
+	
+	    // this.setState({
+	    //   selectedDate: date
+	    // })
+	  },
+	  deleteDate: function deleteDate(data) {
+	    var newEvenData = this.state.eventData;
+	    var newDates = newEvenData.dates;
+	    this.state.eventData.dates.forEach(function (date, i) {
+	      if (data.id === date.id) {
+	        newDates.splice(i, 1);
+	      }
+	    });
+	    this.setState({
+	      eventData: newEvenData
+	    });
+	  },
+	  setFromTime: function setFromTime(data, hours, nextDay, nextDate) {
+	    var that = this;
+	    console.log(nextDay, "THESE ARE THE TIMES COMMING IN");
+	    var newEvenData = this.state.eventData;
+	    var newDates = newEvenData.dates;
+	
+	    var parsedHours = {
+	      fromH: Number(hours.fromHour),
+	      fromM: Number(hours.fromMinutes),
+	      toH: Number(hours.toHours),
+	      toM: Number(hours.toMinutes)
+	    };
+	
+	    this.state.eventData.dates.forEach(function (date, i) {
+	
+	      var start;
+	      var end;
+	
+	      if (data.id === date.id) {
+	
+	        date.date.hours(parsedHours.fromH);
+	        date.date.minutes(parsedHours.fromM);
+	        start = date.date.unix();
+	        date.date.hours(parsedHours.toH);
+	        date.date.minutes(parsedHours.toM);
+	        end = date.date.unix();
+	        date.start = start;
+	        date.end = end;
+	
+	        that.setState(that.state);
+	      }
+	    });
+	  },
+	  checkForNext: function checkForNext(data, date) {
+	    this.setState({
+	      checkNext: data,
+	      selectedDate: date
+	    });
+	  },
+	
 	  render: function render() {
+	    console.log('THIS IS THE STATE!', this.state);
+	    this.state.eventData.dates.forEach(function (date) {
+	      console.log(date);
+	      console.log(moment.unix(date.end).format("MMMM DD YYYY"));
+	    });
+	    var that = this;
+	    //console.log(this.props, "HERE BE PROPS")
 	    return React.createElement(
 	      'div',
-	      { className: 'site-create-event' },
+	      { className: !this.props.hide ? "hide site-create-event" : "site-create-event" },
+	      React.createElement('div', { onClick: this.props.showCreateEvent, ref: 'modal-close', className: 'modal-close' }),
 	      React.createElement(
 	        'div',
 	        { className: 'modal-frame' },
@@ -25919,7 +26056,7 @@
 	                    { className: 'detail-search' },
 	                    React.createElement('input', { onChange: this.handleMembersSearch, type: 'text', placeholder: 'Invite members', className: 'search-field' }),
 	                    this.state.eventData.members.length > 0 ? React.createElement(SmallSearchPicked, { onDeleteMember: this.deleteMember, members: this.state.eventData.members }) : '',
-	                    this.state.showEventMembersSuggestions === true ? React.createElement(SmallSearchSuggested, null) : ''
+	                    this.state.showEventMembersSuggestions === true ? React.createElement(SmallSearchSuggested, { list: this.state.searchMembers }) : ''
 	                  )
 	                ),
 	                React.createElement(
@@ -25939,7 +26076,7 @@
 	                React.createElement(
 	                  'div',
 	                  { className: 'small-calendar-wrap' },
-	                  React.createElement(Calendar, { selected: this.state.moment })
+	                  React.createElement(Calendar, { checkNext: this.state.checkNext, onDateSelect: this.setSelectedDate, selected: this.state.moment })
 	                )
 	              )
 	            ),
@@ -25962,7 +26099,7 @@
 	            'div',
 	            { className: 'create-event-dates' },
 	            this.state.eventData.dates.map(function (selectedDate) {
-	              return React.createElement(EventDateSet, { date: selectedDate, key: selectedDate.from_date });
+	              return React.createElement(EventDateSet, { onCheckNext: that.checkForNext, onSetFromTime: that.setFromTime, onDeleteDate: that.deleteDate, date: selectedDate, key: selectedDate.from_date });
 	            })
 	          )
 	        )
@@ -26006,9 +26143,8 @@
 	      month: month
 	    });
 	  },
-	  select: function select(day) {
-	    this.props.selected = day.date;
-	    //this.forceUpdate();
+	  select: function select(day, nextDay) {
+	    this.props.onDateSelect(day, nextDay);
 	  },
 	  renderWeeks: function renderWeeks() {
 	    var weeks = [],
@@ -26018,7 +26154,7 @@
 	        count = 0;
 	
 	    while (!done) {
-	      weeks.push(React.createElement(Week, { key: date.toString(), date: date.clone(), month: this.state.month, select: this.select, selected: this.props.selected }));
+	      weeks.push(React.createElement(Week, { checkNext: this.props.checkNext, key: date.toString(), date: date.clone(), month: this.state.month, select: this.select, selected: this.props.selected }));
 	      date.add(1, "w");
 	      done = count++ > 2 && monthIndex !== date.month();
 	      monthIndex = date.month();
@@ -26141,9 +26277,10 @@
 	                isToday: date.isSame(new Date(), "day"),
 	                date: date
 	            };
+	
 	            days.push(React.createElement(
 	                "div",
-	                { onClick: this.props.select.bind(null, day), key: day.date.toString(), className: "calendar-weekday" + (day.isToday ? " today" : "") + (day.isCurrentMonth ? "" : " different-month") + (day.date.isSame(this.props.selected) ? " selected" : "") },
+	                { onClick: this.props.select.bind(null, day, this.props.checkNext), key: day.date.toString(), className: "calendar-weekday" + (day.isToday ? " today" : "") + (day.isCurrentMonth ? "" : " different-month") + (day.date.isSame(this.props.selected) ? " selected" : "") },
 	                React.createElement(
 	                    "div",
 	                    { className: "weekday-header" },
@@ -40033,6 +40170,14 @@
 	var Home = React.createClass({
 	  displayName: 'Home',
 	
+	  componentDidMount: function componentDidMount() {
+	    var logged = localStorage.getItem('logged_in');
+	    if (logged !== 'TRUE') {
+	      this.props.history.push('/login');
+	    } else {
+	      this.props.history.push('/schedule');
+	    }
+	  },
 	  render: function render() {
 	    return React.createElement('div', null);
 	  }
@@ -40479,9 +40624,10 @@
 	      url: '/register',
 	      data: this.state
 	    }).then(function (response) {
-	      if (response.data === "ok") {
+	      console.log(response.data);
+	      if (response.data && response.data.id) {
 	        console.log("WE PUSHED");
-	        that.props.history.push('/home');
+	        that.props.history.push('/login');
 	      } else {
 	        that.setState({
 	          status: false
@@ -40492,7 +40638,7 @@
 	  render: function render() {
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'site-authenticate' },
 	      React.createElement(
 	        'div',
 	        { className: 'auth-register' },
@@ -40509,10 +40655,14 @@
 	        React.createElement(
 	          'form',
 	          { ref: 'formData', onSubmit: this.submit },
-	          React.createElement('input', { type: 'text', placeholder: 'Full name', name: 'register-name', value: this.state.fullName, onChange: this.handleChange.bind(this, 'fullName') }),
-	          React.createElement('input', { type: 'password', placeholder: 'Password', name: 'register-password', value: this.state.password, onChange: this.handleChange.bind(this, 'password') }),
-	          React.createElement('input', { type: 'text', placeholder: 'Email address', name: 'register-email', value: this.state.email, onChange: this.handleChange.bind(this, 'email') }),
-	          React.createElement('input', { type: 'text', placeholder: 'Phone number', name: 'register-phone', value: this.state.phone, onChange: this.handleChange.bind(this, 'phone') }),
+	          React.createElement(
+	            'div',
+	            { className: 'form-fields' },
+	            React.createElement('input', { type: 'text', placeholder: 'Full name', name: 'register-name', value: this.state.fullName, onChange: this.handleChange.bind(this, 'fullName') }),
+	            React.createElement('input', { type: 'password', placeholder: 'Password', name: 'register-password', value: this.state.password, onChange: this.handleChange.bind(this, 'password') }),
+	            React.createElement('input', { type: 'text', placeholder: 'Email address', name: 'register-email', value: this.state.email, onChange: this.handleChange.bind(this, 'email') }),
+	            React.createElement('input', { type: 'text', placeholder: 'Phone number', name: 'register-phone', value: this.state.phone, onChange: this.handleChange.bind(this, 'phone') })
+	          ),
 	          React.createElement(
 	            'button',
 	            null,
@@ -41706,24 +41856,79 @@
 	'use strict';
 	
 	var React = __webpack_require__(1);
+	var axios = __webpack_require__(354);
 	
-	var Login = React.createClass({
-	  displayName: 'Login',
+	var Register = React.createClass({
+	  displayName: 'Register',
 	
+	  getInitialState: function getInitialState() {
+	    return {
+	      password: '',
+	      email: ''
+	    };
+	  },
+	  handleChange: function handleChange(string, e) {
+	    var data = this.state;
+	    data[string] = e.target.value;
+	    this.setState(data);
+	  },
+	  submit: function submit(e) {
+	    e.preventDefault();
+	    var that = this;
+	    axios({
+	      method: 'post',
+	      url: '/login',
+	      data: this.state
+	    }).then(function (response) {
+	      if (response.data && response.data.token) {
+	        console.log("WE PUSHED");
+	        localStorage.setItem('logged_in', 'TRUE');
+	        that.props.history.push('/schedule');
+	      } else {
+	        that.setState({
+	          status: false
+	        });
+	      }
+	    });
+	  },
 	  render: function render() {
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'site-authenticate' },
 	      React.createElement(
-	        'h1',
-	        null,
-	        'Login'
+	        'div',
+	        { className: 'auth-register' },
+	        React.createElement(
+	          'h1',
+	          null,
+	          'Register'
+	        ),
+	        !this.state.status ? React.createElement(
+	          'div',
+	          null,
+	          'Please provide the required fields.'
+	        ) : '',
+	        React.createElement(
+	          'form',
+	          { ref: 'formData', onSubmit: this.submit },
+	          React.createElement(
+	            'div',
+	            { className: 'form-fields' },
+	            React.createElement('input', { type: 'text', placeholder: 'Email address', name: 'register-email', value: this.state.email, onChange: this.handleChange.bind(this, 'email') }),
+	            React.createElement('input', { type: 'password', placeholder: 'Password', name: 'register-password', value: this.state.password, onChange: this.handleChange.bind(this, 'password') })
+	          ),
+	          React.createElement(
+	            'button',
+	            null,
+	            'login'
+	          )
+	        )
 	      )
 	    );
 	  }
 	});
 	
-	module.exports = Login;
+	module.exports = Register;
 
 /***/ },
 /* 373 */
@@ -41826,9 +42031,7 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'search-suggested' },
-	      React.createElement(SmallSearchUnit, { title: 'Nathan Holt' }),
-	      React.createElement(SmallSearchUnit, { title: 'Nicholas Brown' }),
-	      React.createElement(SmallSearchUnit, { title: 'Norma Shelton' })
+	      this.props.list
 	    );
 	  }
 	});
@@ -41843,6 +42046,8 @@
 
 	'use strict';
 	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
 	var React = __webpack_require__(1);
 	var moment = __webpack_require__(236);
 	moment().format();
@@ -41852,7 +42057,13 @@
 	
 	  getInitialState: function getInitialState() {
 	    return {
-	      selectEndDateActive: false
+	      selectEndDateActive: false,
+	      from_hours: "",
+	      from_minutes: "",
+	      to_hours: "",
+	      to_minutes: "",
+	      nextDay: false
+	
 	    };
 	  },
 	  handleClickEndDate: function handleClickEndDate() {
@@ -41861,7 +42072,20 @@
 	    } else if (this.state.selectEndDateActive === false) {
 	      this.state.selectEndDateActive = true;
 	    }
-	    console.log(this.state.selectEndDateActive);
+	  },
+	  onDeleteDate: function onDeleteDate(date) {
+	    this.props.onDeleteDate(date);
+	  },
+	  handleInputChange: function handleInputChange(input, e) {
+	    this.setState(_defineProperty({}, input, e.target.value));
+	    this.props.onSetFromTime(this.props.date, { fromHour: this.state.from_hours, fromMinutes: this.state.from_minutes, toHours: this.state.to_hours, toMinutes: this.state.to_minutes }, this.state.nextDay);
+	  },
+	  handleNextTo: function handleNextTo() {
+	    var checker = !this.state.nextDay;
+	    this.props.onCheckNext(checker, this.props.date);
+	    this.setState({
+	      nextDay: !this.state.nextDay
+	    });
 	  },
 	  render: function render() {
 	    return React.createElement(
@@ -41873,9 +42097,9 @@
 	        React.createElement(
 	          'div',
 	          { className: 'value-literal' },
-	          moment.unix(this.props.date.start_date).format('MMMM DD YYYY')
+	          this.props.date.date.format("MMMM DD YYYY")
 	        ),
-	        React.createElement('div', { className: 'remove-date fa fa-times' })
+	        React.createElement('div', { onClick: this.onDeleteDate.bind(this, this.props.date), className: 'remove-date fa fa-times' })
 	      ),
 	      React.createElement(
 	        'div',
@@ -41891,9 +42115,9 @@
 	          React.createElement(
 	            'div',
 	            { className: 'set-options' },
-	            React.createElement('input', { type: 'text', placeholder: '00', className: 'hour' }),
+	            React.createElement('input', { onChange: this.handleInputChange.bind(this, "from_hours"), ref: 'from_hours', type: 'text', placeholder: '00', className: 'hour' }),
 	            ':',
-	            React.createElement('input', { type: 'text', placeholder: '00', className: 'minutes' })
+	            React.createElement('input', { onChange: this.handleInputChange.bind(this, "from_minutes"), ref: 'from_minutes', type: 'text', placeholder: '00', className: 'minutes' })
 	          )
 	        ),
 	        React.createElement(
@@ -41907,9 +42131,9 @@
 	          React.createElement(
 	            'div',
 	            { className: 'set-options' },
-	            React.createElement('input', { type: 'text', placeholder: '00', className: 'hour' }),
+	            React.createElement('input', { onChange: this.handleInputChange.bind(this, "to_hours"), ref: 'to_hours', type: 'text', placeholder: '00', className: 'hour' }),
 	            ':',
-	            React.createElement('input', { type: 'text', placeholder: '00', className: 'minutes' })
+	            React.createElement('input', { onChange: this.handleInputChange.bind(this, "to_minutes"), ref: 'to_minutes', type: 'text', placeholder: '00', className: 'minutes' })
 	          )
 	        ),
 	        React.createElement(
@@ -41928,8 +42152,8 @@
 	              { className: 'add-until-date' },
 	              React.createElement(
 	                'div',
-	                { onClick: this.handleClickEndDate, className: 'select-date-trigger before' },
-	                moment.unix(this.props.date.start_date).format('MMMM DD YYYY')
+	                { onClick: this.handleNextTo, className: 'select-date-trigger before' },
+	                this.props.date.end ? moment.unix(this.props.date.end).format('MMMM DD YYYY') : this.props.date.date.format('MMMM DD YYYY')
 	              )
 	            )
 	          )
@@ -41940,6 +42164,33 @@
 	});
 	
 	module.exports = EventDateSet;
+
+/***/ },
+/* 380 */,
+/* 381 */,
+/* 382 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var MainHeader = __webpack_require__(344);
+	var Calendar = __webpack_require__(233);
+	
+	var Schedule = React.createClass({
+	  displayName: 'Schedule',
+	
+	  render: function render() {
+	    return React.createElement(
+	      'main',
+	      { className: 'site-main' },
+	      React.createElement(MainHeader, { title: 'Charles Jackson' }),
+	      React.createElement(Calendar, null)
+	    );
+	  }
+	});
+	
+	module.exports = Schedule;
 
 /***/ }
 /******/ ]);

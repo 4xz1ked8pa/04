@@ -14,8 +14,9 @@ var Week = React.createClass({
                 isToday: date.isSame(new Date(), "day"),
                 date: date
             };
+
             days.push(
-              <div onClick={this.props.select.bind(null, day)} key={day.date.toString()} className={"calendar-weekday" + (day.isToday ? " today" : "") + (day.isCurrentMonth ? "" : " different-month") + (day.date.isSame(this.props.selected) ? " selected" : "")}>
+              <div onClick={this.props.select.bind(null, day, this.props.checkNext)} key={day.date.toString()} className={"calendar-weekday" + (day.isToday ? " today" : "") + (day.isCurrentMonth ? "" : " different-month") + (day.date.isSame(this.props.selected) ? " selected" : "")}>
                 <div className="weekday-header">
                   <span className="header-count">{day.number}</span>
                 </div>

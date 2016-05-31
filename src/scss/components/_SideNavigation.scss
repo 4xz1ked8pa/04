@@ -1,12 +1,13 @@
 /* ./components/_Navigation.scss */
 .site-side-navigation {
   position: fixed;
-  top:0; left:0;
+  top:40px; left:0;
   width:180px;
   height:100%;
   background: HSLA(0, 0%, 98%, 1);
-  padding-top:40px;
+  padding-bottom:40px;
   border-right:1px solid HSLA(0, 0%, 84%, 1);
+  z-index:3;
   .side-navigation-primary {
     display: flex;
     flex-wrap:wrap;
