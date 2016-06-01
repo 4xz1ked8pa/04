@@ -1,0 +1,76 @@
+$main-color: #ff7043;
+$text-color: #333;
+
+.geosuggest {
+  font-size: 18px;
+  font-size: 1em;
+  position: relative;
+  width: 50%;
+  width:100%;
+  text-align: left;
+  &__input {
+    width: 100%;
+    border:1px solid #DBDBDB;
+    background: transparent;
+    color: $text-color;
+    padding: .5em 1em;
+    -webkit-transition: border 0.2s, box-shadow 0.2s;
+    transition: border 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+    width: 100%;
+    color: #4d4d4d;
+    font-weight: 400;
+    padding: 5px 5px 5px 5px;
+    border: 1px solid #dbdbdb;
+    border-radius: 1px;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.01);
+  }
+  &__suggests {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    color:darken(white,70%);
+    font-size:14px;
+    font-weight:300;
+    max-height: 170px;
+    padding: 0;
+    margin-top: -1px;
+    background: #fff;
+    //box-shadow: 1px 2px 4px #222;
+    border-top-width: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    list-style: none;
+    z-index: 5;
+    -webkit-transition: max-height 0.2s, border 0.2s;
+    transition: max-height 0.2s, border 0.2s;
+    background: #FAFAFA;
+    padding-top:5px;
+    border:1px solid #DBDBDB;
+    margin-top:6px;
+    &--hidden {
+      padding:0;
+      max-height: 0;
+      overflow: hidden;
+      border-width: 0;
+    }
+  }
+  &-item {
+    font-size: 18px;
+    font-size: 1em;
+    padding: .5em .65em;
+    cursor: pointer;
+    &:hover, &:focus {
+      background: darken(white,10%);
+    }
+  }
+  &--active {
+    background: $main-color;
+    color: $text-color;
+
+    &:hover, &:focus {
+      background: $main-color;
+    }
+  }
+}

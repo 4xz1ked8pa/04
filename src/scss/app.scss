@@ -1,6 +1,7 @@
 /* vendors */
 @import "./vendors/bourbon/app/assets/stylesheets/_bourbon.scss";
 @import "./vendors/_normalize.scss";
+@import './vendors/GeoSuggest.scss';
 
 /* settings */
 @import './settings.scss';

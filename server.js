@@ -43,15 +43,16 @@ function checkLoginToken(request, response, next) {
 app.use(checkLoginToken);
 
 /* Routes */
-app.get('/getUserFriends', function(req, res) {
+app.get('/getUserFriends/:userId/:friend', function(req, res) {
+
   if (req.query.userId) {
     var userId = req.query.userId;
   }
   else {
-    var userId = req.loggedInUser.id;
+    var userId = Number(req.loggedInUser.id);
   }
-  console.log(req.loggedInUser);
-  CursuumAPI.getFriendsForUser(userId, function(err, friends) {
+  console.log(userId, req.params.friend, "THE THING TO SEARCH");
+  CursuumAPI.getFriendsForUser(userId, req.params.friend, function(err, friends) {
     if (err) {
       res.status(500).send(err);
     }

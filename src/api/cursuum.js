@@ -19,12 +19,9 @@ module.exports = function CursuumAPI(conn) {
         }
       );
     },
-    getFriendsForUser: function(userId, callback) {
+    getFriendsForUser: function(userId, searchFor, callback) {
       conn.query(
-        `SELECT *
-        FROM friends
-        JOIN users ON users.id = friends.friend2Id
-        WHERE friend1Id = ?`, [userId], function(err, friends) {
+        `SELECT * FROM friends JOIN users ON users.id = friends.friend2Id WHERE friend1Id = ? AND users.firstName COLLATE UTF8_GENERAL_CI LIKE ?`, [userId, '%'+searchFor+'%'], function(err, friends) {
           if (err) {
             callback(err);
           }
@@ -140,10 +137,9 @@ module.exports = function CursuumAPI(conn) {
           userId,
           title,
           description,
-          categoryId,
-          locationLat,
-          locationLng) VALUES (?, ?, ?, ?, ?, ?)`,
-          [eventData.userId, eventData.title, eventData.description, eventData.categoryId, eventData.locationLat, eventData.locationLng],
+          category,
+          location) VALUES (?, ?, ?, ?, ?)`,
+          [eventData.userId, eventData.title, eventData.description, eventData.category, eventData.location],
         function(err, result) {
           if (err) {
             callback(err);

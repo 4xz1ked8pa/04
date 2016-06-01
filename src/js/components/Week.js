@@ -1,6 +1,10 @@
 var React = require('react');
+var WeekDayEvent = require('./WeekDayEvent.js');
 
 var Week = React.createClass({
+    getEventsForDay: function(day) {
+
+    },
     render: function() {
         var days = [],
             date = this.props.date,
@@ -19,6 +23,9 @@ var Week = React.createClass({
               <div onClick={this.props.select.bind(null, day, this.props.checkNext)} key={day.date.toString()} className={"calendar-weekday" + (day.isToday ? " today" : "") + (day.isCurrentMonth ? "" : " different-month") + (day.date.isSame(this.props.selected) ? " selected" : "")}>
                 <div className="weekday-header">
                   <span className="header-count">{day.number}</span>
+                  <div className="weekday-events">
+
+                  </div>
                 </div>
               </div>);
             date = date.clone();

@@ -43,6 +43,19 @@ var cursuumAPI = new cursuum(connection);
 //   }
 // });
 
-cursuumAPI.createEvent({}, function(err, result) {
+
+
+
+
+cursuumAPI.createEvent(
+  {
+    title: '',
+    description: '',
+    category: 'social',
+    members: [],
+    location: []
+    dates: []
+  },
+  function(err, result) {
 
 });

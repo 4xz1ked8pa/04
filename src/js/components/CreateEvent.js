@@ -5,13 +5,16 @@ var SmallSearchUnit = require('./CreateEvent/SmallSearchUnit.js');
 var SmallSearchPicked = require('./CreateEvent/SmallSearchPicked.js');
 var SmallSearchSuggested = require('./CreateEvent/SmallSearchSuggested.js');
 var EventDateSet = require('./CreateEvent/EventDateSet.js');
+import Geosuggest from "react-geosuggest";
 var axios = require('axios');
 var moment = require('moment');
 moment().format();
 
+
 var CreateEvent  = React.createClass({
   getInitialState: function(){
     return {
+      user: "",
       moment: moment(),
       showEventCategoryDropdown: false,
       showEventMembersSuggestions: false,
@@ -23,17 +26,33 @@ var CreateEvent  = React.createClass({
         members: [],
         dates: [
         ],
-        coordinates: {
-          lng: '',
-          lat: ''
-        }
+        location: ""
       },
       selectedDate: {},
       checkNext: false,
       searchMembers: [],
-      searchParameter: ""
+      searchParameter: "",
+      select: ""
 
     }
+  },
+  componentWillMount: function(){
+    var that = this;
+    axios({
+      method: 'get',
+      url: '/me'
+    }).then(function(user){
+      that.setState({user: user.data})
+    })
+  },
+  onSuggestSelect: function(e) {
+
+    var newEvenData = this.state.eventData;
+    newEvenData.location = e.label
+    this.setState({
+      eventData: newEvenData
+    })
+      console.log(e.label)
   },
   deleteMember: function(key) {
     var foundMember = this.state.eventData.members.find(function(member) {
@@ -47,40 +66,19 @@ var CreateEvent  = React.createClass({
     }
   },
   handleMembersSearch: function(e) {
-    this.state.searchParameter = e.target.value;
     console.log(e.target.value, "THIS SHOULD BE WHAT I TYPE")
     var that = this;
     if (e.target.value.length > 0 && e.target.value != ' ') {
-      that.state.showEventMembersSuggestions = true;
       axios({
         method: 'get',
-        url: '/getUserFriends'
-      }).then(function(friends) {
-        friends.data.forEach(function(friend) {
-          var nameToCheck = that.state.searchParameter.toLowerCase();
-          if (friend.firstName.toLowerCase().indexOf(nameToCheck) !== -1) {
-              if(that.state.searchMembers.length !== 0){
-                that.state.searchMembers.forEach(function(m){
-                  if(m.firstName !== friend.firstName){
-                    that.state.searchMembers.push(friend);
-                    that.setState(that.state);
-                  }
-                })
-              }
-              else {
-                that.state.searchMembers.push(friend);
-                that.setState(that.state)
-              }
-          }
-        });
-      });
-    } else if(e.target.value === ""){
-      that.setState({searchMembers: []})
-    }
-    else {
-      this.state.showEventMembersSuggestions = false;
-      this.setState(this.state);
-    }
+        url: `/getUserFriends/${that.state.user.id}/${e.target.value}`
+      }).then(function(res){
+        console.log(res.data, "THIS IS THE FRIEND");
+        that.setState({searchMembers: res.data})
+      })
+} else {
+  this.setState({searchMembers: []})
+}
   },
   handleEventDataChange: function(key, e) {
     this.state.eventData[key] = e.target.value;
@@ -182,14 +180,30 @@ var CreateEvent  = React.createClass({
         selectedDate: date
       })
   },
+addMember: function(memberId){
+  var eventMembers = this.state.eventData.members;
+  var that = this;
+  this.state.searchMembers.forEach(function (m) {
+    var found = false;
+    that.state.eventData.members.forEach(function(m){
+      if(m.id !== memberId){
+        found = false;
+      } else {
+        found = true
+      }
+    })
 
+    if(m.id === memberId && !found){
+        that.state.searchMembers = [];
+        eventMembers.push(m)
+    } else {
+      that.state.searchMembers = [];
+    }
+  })
+  this.setState(this.state)
+},
   render: function() {
-    console.log(this.state.searchMembers)
-    // console.log('THIS IS THE STATE!',this.state);
-    // this.state.eventData.dates.forEach(function(date){
-    //   console.log(date)
-    //   console.log(moment.unix(date.end).format("MMMM DD YYYY"))
-    // })
+    console.log(this.state.eventData.members, "MEMBERS IN STATE")
     var that = this;
     // console.log(this.props, "HERE BE PROPS")
     return (
@@ -218,8 +232,9 @@ var CreateEvent  = React.createClass({
                   </div>
                   <div className="event-detail location">
                     <div className="detail-search">
-                      <input type="text" placeholder="Find a location" className="search-field" />
-                      {(this.state.showEventLocationSuggestions === true) ? <SmallSearchSuggested /> : ''}
+                      <Geosuggest className="rmLP" update={this.state.suggest}
+                                            onSuggestSelect={this.onSuggestSelect} country="ca"
+                                            placeholder='Address'/>
                     </div>
                   </div>
                 </div>
