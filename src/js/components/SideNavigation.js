@@ -6,7 +6,7 @@ var SideNavigation = React.createClass({
     return {createEvent: false}
   },
   showCreateEvent: function(e){
-     e ? e.stopPropagation() : null
+      e ? e.stopPropagation() : null
       this.setState({createEvent: !this.state.createEvent})
       var that = this;
   },
@@ -65,7 +65,7 @@ var SideNavigation = React.createClass({
             </li>
           </ul>
           <ul className="site-options">
-            <CreateEvent showCreateEvent={this.showCreateEvent} hide={this.state.createEvent}/>
+            <CreateEvent hideCreateEvent={this.showCreateEvent} hide={this.state.createEvent}/>
             <li onClick={this.showCreateEvent} className="option-create-event fa fa-plus"></li>
           </ul>
         </div>

@@ -1194,13 +1194,13 @@ textarea {
       width: 100%;
       padding: 4px 6px; }
       .create-date-set .date-hours .hour-set .set-label, .create-date-set .date-hours .until-date .set-label {
-        width: 30%;
+        width: 31%;
         color: #4d4d4d;
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 300; }
       .create-date-set .date-hours .hour-set .set-options, .create-date-set .date-hours .until-date .set-options {
         display: flex;
-        width: 70%;
+        width: 69%;
         color: gray;
         align-items: center; }
     .create-date-set .date-hours .until-date {
@@ -1223,7 +1223,7 @@ textarea {
           opacity: .8;
           cursor: pointer; }
     .create-date-set .date-hours .hour-set .set-options .hour, .create-date-set .date-hours .hour-set .set-options .minutes {
-      width: 31.5px;
+      width: 34px;
       background: #f7f7f7;
       font-size: 12px;
       font-weight: 300;

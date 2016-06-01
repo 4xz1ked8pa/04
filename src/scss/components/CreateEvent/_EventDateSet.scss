@@ -31,14 +31,14 @@
       width:100%;
       padding:4px 6px;
       .set-label {
-        width:30%;
+        width:31%;
         color:darken(white,70%);
-        font-size:14px;
+        font-size:13px;
         font-weight:300;
       }
       .set-options {
         display: flex;
-        width:70%;
+        width:69%;
         color:darken(white,50%);
         align-items: center;
       }
@@ -71,7 +71,7 @@
     .hour-set {
       .set-options {
         .hour, .minutes {
-          width:31.5px;
+          width:34px;
           background: darken(white,3%);
           font-size:12px;
           font-weight:300;

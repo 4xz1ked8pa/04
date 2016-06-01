@@ -1,11 +1,17 @@
 var React = require('react');
-var Search = require('./Search.js');
 var Notify = require('./Notify.js');
 var axios = require('axios')
+var SearchResults = require('./SearchResults.js');
 
 var Navigation = React.createClass({
   getInitialState: function() {
     return {
+      searchMembers: [
+        {
+          name: 'Charles Gaudreau Jackson',
+          network: 'Cursuum'
+        }
+      ],
       name: ''
     }
   },
@@ -17,10 +23,13 @@ var Navigation = React.createClass({
     }).then(function (response) {
       if (response.data) {
         that.setState({
-          name: response.data.firstName + response.data.lastName
+          name: response.data.firstName
         })
       }
     });
+  },
+  handleSearch: function() {
+
   },
   render: function() {
     return (
@@ -32,7 +41,10 @@ var Navigation = React.createClass({
             <div className="user-name">{this.state.name}</div>
           </div>
           <Notify />
-          <Search />
+          <div className="site-search">
+            <input type="text" className="search-field" placeholder="Search for schedules, people, events and more..." />
+            {(this.state.searchMembers.length > 0) ? <SearchResults list={this.state.searchMembers} /> : ''}
+          </div>
         </div>
       </nav>
     );

@@ -14,6 +14,7 @@ var Register = React.createClass({
     this.setState(data);
   },
   submit: function(e) {
+    console.log(e);
     e.preventDefault();
     var that = this;
     axios({

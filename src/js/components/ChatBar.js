@@ -5,6 +5,7 @@ var axios = require('axios');
 var ChatBar = React.createClass({
   getInitialState: function() {
     return {
+      user: '',
       userFriends: []
     };
   },
@@ -12,7 +13,7 @@ var ChatBar = React.createClass({
     var that = this;
     axios({
       method: 'get',
-      url: '/getUserFriends'
+      url: `/getUserChatFriends`
     }).then(function(response) {
       if (response.data) {
         that.setState({
@@ -28,7 +29,7 @@ var ChatBar = React.createClass({
           <div className="chat-bar-users">
             {
               this.state.userFriends.map(function(friend) {
-                return <ChatBarUser key={friend.id} name={friend.firstName} />
+                  return <ChatBarUser key={friend.id} name={friend.firstName} />;
               })
             }
           </div>

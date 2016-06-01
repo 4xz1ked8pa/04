@@ -25,14 +25,14 @@ var cursuumAPI = new cursuum(connection);
 // });
 
 
-// cursuumAPI.createFriendship(14,8, function(err, friendship) {
-//   if (err) {
-//     console.log(err.stack);
-//   }
-//   else {
-//     console.log(friendship);
-//   }
-// });
+cursuumAPI.createFriendship(1,6, function(err, friendship) {
+  if (err) {
+    console.log(err.stack);
+  }
+  else {
+    console.log(friendship);
+  }
+});
 
 // cursuumAPI.getFriendsForUser(14, function(err, friends) {
 //   if (err) {
@@ -42,20 +42,3 @@ var cursuumAPI = new cursuum(connection);
 //     console.log(friends);
 //   }
 // });
-
-
-
-
-
-cursuumAPI.createEvent(
-  {
-    title: '',
-    description: '',
-    category: 'social',
-    members: [],
-    location: []
-    dates: []
-  },
-  function(err, result) {
-
-});

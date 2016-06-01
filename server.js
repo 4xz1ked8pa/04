@@ -25,7 +25,8 @@ app.use(cookieParser()); // this middleware will add a `cookies` property to the
 function checkLoginToken(request, response, next) {
   // check if there's a SESSION cookie...
   if (request.cookies.SESSION) {
-    CursuumAPI.getUserFromSession(request.cookies.SESSION, function(err, user) {
+    CursuumAPI.getUserFromSession(Number(request.cookies.SESSION), function(err, user) {
+      console.log(err);
       // if we get back a user object, set it on the request. From now on, this request looks like it was made by this user as far as the rest of the code is concerned
       if (user) {
         request.loggedInUser = user;
@@ -43,6 +44,27 @@ function checkLoginToken(request, response, next) {
 app.use(checkLoginToken);
 
 /* Routes */
+app.get('/getUserEvents/:userId', function(req, res) {
+  CursuumAPI.getUserEvents(req.params.userId, function(err, events) {
+    if (err) {
+      res.status(500).send(err.stack);
+    }
+    else {
+      res.send(events);
+    }
+  });
+});
+
+app.get('/getUserChatFriends', function(req, res) {
+  CursuumAPI.getUserChatFriends(req.loggedInUser.id, function(err, chatFriends) {
+    if (err) {
+      res.status(500).send(err);
+    }
+    else {
+      res.send(chatFriends);
+    }
+  });
+});
 app.get('/getUserFriends/:userId/:friend', function(req, res) {
 
   if (req.query.userId) {
@@ -77,6 +99,7 @@ app.post('/register', function(req, res) {
         fullName: req.body.fullName,
         password: req.body.password,
         email: req.body.email,
+        network: req.body.network,
         phone: req.body.phone
       }
       CursuumAPI.createUser(parsedData, function (err, user) {
@@ -101,10 +124,12 @@ app.post('/login', function(request, response) {
       // password is OK!
       // we have to create a token and send it to the user in his cookies, then add it to our sessions table!
       CursuumAPI.createSession(user.id, function(err, token) {
+      console.log(err);
         if (err) {
-          response.status(500).send('an error occurred. please try again later!');
+
         }
         else {
+          console.log(token);
           response.cookie('SESSION', token); // the secret token is now in the user's cookies!
           response.send({token: token});
         }
@@ -123,23 +148,22 @@ app.get('/profile/:userId', function(request, response) {
   });
 })
 app.post('/createEvent', function(request, response) {
-  Cursuum.createEvent(
+  CursuumAPI.createEvent(
     {
       title: request.body.title,
       description: request.body.title,
-      categoryId: request.body.categoryId,
-      userId: request.body.userId,
-      locationLat: request.body.locationLat,
-      locationLng: request.body.locationLng,
+      categoryId: request.body.category,
+      userId: request.loggedInUser.id,
+      location: request.body.location,
       dates: request.body.dates,
-      member: request.body.members
+      members: request.body.members
     },
     function(err, event) {
       if (err) {
-        response.status(500).send(err);
+        response.status(500).send(err.stack);
       }
       else {
-        response.send('event created!');
+        response.send(event);
       }
     });
 })

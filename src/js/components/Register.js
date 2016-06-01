@@ -7,6 +7,7 @@ var Register = React.createClass({
       fullName: '',
       password: '',
       email: '',
+      network: '',
       phone: '',
       status: true
     });
@@ -47,6 +48,7 @@ var Register = React.createClass({
               <input type="text" placeholder="Full name" name="register-name" value={this.state.fullName} onChange={this.handleChange.bind(this,'fullName')} />
               <input type="password" placeholder="Password" name="register-password" value={this.state.password} onChange={this.handleChange.bind(this,'password')} />
               <input type="text" placeholder="Email address" name="register-email" value={this.state.email} onChange={this.handleChange.bind(this,'email')} />
+              <input type="text" placeholder="Network" name="register-network" value={this.state.network} onChange={this.handleChange.bind(this,'network')} />
               <input type="text" placeholder="Phone number" name="register-phone" value={this.state.phone} onChange={this.handleChange.bind(this,'phone')} />
             </div>
             <button>register</button>

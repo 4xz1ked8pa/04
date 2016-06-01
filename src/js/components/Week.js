@@ -19,20 +19,28 @@ var Week = React.createClass({
                 date: date
             };
 
+            var todayEvents = [];
+
+            this.props.events.forEach(
+              function(evt) {
+                if (date.toISOString() >= evt.startDate && date.toISOString() <= evt.endDate) {
+                  todayEvents.push(evt);
+                }
+              }
+            )
+
             days.push(
               <div onClick={this.props.select.bind(null, day, this.props.checkNext)} key={day.date.toString()} className={"calendar-weekday" + (day.isToday ? " today" : "") + (day.isCurrentMonth ? "" : " different-month") + (day.date.isSame(this.props.selected) ? " selected" : "")}>
                 <div className="weekday-header">
                   <span className="header-count">{day.number}</span>
                   <div className="weekday-events">
-
+                    {todayEvents.map(evt => <div>{evt.title}</div>)}
                   </div>
                 </div>
               </div>);
             date = date.clone();
             date.add(1, "d");
-
         }
-
         return (
           <div className="calendar-week" key={days[0].toString()}>
               {days}

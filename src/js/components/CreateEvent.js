@@ -66,14 +66,12 @@ var CreateEvent  = React.createClass({
     }
   },
   handleMembersSearch: function(e) {
-    console.log(e.target.value, "THIS SHOULD BE WHAT I TYPE")
     var that = this;
     if (e.target.value.length > 0 && e.target.value != ' ') {
       axios({
         method: 'get',
         url: `/getUserFriends/${that.state.user.id}/${e.target.value}`
       }).then(function(res){
-        console.log(res.data, "THIS IS THE FRIEND");
         that.setState({searchMembers: res.data})
       })
 } else {
@@ -85,20 +83,17 @@ var CreateEvent  = React.createClass({
     this.setState(this.state);
   },
   createEvent: function() {
+    var that = this;
+    console.log('EVENT CREATED!',this.state.eventData);
     axios({
       method: 'post',
       url: '/createEvent',
-      data: {
-        userId: axios.get('/me').id,
-        title: this.state.eventData.title,
-        description: this.state.eventData.description,
-        categoryId: this.state.eventData.categoryId,
-        location: this.state.eventData.location
+      data: this.state.eventData
+    }).then(
+      function(result) {
+        that.props.hideCreateEvent();
       }
-    }).then(function() {
-
-    });
-    // console.log('EVENT CREATED!',this.state.eventData);
+    );
   },
   setSelectedDate: function(date, nextDay){
     var that = this;
@@ -240,12 +235,12 @@ addMember: function(memberId){
                 </div>
                 <div className="details-right small-calendar">
                   <div className="small-calendar-wrap">
-                    <Calendar checkNext={this.state.checkNext} onDateSelect={this.setSelectedDate}  selected={this.state.moment} />
+                    <Calendar events={[]} checkNext={this.state.checkNext} onDateSelect={this.setSelectedDate}  selected={this.state.moment} />
                   </div>
                 </div>
               </div>
               <div className="window-submit">
-                <button className="cancel-button">CANCEL</button>
+                <button className="cancel-button" onClick={this.props.hideCreateEvent}>CANCEL</button>
                 <button className="submit-button" onClick={this.createEvent}>CREATE EVENT</button>
               </div>
             </div>

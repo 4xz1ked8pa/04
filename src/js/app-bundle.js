@@ -56,15 +56,15 @@
 	var browserHistory = ReactRouter.browserHistory;
 	
 	var App = __webpack_require__(220);
-	var Home = __webpack_require__(358);
-	var Schedule = __webpack_require__(359);
-	var Profile = __webpack_require__(360);
-	var Register = __webpack_require__(368);
-	var Login = __webpack_require__(369);
-	var CreateEvent = __webpack_require__(248);
-	var NotFound = __webpack_require__(370);
+	var Home = __webpack_require__(371);
+	var Schedule = __webpack_require__(372);
+	var Profile = __webpack_require__(373);
+	var Register = __webpack_require__(380);
+	var Login = __webpack_require__(381);
+	var CreateEvent = __webpack_require__(247);
+	var NotFound = __webpack_require__(382);
 	
-	var moment = __webpack_require__(254);
+	var moment = __webpack_require__(260);
 	
 	var routes = React.createElement(
 	  Router,
@@ -79,8 +79,8 @@
 	      Route,
 	      { component: App },
 	      React.createElement(Route, { path: 'create', component: CreateEvent }),
-	      React.createElement(Route, { path: 'schedule', component: Schedule }),
-	      React.createElement(Route, { path: 'profile', component: Profile })
+	      React.createElement(Route, { path: 'schedule/:userId', component: Schedule }),
+	      React.createElement(Route, { path: 'profile/', component: Profile })
 	    ),
 	    React.createElement(Route, { path: '*', component: NotFound })
 	  )
@@ -25212,11 +25212,11 @@
 	
 	var React = __webpack_require__(1);
 	var Navigation = __webpack_require__(221);
-	var SideNavigation = __webpack_require__(247);
-	var ChatBar = __webpack_require__(249);
-	var CreateEvent = __webpack_require__(248);
-	var Calendar = __webpack_require__(251);
-	var MainHeader = __webpack_require__(357);
+	var SideNavigation = __webpack_require__(246);
+	var ChatBar = __webpack_require__(368);
+	var CreateEvent = __webpack_require__(247);
+	var Calendar = __webpack_require__(256);
+	var MainHeader = __webpack_require__(370);
 	
 	// The main application layout
 	// this.props.children will be set by React Router depending on the current route
@@ -25250,15 +25250,19 @@
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var Search = __webpack_require__(222);
-	var Notify = __webpack_require__(225);
-	var axios = __webpack_require__(229);
+	var Notify = __webpack_require__(222);
+	var axios = __webpack_require__(226);
+	var SearchResults = __webpack_require__(244);
 	
 	var Navigation = React.createClass({
 	  displayName: 'Navigation',
 	
 	  getInitialState: function getInitialState() {
 	    return {
+	      searchMembers: [{
+	        name: 'Charles Gaudreau Jackson',
+	        network: 'Cursuum'
+	      }],
 	      name: ''
 	    };
 	  },
@@ -25270,11 +25274,12 @@
 	    }).then(function (response) {
 	      if (response.data) {
 	        that.setState({
-	          name: response.data.firstName + response.data.lastName
+	          name: response.data.firstName
 	        });
 	      }
 	    });
 	  },
+	  handleSearch: function handleSearch() {},
 	  render: function render() {
 	    return React.createElement(
 	      'nav',
@@ -25294,7 +25299,12 @@
 	          )
 	        ),
 	        React.createElement(Notify, null),
-	        React.createElement(Search, null)
+	        React.createElement(
+	          'div',
+	          { className: 'site-search' },
+	          React.createElement('input', { type: 'text', className: 'search-field', placeholder: 'Search for schedules, people, events and more...' }),
+	          this.state.searchMembers.length > 0 ? React.createElement(SearchResults, { list: this.state.searchMembers }) : ''
+	        )
 	      )
 	    );
 	  }
@@ -25309,103 +25319,7 @@
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var SearchResults = __webpack_require__(223);
-	
-	var Navigation = React.createClass({
-	  displayName: 'Navigation',
-	
-	  render: function render() {
-	    return React.createElement(
-	      'nav',
-	      { className: 'site-search' },
-	      React.createElement('input', { type: 'text', className: 'search-field', placeholder: 'Search for schedules, people, events and more...' }),
-	      React.createElement(SearchResults, null)
-	    );
-	  }
-	});
-	
-	module.exports = Navigation;
-
-/***/ },
-/* 223 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(1);
-	var SearchResult = __webpack_require__(224);
-	
-	var SearchResults = React.createClass({
-	  displayName: 'SearchResults',
-	
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      { className: 'site-search-results' },
-	      React.createElement(
-	        'header',
-	        { className: 'results-header' },
-	        'PEOPLE'
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'results-list' },
-	        React.createElement(SearchResult, { title: 'Nathan Holt', network: 'Concordia University' }),
-	        React.createElement(SearchResult, { title: 'Deborah Miller', network: 'University of Montreal' }),
-	        React.createElement(SearchResult, { title: 'Julian Dennis', network: 'Thirdshelf' }),
-	        React.createElement(SearchResult, { title: 'Jean Klein', network: 'Collège Jean-de-Brébeuf' }),
-	        React.createElement(SearchResult, { title: 'Christie Duncan', network: 'Startup Festival' })
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = SearchResults;
-
-/***/ },
-/* 224 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var React = __webpack_require__(1);
-	
-	var SearchResult = React.createClass({
-	  displayName: "SearchResult",
-	
-	  render: function render() {
-	    return React.createElement(
-	      "div",
-	      { className: "site-search-result" },
-	      React.createElement("div", { className: "result-picture" }),
-	      React.createElement(
-	        "div",
-	        { className: "result-details" },
-	        React.createElement(
-	          "div",
-	          { className: "detail-title" },
-	          this.props.title
-	        ),
-	        React.createElement(
-	          "div",
-	          { className: "detail-network" },
-	          this.props.network
-	        )
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = SearchResult;
-
-/***/ },
-/* 225 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(1);
-	var NotifyResults = __webpack_require__(226);
+	var NotifyResults = __webpack_require__(223);
 	
 	var SearchResults = React.createClass({
 	  displayName: 'SearchResults',
@@ -25431,13 +25345,13 @@
 	module.exports = SearchResults;
 
 /***/ },
-/* 226 */
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var NotifyResult = __webpack_require__(227);
+	var NotifyResult = __webpack_require__(224);
 	
 	var SearchResults = React.createClass({
 	  displayName: 'SearchResults',
@@ -25471,13 +25385,13 @@
 	module.exports = SearchResults;
 
 /***/ },
-/* 227 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var ConnectionButton = __webpack_require__(228);
+	var ConnectionButton = __webpack_require__(225);
 	
 	var NotifyResult = React.createClass({
 	  displayName: 'NotifyResult',
@@ -25509,7 +25423,7 @@
 	module.exports = NotifyResult;
 
 /***/ },
-/* 228 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -25535,25 +25449,25 @@
 	module.exports = ConnectionButton;
 
 /***/ },
-/* 229 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(230);
+	module.exports = __webpack_require__(227);
 
 /***/ },
-/* 230 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var defaults = __webpack_require__(231);
-	var utils = __webpack_require__(232);
-	var dispatchRequest = __webpack_require__(233);
-	var InterceptorManager = __webpack_require__(242);
-	var isAbsoluteURL = __webpack_require__(243);
-	var combineURLs = __webpack_require__(244);
-	var bind = __webpack_require__(245);
-	var transformData = __webpack_require__(237);
+	var defaults = __webpack_require__(228);
+	var utils = __webpack_require__(229);
+	var dispatchRequest = __webpack_require__(230);
+	var InterceptorManager = __webpack_require__(239);
+	var isAbsoluteURL = __webpack_require__(240);
+	var combineURLs = __webpack_require__(241);
+	var bind = __webpack_require__(242);
+	var transformData = __webpack_require__(234);
 	
 	function Axios(defaultConfig) {
 	  this.defaults = utils.merge({}, defaultConfig);
@@ -25639,7 +25553,7 @@
 	axios.all = function all(promises) {
 	  return Promise.all(promises);
 	};
-	axios.spread = __webpack_require__(246);
+	axios.spread = __webpack_require__(243);
 	
 	// Provide aliases for supported request methods
 	utils.forEach(['delete', 'get', 'head'], function forEachMethodNoData(method) {
@@ -25667,12 +25581,12 @@
 
 
 /***/ },
-/* 231 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(232);
+	var utils = __webpack_require__(229);
 	
 	var PROTECTION_PREFIX = /^\)\]\}',?\n/;
 	var DEFAULT_CONTENT_TYPE = {
@@ -25739,7 +25653,7 @@
 
 
 /***/ },
-/* 232 */
+/* 229 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26011,7 +25925,7 @@
 
 
 /***/ },
-/* 233 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -26033,10 +25947,10 @@
 	        adapter = config.adapter;
 	      } else if (typeof XMLHttpRequest !== 'undefined') {
 	        // For browsers use XHR adapter
-	        adapter = __webpack_require__(234);
+	        adapter = __webpack_require__(231);
 	      } else if (typeof process !== 'undefined') {
 	        // For node use HTTP adapter
-	        adapter = __webpack_require__(234);
+	        adapter = __webpack_require__(231);
 	      }
 	
 	      if (typeof adapter === 'function') {
@@ -26052,18 +25966,18 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 234 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 	
-	var utils = __webpack_require__(232);
-	var buildURL = __webpack_require__(235);
-	var parseHeaders = __webpack_require__(236);
-	var transformData = __webpack_require__(237);
-	var isURLSameOrigin = __webpack_require__(238);
-	var btoa = (typeof window !== 'undefined' && window.btoa) || __webpack_require__(239);
-	var settle = __webpack_require__(240);
+	var utils = __webpack_require__(229);
+	var buildURL = __webpack_require__(232);
+	var parseHeaders = __webpack_require__(233);
+	var transformData = __webpack_require__(234);
+	var isURLSameOrigin = __webpack_require__(235);
+	var btoa = (typeof window !== 'undefined' && window.btoa) || __webpack_require__(236);
+	var settle = __webpack_require__(237);
 	
 	module.exports = function xhrAdapter(resolve, reject, config) {
 	  var requestData = config.data;
@@ -26160,7 +26074,7 @@
 	  // This is only done if running in a standard browser environment.
 	  // Specifically not if we're in a web worker, or react-native.
 	  if (utils.isStandardBrowserEnv()) {
-	    var cookies = __webpack_require__(241);
+	    var cookies = __webpack_require__(238);
 	
 	    // Add xsrf header
 	    var xsrfValue = config.withCredentials || isURLSameOrigin(config.url) ?
@@ -26221,12 +26135,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 235 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(232);
+	var utils = __webpack_require__(229);
 	
 	function encode(val) {
 	  return encodeURIComponent(val).
@@ -26294,12 +26208,12 @@
 
 
 /***/ },
-/* 236 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(232);
+	var utils = __webpack_require__(229);
 	
 	/**
 	 * Parse headers into an object
@@ -26337,12 +26251,12 @@
 
 
 /***/ },
-/* 237 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(232);
+	var utils = __webpack_require__(229);
 	
 	/**
 	 * Transform the data for a request or a response
@@ -26363,12 +26277,12 @@
 
 
 /***/ },
-/* 238 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(232);
+	var utils = __webpack_require__(229);
 	
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -26437,7 +26351,7 @@
 
 
 /***/ },
-/* 239 */
+/* 236 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26479,7 +26393,7 @@
 
 
 /***/ },
-/* 240 */
+/* 237 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26503,12 +26417,12 @@
 
 
 /***/ },
-/* 241 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(232);
+	var utils = __webpack_require__(229);
 	
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -26562,12 +26476,12 @@
 
 
 /***/ },
-/* 242 */
+/* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(232);
+	var utils = __webpack_require__(229);
 	
 	function InterceptorManager() {
 	  this.handlers = [];
@@ -26620,7 +26534,7 @@
 
 
 /***/ },
-/* 243 */
+/* 240 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26640,7 +26554,7 @@
 
 
 /***/ },
-/* 244 */
+/* 241 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26658,7 +26572,7 @@
 
 
 /***/ },
-/* 245 */
+/* 242 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26675,7 +26589,7 @@
 
 
 /***/ },
-/* 246 */
+/* 243 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -26708,13 +26622,85 @@
 
 
 /***/ },
-/* 247 */
+/* 244 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var SearchResult = __webpack_require__(245);
+	
+	var SearchResults = React.createClass({
+	  displayName: 'SearchResults',
+	
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'site-search-results' },
+	      React.createElement(
+	        'header',
+	        { className: 'results-header' },
+	        'PEOPLE'
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'results-list' },
+	        React.createElement(SearchResult, { title: 'Nathan Holt', network: 'Concordia University' }),
+	        React.createElement(SearchResult, { title: 'Deborah Miller', network: 'University of Montreal' }),
+	        React.createElement(SearchResult, { title: 'Julian Dennis', network: 'Thirdshelf' }),
+	        React.createElement(SearchResult, { title: 'Jean Klein', network: 'Collège Jean-de-Brébeuf' }),
+	        React.createElement(SearchResult, { title: 'Christie Duncan', network: 'Startup Festival' })
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = SearchResults;
+
+/***/ },
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
 	var React = __webpack_require__(1);
-	var CreateEvent = __webpack_require__(248);
+	
+	var SearchResult = React.createClass({
+	  displayName: "SearchResult",
+	
+	  render: function render() {
+	    return React.createElement(
+	      "div",
+	      { className: "site-search-result" },
+	      React.createElement("div", { className: "result-picture" }),
+	      React.createElement(
+	        "div",
+	        { className: "result-details" },
+	        React.createElement(
+	          "div",
+	          { className: "detail-title" },
+	          this.props.title
+	        ),
+	        React.createElement(
+	          "div",
+	          { className: "detail-network" },
+	          this.props.network
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = SearchResult;
+
+/***/ },
+/* 246 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var React = __webpack_require__(1);
+	var CreateEvent = __webpack_require__(247);
 	
 	var SideNavigation = React.createClass({
 	  displayName: "SideNavigation",
@@ -26908,7 +26894,7 @@
 	        React.createElement(
 	          "ul",
 	          { className: "site-options" },
-	          React.createElement(CreateEvent, { showCreateEvent: this.showCreateEvent, hide: this.state.createEvent }),
+	          React.createElement(CreateEvent, { hideCreateEvent: this.showCreateEvent, hide: this.state.createEvent }),
 	          React.createElement("li", { onClick: this.showCreateEvent, className: "option-create-event fa fa-plus" })
 	        )
 	      )
@@ -26919,27 +26905,27 @@
 	module.exports = SideNavigation;
 
 /***/ },
-/* 248 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _reactGeosuggest = __webpack_require__(376);
+	var _reactGeosuggest = __webpack_require__(248);
 	
 	var _reactGeosuggest2 = _interopRequireDefault(_reactGeosuggest);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var React = __webpack_require__(1);
-	var Calendar = __webpack_require__(251);
-	var Dropdown = __webpack_require__(365);
-	var SmallSearchUnit = __webpack_require__(371);
-	var SmallSearchPicked = __webpack_require__(372);
-	var SmallSearchSuggested = __webpack_require__(373);
-	var EventDateSet = __webpack_require__(374);
+	var Calendar = __webpack_require__(256);
+	var Dropdown = __webpack_require__(363);
+	var SmallSearchUnit = __webpack_require__(364);
+	var SmallSearchPicked = __webpack_require__(365);
+	var SmallSearchSuggested = __webpack_require__(366);
+	var EventDateSet = __webpack_require__(367);
 	
-	var axios = __webpack_require__(229);
-	var moment = __webpack_require__(254);
+	var axios = __webpack_require__(226);
+	var moment = __webpack_require__(260);
 	moment().format();
 	
 	var CreateEvent = React.createClass({
@@ -26998,14 +26984,12 @@
 	    }
 	  },
 	  handleMembersSearch: function handleMembersSearch(e) {
-	    console.log(e.target.value, "THIS SHOULD BE WHAT I TYPE");
 	    var that = this;
 	    if (e.target.value.length > 0 && e.target.value != ' ') {
 	      axios({
 	        method: 'get',
 	        url: '/getUserFriends/' + that.state.user.id + '/' + e.target.value
 	      }).then(function (res) {
-	        console.log(res.data, "THIS IS THE FRIEND");
 	        that.setState({ searchMembers: res.data });
 	      });
 	    } else {
@@ -27017,18 +27001,15 @@
 	    this.setState(this.state);
 	  },
 	  createEvent: function createEvent() {
+	    var that = this;
+	    console.log('EVENT CREATED!', this.state.eventData);
 	    axios({
 	      method: 'post',
 	      url: '/createEvent',
-	      data: {
-	        userId: axios.get('/me').id,
-	        title: this.state.eventData.title,
-	        description: this.state.eventData.description,
-	        categoryId: this.state.eventData.categoryId,
-	        location: this.state.eventData.location
-	      }
-	    }).then(function () {});
-	    // console.log('EVENT CREATED!',this.state.eventData);
+	      data: this.state.eventData
+	    }).then(function (result) {
+	      that.props.hideCreateEvent();
+	    });
 	  },
 	  setSelectedDate: function setSelectedDate(date, nextDay) {
 	    var that = this;
@@ -27198,7 +27179,7 @@
 	                React.createElement(
 	                  'div',
 	                  { className: 'small-calendar-wrap' },
-	                  React.createElement(Calendar, { checkNext: this.state.checkNext, onDateSelect: this.setSelectedDate, selected: this.state.moment })
+	                  React.createElement(Calendar, { events: [], checkNext: this.state.checkNext, onDateSelect: this.setSelectedDate, selected: this.state.moment })
 	                )
 	              )
 	            ),
@@ -27207,7 +27188,7 @@
 	              { className: 'window-submit' },
 	              React.createElement(
 	                'button',
-	                { className: 'cancel-button' },
+	                { className: 'cancel-button', onClick: this.props.hideCreateEvent },
 	                'CANCEL'
 	              ),
 	              React.createElement(
@@ -27233,97 +27214,581 @@
 	module.exports = CreateEvent;
 
 /***/ },
-/* 249 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var React = __webpack_require__(1);
-	var ChatBarUser = __webpack_require__(250);
-	var axios = __webpack_require__(229);
-	
-	var ChatBar = React.createClass({
-	  displayName: 'ChatBar',
-	
-	  getInitialState: function getInitialState() {
-	    return {
-	      userFriends: []
-	    };
-	  },
-	  componentDidMount: function componentDidMount() {
-	    var that = this;
-	    axios({
-	      method: 'get',
-	      url: '/getUserFriends'
-	    }).then(function (response) {
-	      if (response.data) {
-	        that.setState({
-	          userFriends: response.data
-	        });
-	      }
-	    });
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      'aside',
-	      { className: 'site-chat-bar' },
-	      React.createElement(
-	        'div',
-	        { className: 'chat-bar-primary' },
-	        React.createElement(
-	          'div',
-	          { className: 'chat-bar-users' },
-	          this.state.userFriends.map(function (friend) {
-	            return React.createElement(ChatBarUser, { key: friend.id, name: friend.firstName });
-	          })
-	        ),
-	        React.createElement(
-	          'ul',
-	          { className: 'chat-bar-options' },
-	          React.createElement(
-	            'li',
-	            { className: 'option-search' },
-	            React.createElement('input', { type: 'text', placeholder: 'Search...' })
-	          ),
-	          React.createElement(
-	            'li',
-	            { className: 'option-status' },
-	            React.createElement('span', { className: 'status-tick' })
-	          )
-	        )
-	      )
-	    );
-	  }
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
 	});
 	
-	module.exports = ChatBar;
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _classnames = __webpack_require__(249);
+	
+	var _classnames2 = _interopRequireDefault(_classnames);
+	
+	var _defaults = __webpack_require__(250);
+	
+	var _defaults2 = _interopRequireDefault(_defaults);
+	
+	var _propTypes = __webpack_require__(251);
+	
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+	
+	var _filterInputAttributes = __webpack_require__(252);
+	
+	var _filterInputAttributes2 = _interopRequireDefault(_filterInputAttributes);
+	
+	var _input = __webpack_require__(253);
+	
+	var _input2 = _interopRequireDefault(_input);
+	
+	var _suggestList = __webpack_require__(254);
+	
+	var _suggestList2 = _interopRequireDefault(_suggestList);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* global window */
+	
+	// Escapes special characters in user input for regex
+	function escapeRegExp(str) {
+	  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+	}
+	
+	/**
+	 * Entry point for the Geosuggest component
+	 */
+	
+	var Geosuggest = function (_React$Component) {
+	  _inherits(Geosuggest, _React$Component);
+	
+	  /**
+	   * The constructor. Sets the initial state.
+	   * @param  {Object} props The properties object.
+	   */
+	
+	  function Geosuggest(props) {
+	    _classCallCheck(this, Geosuggest);
+	
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Geosuggest).call(this, props));
+	
+	    _this.state = {
+	      isSuggestsHidden: true,
+	      userInput: props.initialValue,
+	      activeSuggest: null,
+	      suggests: [],
+	      timer: null
+	    };
+	    return _this;
+	  }
+	
+	  /**
+	   * Change inputValue if prop changes
+	   * @param {Object} props The new props
+	   */
+	
+	
+	  _createClass(Geosuggest, [{
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(props) {
+	      if (this.props.initialValue !== props.initialValue) {
+	        this.setState({ userInput: props.initialValue });
+	      }
+	    }
+	
+	    /**
+	     * Called on the client side after component is mounted.
+	     * Google api sdk object will be obtained and cached as a instance property.
+	     * Necessary objects of google api will also be determined and saved.
+	     */
+	
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.setState({ userInput: this.props.initialValue });
+	
+	      var googleMaps = this.props.googleMaps || window.google && // eslint-disable-line no-extra-parens
+	      window.google.maps || this.googleMaps;
+	
+	      if (!googleMaps) {
+	        console.error( // eslint-disable-line no-console
+	        'Google map api was not found in the page.');
+	        return;
+	      }
+	      this.googleMaps = googleMaps;
+	
+	      this.autocompleteService = new googleMaps.places.AutocompleteService();
+	      this.geocoder = new googleMaps.Geocoder();
+	    }
+	
+	    /**
+	     * When the component will unmount
+	     */
+	
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      clearTimeout(this.state.timer);
+	    }
+	
+	    /**
+	     * When the input got changed
+	     * @param {String} userInput The input value of the user
+	     */
+	
+	  }, {
+	    key: 'onInputChange',
+	    value: function onInputChange(userInput) {
+	      var _this2 = this;
+	
+	      this.setState({ userInput: userInput }, function () {
+	        _this2.showSuggests();
+	        _this2.props.onChange(userInput);
+	      });
+	    }
+	
+	    /**
+	     * When the input gets focused
+	     */
+	
+	  }, {
+	    key: 'onInputFocus',
+	    value: function onInputFocus() {
+	      this.props.onFocus();
+	      this.showSuggests();
+	    }
+	
+	    /**
+	     * When the input gets blurred
+	     */
+	
+	  }, {
+	    key: 'onInputBlur',
+	    value: function onInputBlur() {
+	      if (!this.state.ignoreBlur) {
+	        this.hideSuggests();
+	      }
+	    }
+	
+	    /**
+	     * Focus the input
+	     */
+	
+	  }, {
+	    key: 'focus',
+	    value: function focus() {
+	      this.refs.input.focus();
+	    }
+	
+	    /**
+	     * Update the value of the user input
+	     * @param {String} userInput the new value of the user input
+	     */
+	
+	  }, {
+	    key: 'update',
+	    value: function update(userInput) {
+	      this.setState({ userInput: userInput });
+	      this.props.onChange(userInput);
+	    }
+	
+	    /*
+	     * Clear the input and close the suggestion pane
+	     */
+	
+	  }, {
+	    key: 'clear',
+	    value: function clear() {
+	      var _this3 = this;
+	
+	      this.setState({ userInput: '' }, function () {
+	        return _this3.hideSuggests();
+	      });
+	    }
+	
+	    /**
+	     * Search for new suggests
+	     */
+	
+	  }, {
+	    key: 'searchSuggests',
+	    value: function searchSuggests() {
+	      var _this4 = this;
+	
+	      if (!this.state.userInput) {
+	        this.updateSuggests();
+	        return;
+	      }
+	
+	      var options = {
+	        input: this.state.userInput
+	      };
+	
+	      ['location', 'radius', 'bounds', 'types'].forEach(function (option) {
+	        if (_this4.props[option]) {
+	          options[option] = _this4.props[option];
+	        }
+	      });
+	
+	      if (this.props.country) {
+	        options.componentRestrictions = {
+	          country: this.props.country
+	        };
+	      }
+	
+	      this.autocompleteService.getPlacePredictions(options, function (suggestsGoogle) {
+	        _this4.updateSuggests(suggestsGoogle || []); // can be null
+	
+	        if (_this4.props.autoActivateFirstSuggest) {
+	          _this4.activateSuggest('next');
+	        }
+	      });
+	    }
+	
+	    /**
+	     * Update the suggests
+	     * @param  {Array} suggestsGoogle The new google suggests
+	     */
+	
+	  }, {
+	    key: 'updateSuggests',
+	    value: function updateSuggests() {
+	      var _this5 = this;
+	
+	      var suggestsGoogle = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+	
+	      var suggests = [],
+	          regex = new RegExp(escapeRegExp(this.state.userInput), 'gim'),
+	          skipSuggest = this.props.skipSuggest,
+	          maxFixtures = 10,
+	          fixturesSearched = 0;
+	
+	      this.props.fixtures.forEach(function (suggest) {
+	        if (fixturesSearched >= maxFixtures) {
+	          return;
+	        }
+	
+	        if (!skipSuggest(suggest) && suggest.label.match(regex)) {
+	          fixturesSearched++;
+	
+	          suggest.placeId = suggest.label;
+	          suggests.push(suggest);
+	        }
+	      });
+	
+	      suggestsGoogle.forEach(function (suggest) {
+	        if (!skipSuggest(suggest)) {
+	          suggests.push({
+	            label: _this5.props.getSuggestLabel(suggest),
+	            placeId: suggest.place_id
+	          });
+	        }
+	      });
+	
+	      this.setState({ suggests: suggests });
+	    }
+	
+	    /**
+	     * Show the suggestions
+	     */
+	
+	  }, {
+	    key: 'showSuggests',
+	    value: function showSuggests() {
+	      this.searchSuggests();
+	      this.setState({ isSuggestsHidden: false });
+	    }
+	
+	    /**
+	     * Hide the suggestions
+	     */
+	
+	  }, {
+	    key: 'hideSuggests',
+	    value: function hideSuggests() {
+	      var _this6 = this;
+	
+	      this.props.onBlur();
+	      var timer = setTimeout(function () {
+	        _this6.setState({ isSuggestsHidden: true });
+	      }, 100);
+	
+	      this.setState({ timer: timer });
+	    }
+	
+	    /**
+	     * Activate a new suggest
+	     * @param {String} direction The direction in which to activate new suggest
+	     */
+	
+	  }, {
+	    key: 'activateSuggest',
+	    value: function activateSuggest(direction) {
+	      // eslint-disable-line complexity
+	      if (this.state.isSuggestsHidden) {
+	        this.showSuggests();
+	        return;
+	      }
+	
+	      var suggestsCount = this.state.suggests.length - 1,
+	          next = direction === 'next';
+	      var newActiveSuggest = null,
+	          newIndex = 0,
+	          i = 0;
+	
+	      for (i; i <= suggestsCount; i++) {
+	        if (this.state.suggests[i] === this.state.activeSuggest) {
+	          newIndex = next ? i + 1 : i - 1;
+	        }
+	      }
+	
+	      if (!this.state.activeSuggest) {
+	        newIndex = next ? 0 : suggestsCount;
+	      }
+	
+	      if (newIndex >= 0 && newIndex <= suggestsCount) {
+	        newActiveSuggest = this.state.suggests[newIndex];
+	      }
+	
+	      this.props.onActivateSuggest(newActiveSuggest);
+	
+	      this.setState({ activeSuggest: newActiveSuggest });
+	    }
+	
+	    /**
+	     * When an item got selected
+	     * @param {GeosuggestItem} suggest The selected suggest item
+	     */
+	
+	  }, {
+	    key: 'selectSuggest',
+	    value: function selectSuggest(suggest) {
+	      if (!suggest) {
+	        suggest = {
+	          label: this.state.userInput
+	        };
+	      }
+	
+	      this.setState({
+	        isSuggestsHidden: true,
+	        userInput: suggest.label
+	      });
+	
+	      if (suggest.location) {
+	        this.setState({ ignoreBlur: false });
+	        this.props.onSuggestSelect(suggest);
+	        return;
+	      }
+	
+	      this.geocodeSuggest(suggest);
+	    }
+	
+	    /**
+	     * Geocode a suggest
+	     * @param  {Object} suggest The suggest
+	     */
+	
+	  }, {
+	    key: 'geocodeSuggest',
+	    value: function geocodeSuggest(suggest) {
+	      var _this7 = this;
+	
+	      this.geocoder.geocode(suggest.placeId ? { placeId: suggest.placeId } : { address: suggest.label }, function (results, status) {
+	        if (status !== _this7.googleMaps.GeocoderStatus.OK) {
+	          return;
+	        }
+	
+	        var gmaps = results[0],
+	            location = gmaps.geometry.location;
+	
+	        suggest.gmaps = gmaps;
+	        suggest.location = {
+	          lat: location.lat(),
+	          lng: location.lng()
+	        };
+	
+	        _this7.props.onSuggestSelect(suggest);
+	      });
+	    }
+	
+	    /**
+	     * Render the view
+	     * @return {Function} The React element to render
+	     */
+	
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this8 = this;
+	
+	      var attributes = (0, _filterInputAttributes2.default)(this.props),
+	          classes = (0, _classnames2.default)('geosuggest', this.props.className);
+	      var input = _react2.default.createElement(_input2.default, _extends({ className: this.props.inputClassName,
+	        ref: 'input',
+	        value: this.state.userInput,
+	        onChange: this.onInputChange.bind(this),
+	        onFocus: this.onInputFocus.bind(this),
+	        onBlur: this.onInputBlur.bind(this),
+	        onNext: function onNext() {
+	          return _this8.activateSuggest('next');
+	        },
+	        onPrev: function onPrev() {
+	          return _this8.activateSuggest('prev');
+	        },
+	        onSelect: function onSelect() {
+	          return _this8.selectSuggest(_this8.state.activeSuggest);
+	        },
+	        onEscape: this.hideSuggests.bind(this) }, attributes)),
+	          suggestionsList = _react2.default.createElement(_suggestList2.default, { isHidden: this.state.isSuggestsHidden,
+	        suggests: this.state.suggests,
+	        activeSuggest: this.state.activeSuggest,
+	        onSuggestMouseDown: function onSuggestMouseDown() {
+	          return _this8.setState({ ignoreBlur: true });
+	        },
+	        onSuggestMouseOut: function onSuggestMouseOut() {
+	          return _this8.setState({ ignoreBlur: false });
+	        },
+	        onSuggestSelect: this.selectSuggest.bind(this) });
+	
+	      return _react2.default.createElement(
+	        'div',
+	        { className: classes },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'geosuggest__input-wrapper' },
+	          input
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'geosuggest__suggests-wrapper' },
+	          suggestionsList
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return Geosuggest;
+	}(_react2.default.Component);
+	
+	/**
+	 * Types for the properties
+	 * @type {Object}
+	 */
+	
+	
+	Geosuggest.propTypes = _propTypes2.default;
+	
+	/**
+	 * Default values for the properties
+	 * @type {Object}
+	 */
+	Geosuggest.defaultProps = _defaults2.default;
+	
+	exports.default = Geosuggest;
+
+/***/ },
+/* 249 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2016 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+	/* global define */
+	
+	(function () {
+		'use strict';
+	
+		var hasOwn = {}.hasOwnProperty;
+	
+		function classNames () {
+			var classes = [];
+	
+			for (var i = 0; i < arguments.length; i++) {
+				var arg = arguments[i];
+				if (!arg) continue;
+	
+				var argType = typeof arg;
+	
+				if (argType === 'string' || argType === 'number') {
+					classes.push(arg);
+				} else if (Array.isArray(arg)) {
+					classes.push(classNames.apply(null, arg));
+				} else if (argType === 'object') {
+					for (var key in arg) {
+						if (hasOwn.call(arg, key) && arg[key]) {
+							classes.push(key);
+						}
+					}
+				}
+			}
+	
+			return classes.join(' ');
+		}
+	
+		if (typeof module !== 'undefined' && module.exports) {
+			module.exports = classNames;
+		} else if (true) {
+			// register as 'classnames', consistent with npm package name
+			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return classNames;
+			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else {
+			window.classNames = classNames;
+		}
+	}());
+
 
 /***/ },
 /* 250 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 	
-	var React = __webpack_require__(1);
-	
-	var ChatBar = React.createClass({
-	  displayName: "ChatBar",
-	
-	  render: function render() {
-	    return React.createElement(
-	      "div",
-	      { className: "chat-bar-user" },
-	      React.createElement("div", { className: "user-picture" }),
-	      React.createElement(
-	        "span",
-	        { className: "user-name" },
-	        this.props.name
-	      )
-	    );
-	  }
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
 	});
-	
-	module.exports = ChatBar;
+	/**
+	 * Default values
+	 */
+	exports.default = {
+	  fixtures: [],
+	  initialValue: '',
+	  placeholder: 'Search places',
+	  disabled: false,
+	  className: '',
+	  inputClassName: '',
+	  location: null,
+	  radius: null,
+	  bounds: null,
+	  country: null,
+	  types: null,
+	  googleMaps: null,
+	  onActivateSuggest: function onActivateSuggest() {},
+	  onSuggestSelect: function onSuggestSelect() {},
+	  onFocus: function onFocus() {},
+	  onBlur: function onBlur() {},
+	  onChange: function onChange() {},
+	  skipSuggest: function skipSuggest() {},
+	  getSuggestLabel: function getSuggestLabel(suggest) {
+	    return suggest.description;
+	  },
+	  autoActivateFirstSuggest: false
+	};
 
 /***/ },
 /* 251 */
@@ -27331,10 +27796,357 @@
 
 	'use strict';
 	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	/**
+	 * Default values
+	 */
+	exports.default = {
+	  fixtures: _react2.default.PropTypes.array,
+	  initialValue: _react2.default.PropTypes.string,
+	  placeholder: _react2.default.PropTypes.string,
+	  disabled: _react2.default.PropTypes.bool,
+	  className: _react2.default.PropTypes.string,
+	  inputClassName: _react2.default.PropTypes.string,
+	  location: _react2.default.PropTypes.object,
+	  radius: _react2.default.PropTypes.oneOfType([_react2.default.PropTypes.string, _react2.default.PropTypes.number]),
+	  bounds: _react2.default.PropTypes.object,
+	  country: _react2.default.PropTypes.string,
+	  types: _react2.default.PropTypes.array,
+	  googleMaps: _react2.default.PropTypes.object,
+	  onSuggestSelect: _react2.default.PropTypes.func,
+	  onFocus: _react2.default.PropTypes.func,
+	  onBlur: _react2.default.PropTypes.func,
+	  onChange: _react2.default.PropTypes.func,
+	  skipSuggest: _react2.default.PropTypes.func,
+	  getSuggestLabel: _react2.default.PropTypes.func,
+	  autoActivateFirstSuggest: _react2.default.PropTypes.bool
+	};
+
+/***/ },
+/* 252 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (props) {
+	  var attributes = {};
+	
+	  allowedAttributes.forEach(function (allowedAttribute) {
+	    if (props[allowedAttribute]) {
+	      attributes[allowedAttribute] = props[allowedAttribute];
+	    }
+	  });
+	
+	  return attributes;
+	};
+	
+	/**
+	 * Attributes allowed on input elements
+	 */
+	var allowedAttributes = ['autoComplete', 'autoFocus', 'disabled', 'form', 'formAction', 'formEncType', 'formMethod', 'formNoValidate', 'formTarget', 'height', 'id', 'inputMode', 'maxLength', 'name', 'pattern', 'placeholder', 'readOnly', 'required', 'size', 'spellCheck', 'tabIndex'];
+	
+	/**
+	 * Filter the properties for only allowed input properties
+	 * @param  {Object} props The properties to filter
+	 * @return {Object} The filtered, allowed properties
+	 */
+
+/***/ },
+/* 253 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _classnames = __webpack_require__(249);
+	
+	var _classnames2 = _interopRequireDefault(_classnames);
+	
+	var _filterInputAttributes = __webpack_require__(252);
+	
+	var _filterInputAttributes2 = _interopRequireDefault(_filterInputAttributes);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // eslint-disable-line no-unused-vars
+	
+	
+	/**
+	 * The input field
+	 * @param {Object} props The component's props
+	 * @return {JSX} The icon component.
+	 */
+	
+	var Input = function (_React$Component) {
+	  _inherits(Input, _React$Component);
+	
+	  function Input() {
+	    _classCallCheck(this, Input);
+	
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Input).apply(this, arguments));
+	  }
+	
+	  _createClass(Input, [{
+	    key: 'onChange',
+	
+	    /**
+	     * When the input got changed
+	     */
+	    value: function onChange() {
+	      this.props.onChange(this.refs.input.value);
+	    }
+	
+	    /**
+	     * When a key gets pressed in the input
+	     * @param  {Event} event The keypress event
+	     */
+	
+	  }, {
+	    key: 'onInputKeyDown',
+	    value: function onInputKeyDown(event) {
+	      switch (event.which) {
+	        case 40:
+	          // DOWN
+	          event.preventDefault();
+	          this.props.onNext();
+	          break;
+	        case 38:
+	          // UP
+	          event.preventDefault();
+	          this.props.onPrev();
+	          break;
+	        case 13:
+	          // ENTER
+	          event.preventDefault();
+	          this.props.onSelect();
+	          break;
+	        case 9:
+	          // TAB
+	          this.props.onSelect();
+	          break;
+	        case 27:
+	          // ESC
+	          this.props.onEscape();
+	          break;
+	        default:
+	          break;
+	      }
+	    }
+	
+	    /**
+	     * Focus the input
+	     */
+	
+	  }, {
+	    key: 'focus',
+	    value: function focus() {
+	      this.refs.input.focus();
+	    }
+	
+	    /**
+	     * Render the view
+	     * @return {Function} The React element to render
+	     */
+	
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var attributes = (0, _filterInputAttributes2.default)(this.props),
+	          classes = (0, _classnames2.default)('geosuggest__input', this.props.className);
+	
+	      return _react2.default.createElement('input', _extends({ className: classes,
+	        ref: 'input',
+	        type: 'text'
+	      }, attributes, {
+	        value: this.props.value,
+	        onKeyDown: this.onInputKeyDown.bind(this),
+	        onChange: this.onChange.bind(this),
+	        onFocus: this.props.onFocus.bind(this),
+	        onBlur: this.props.onBlur.bind(this) }));
+	    }
+	  }]);
+	
+	  return Input;
+	}(_react2.default.Component);
+	
+	/**
+	 * Default values for the properties
+	 * @type {Object}
+	 */
+	
+	
+	Input.defaultProps = {
+	  className: '',
+	  value: '',
+	  onChange: function onChange() {},
+	  onFocus: function onFocus() {},
+	  onBlur: function onBlur() {},
+	  onNext: function onNext() {},
+	  onPrev: function onPrev() {},
+	  onSelect: function onSelect() {},
+	  onEscape: function onEscape() {}
+	};
+	
+	exports.default = Input;
+
+/***/ },
+/* 254 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _classnames = __webpack_require__(249);
+	
+	var _classnames2 = _interopRequireDefault(_classnames);
+	
+	var _suggestItem = __webpack_require__(255);
+	
+	var _suggestItem2 = _interopRequireDefault(_suggestItem);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	/**
+	 * The list with suggestions. Either from an API or provided as fixture
+	 * @param {Object} props The component's props
+	 * @return {JSX} The icon component.
+	 */
+	// eslint-disable-line no-unused-vars
+	
+	exports.default = function (_ref) {
+	  var _ref$isHidden = _ref.isHidden;
+	  var isHidden = _ref$isHidden === undefined ? true : _ref$isHidden;
+	  var _ref$suggests = _ref.suggests;
+	  var suggests = _ref$suggests === undefined ? [] : _ref$suggests;
+	  var activeSuggest = _ref.activeSuggest;
+	  var _ref$onSuggestMouseDo = _ref.onSuggestMouseDown;
+	  var onSuggestMouseDown = _ref$onSuggestMouseDo === undefined ? function () {} : _ref$onSuggestMouseDo;
+	  var _ref$onSuggestMouseOu = _ref.onSuggestMouseOut;
+	  var onSuggestMouseOut = _ref$onSuggestMouseOu === undefined ? function () {} : _ref$onSuggestMouseOu;
+	  var _ref$onSuggestSelect = _ref.onSuggestSelect;
+	  var onSuggestSelect = _ref$onSuggestSelect === undefined ? function () {} : _ref$onSuggestSelect;
+	
+	  var classes = (0, _classnames2.default)('geosuggest__suggests', { 'geosuggest__suggests--hidden': isHidden });
+	
+	  return _react2.default.createElement(
+	    'ul',
+	    { className: classes },
+	    suggests.map(function (suggest) {
+	      var isActive = activeSuggest && suggest.placeId === activeSuggest.placeId;
+	
+	      return _react2.default.createElement(_suggestItem2.default, { key: suggest.placeId,
+	        className: suggest.className,
+	        suggest: suggest,
+	        isActive: isActive,
+	        onMouseDown: onSuggestMouseDown,
+	        onMouseOut: onSuggestMouseOut,
+	        onSelect: function onSelect() {
+	          return onSuggestSelect(suggest);
+	        } });
+	    })
+	  );
+	};
+
+/***/ },
+/* 255 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _classnames = __webpack_require__(249);
+	
+	var _classnames2 = _interopRequireDefault(_classnames);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	/**
+	 * A single Geosuggest item in the list
+	 * @param {Object} props The component's props
+	 * @return {JSX} The icon component.
+	 */
+	
+	exports.default = function (_ref) {
+	  var _ref$isActive = _ref.isActive;
+	  var isActive = _ref$isActive === undefined ? false : _ref$isActive;
+	  var _ref$className = _ref.className;
+	  var className = _ref$className === undefined ? '' : _ref$className;
+	  var _ref$suggest = _ref.suggest;
+	  var suggest = _ref$suggest === undefined ? {} : _ref$suggest;
+	  var _ref$onMouseDown = _ref.onMouseDown;
+	  var onMouseDown = _ref$onMouseDown === undefined ? function () {} : _ref$onMouseDown;
+	  var _ref$onMouseOut = _ref.onMouseOut;
+	  var onMouseOut = _ref$onMouseOut === undefined ? function () {} : _ref$onMouseOut;
+	  var _ref$onSelect = _ref.onSelect;
+	  var onSelect = _ref$onSelect === undefined ? function () {} : _ref$onSelect;
+	
+	  var classes = (0, _classnames2.default)('geosuggest-item', className, { 'geosuggest-item--active': isActive });
+	
+	  return _react2.default.createElement(
+	    'li',
+	    { className: classes,
+	      onMouseDown: onMouseDown,
+	      onMouseOut: onMouseOut,
+	      onClick: function onClick(event) {
+	        event.preventDefault();
+	        onSelect();
+	      } },
+	    suggest.label
+	  );
+	}; // eslint-disable-line no-unused-vars
+
+/***/ },
+/* 256 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
 	var React = __webpack_require__(1);
-	var DayNames = __webpack_require__(252);
-	var Week = __webpack_require__(253);
-	var moment = __webpack_require__(254);
+	var DayNames = __webpack_require__(257);
+	var Week = __webpack_require__(258);
+	var moment = __webpack_require__(260);
 	moment().format();
 	var Calendar = React.createClass({
 	  displayName: 'Calendar',
@@ -27369,7 +28181,7 @@
 	        count = 0;
 	
 	    while (!done) {
-	      weeks.push(React.createElement(Week, { checkNext: this.props.checkNext, key: date.toString(), date: date.clone(), month: this.state.month, select: this.select, selected: this.props.selected }));
+	      weeks.push(React.createElement(Week, { events: this.props.events, checkNext: this.props.checkNext, key: date.toString(), date: date.clone(), month: this.state.month, select: this.select, selected: this.props.selected }));
 	      date.add(1, "w");
 	      done = count++ > 2 && monthIndex !== date.month();
 	      monthIndex = date.month();
@@ -27413,7 +28225,7 @@
 	module.exports = Calendar;
 
 /***/ },
-/* 252 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -27469,62 +28281,105 @@
 	module.exports = DayNames;
 
 /***/ },
-/* 253 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var WeekDayEvent = __webpack_require__(375);
+	var WeekDayEvent = __webpack_require__(259);
 	
 	var Week = React.createClass({
-	    displayName: 'Week',
+	  displayName: 'Week',
 	
-	    getEventsForDay: function getEventsForDay(day) {},
-	    render: function render() {
-	        var days = [],
-	            date = this.props.date,
-	            month = this.props.month;
+	  getEventsForDay: function getEventsForDay(day) {},
+	  render: function render() {
+	    var days = [],
+	        date = this.props.date,
+	        month = this.props.month;
 	
-	        for (var i = 0; i < 7; i++) {
-	            var day = {
-	                name: date.format("dd").substring(0, 1),
-	                number: date.date(),
-	                isCurrentMonth: date.month() === month.month(),
-	                isToday: date.isSame(new Date(), "day"),
-	                date: date
-	            };
+	    for (var i = 0; i < 7; i++) {
+	      var day = {
+	        name: date.format("dd").substring(0, 1),
+	        number: date.date(),
+	        isCurrentMonth: date.month() === month.month(),
+	        isToday: date.isSame(new Date(), "day"),
+	        date: date
+	      };
 	
-	            days.push(React.createElement(
-	                'div',
-	                { onClick: this.props.select.bind(null, day, this.props.checkNext), key: day.date.toString(), className: "calendar-weekday" + (day.isToday ? " today" : "") + (day.isCurrentMonth ? "" : " different-month") + (day.date.isSame(this.props.selected) ? " selected" : "") },
-	                React.createElement(
-	                    'div',
-	                    { className: 'weekday-header' },
-	                    React.createElement(
-	                        'span',
-	                        { className: 'header-count' },
-	                        day.number
-	                    ),
-	                    React.createElement('div', { className: 'weekday-events' })
-	                )
-	            ));
-	            date = date.clone();
-	            date.add(1, "d");
+	      var todayEvents = [];
+	
+	      this.props.events.forEach(function (evt) {
+	        if (date.toISOString() >= evt.startDate && date.toISOString() <= evt.endDate) {
+	          todayEvents.push(evt);
 	        }
+	      });
 	
-	        return React.createElement(
+	      days.push(React.createElement(
+	        'div',
+	        { onClick: this.props.select.bind(null, day, this.props.checkNext), key: day.date.toString(), className: "calendar-weekday" + (day.isToday ? " today" : "") + (day.isCurrentMonth ? "" : " different-month") + (day.date.isSame(this.props.selected) ? " selected" : "") },
+	        React.createElement(
+	          'div',
+	          { className: 'weekday-header' },
+	          React.createElement(
+	            'span',
+	            { className: 'header-count' },
+	            day.number
+	          ),
+	          React.createElement(
 	            'div',
-	            { className: 'calendar-week', key: days[0].toString() },
-	            days
-	        );
+	            { className: 'weekday-events' },
+	            todayEvents.map(function (evt) {
+	              return React.createElement(
+	                'div',
+	                null,
+	                evt.title
+	              );
+	            })
+	          )
+	        )
+	      ));
+	      date = date.clone();
+	      date.add(1, "d");
 	    }
+	    return React.createElement(
+	      'div',
+	      { className: 'calendar-week', key: days[0].toString() },
+	      days
+	    );
+	  }
 	});
 	
 	module.exports = Week;
 
 /***/ },
-/* 254 */
+/* 259 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var React = __webpack_require__(1);
+	
+	var WeekDayEvent = React.createClass({
+	  displayName: "WeekDayEvent",
+	
+	  render: function render() {
+	    return React.createElement(
+	      "div",
+	      { className: "calendar-weekday-event" },
+	      React.createElement(
+	        "span",
+	        { className: "weekday-event-title" },
+	        this.props.title
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = WeekDayEvent;
+
+/***/ },
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {//! moment.js
@@ -27925,7 +28780,7 @@
 	                module && module.exports) {
 	            try {
 	                oldLocale = globalLocale._abbr;
-	                __webpack_require__(256)("./" + name);
+	                __webpack_require__(262)("./" + name);
 	                // because defineLocale currently also sets the global locale, we
 	                // want to undo that for lazy loaded locales
 	                locale_locales__getSetGlobalLocale(oldLocale);
@@ -31567,10 +32422,10 @@
 	    return _moment;
 	
 	}));
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(255)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(261)(module)))
 
 /***/ },
-/* 255 */
+/* 261 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -31586,210 +32441,210 @@
 
 
 /***/ },
-/* 256 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./af": 257,
-		"./af.js": 257,
-		"./ar": 258,
-		"./ar-ma": 259,
-		"./ar-ma.js": 259,
-		"./ar-sa": 260,
-		"./ar-sa.js": 260,
-		"./ar-tn": 261,
-		"./ar-tn.js": 261,
-		"./ar.js": 258,
-		"./az": 262,
-		"./az.js": 262,
-		"./be": 263,
-		"./be.js": 263,
-		"./bg": 264,
-		"./bg.js": 264,
-		"./bn": 265,
-		"./bn.js": 265,
-		"./bo": 266,
-		"./bo.js": 266,
-		"./br": 267,
-		"./br.js": 267,
-		"./bs": 268,
-		"./bs.js": 268,
-		"./ca": 269,
-		"./ca.js": 269,
-		"./cs": 270,
-		"./cs.js": 270,
-		"./cv": 271,
-		"./cv.js": 271,
-		"./cy": 272,
-		"./cy.js": 272,
-		"./da": 273,
-		"./da.js": 273,
-		"./de": 274,
-		"./de-at": 275,
-		"./de-at.js": 275,
-		"./de.js": 274,
-		"./dv": 276,
-		"./dv.js": 276,
-		"./el": 277,
-		"./el.js": 277,
-		"./en-au": 278,
-		"./en-au.js": 278,
-		"./en-ca": 279,
-		"./en-ca.js": 279,
-		"./en-gb": 280,
-		"./en-gb.js": 280,
-		"./en-ie": 281,
-		"./en-ie.js": 281,
-		"./en-nz": 282,
-		"./en-nz.js": 282,
-		"./eo": 283,
-		"./eo.js": 283,
-		"./es": 284,
-		"./es.js": 284,
-		"./et": 285,
-		"./et.js": 285,
-		"./eu": 286,
-		"./eu.js": 286,
-		"./fa": 287,
-		"./fa.js": 287,
-		"./fi": 288,
-		"./fi.js": 288,
-		"./fo": 289,
-		"./fo.js": 289,
-		"./fr": 290,
-		"./fr-ca": 291,
-		"./fr-ca.js": 291,
-		"./fr-ch": 292,
-		"./fr-ch.js": 292,
-		"./fr.js": 290,
-		"./fy": 293,
-		"./fy.js": 293,
-		"./gd": 294,
-		"./gd.js": 294,
-		"./gl": 295,
-		"./gl.js": 295,
-		"./he": 296,
-		"./he.js": 296,
-		"./hi": 297,
-		"./hi.js": 297,
-		"./hr": 298,
-		"./hr.js": 298,
-		"./hu": 299,
-		"./hu.js": 299,
-		"./hy-am": 300,
-		"./hy-am.js": 300,
-		"./id": 301,
-		"./id.js": 301,
-		"./is": 302,
-		"./is.js": 302,
-		"./it": 303,
-		"./it.js": 303,
-		"./ja": 304,
-		"./ja.js": 304,
-		"./jv": 305,
-		"./jv.js": 305,
-		"./ka": 306,
-		"./ka.js": 306,
-		"./kk": 307,
-		"./kk.js": 307,
-		"./km": 308,
-		"./km.js": 308,
-		"./ko": 309,
-		"./ko.js": 309,
-		"./ky": 310,
-		"./ky.js": 310,
-		"./lb": 311,
-		"./lb.js": 311,
-		"./lo": 312,
-		"./lo.js": 312,
-		"./lt": 313,
-		"./lt.js": 313,
-		"./lv": 314,
-		"./lv.js": 314,
-		"./me": 315,
-		"./me.js": 315,
-		"./mk": 316,
-		"./mk.js": 316,
-		"./ml": 317,
-		"./ml.js": 317,
-		"./mr": 318,
-		"./mr.js": 318,
-		"./ms": 319,
-		"./ms-my": 320,
-		"./ms-my.js": 320,
-		"./ms.js": 319,
-		"./my": 321,
-		"./my.js": 321,
-		"./nb": 322,
-		"./nb.js": 322,
-		"./ne": 323,
-		"./ne.js": 323,
-		"./nl": 324,
-		"./nl.js": 324,
-		"./nn": 325,
-		"./nn.js": 325,
-		"./pa-in": 326,
-		"./pa-in.js": 326,
-		"./pl": 327,
-		"./pl.js": 327,
-		"./pt": 328,
-		"./pt-br": 329,
-		"./pt-br.js": 329,
-		"./pt.js": 328,
-		"./ro": 330,
-		"./ro.js": 330,
-		"./ru": 331,
-		"./ru.js": 331,
-		"./se": 332,
-		"./se.js": 332,
-		"./si": 333,
-		"./si.js": 333,
-		"./sk": 334,
-		"./sk.js": 334,
-		"./sl": 335,
-		"./sl.js": 335,
-		"./sq": 336,
-		"./sq.js": 336,
-		"./sr": 337,
-		"./sr-cyrl": 338,
-		"./sr-cyrl.js": 338,
-		"./sr.js": 337,
-		"./ss": 339,
-		"./ss.js": 339,
-		"./sv": 340,
-		"./sv.js": 340,
-		"./sw": 341,
-		"./sw.js": 341,
-		"./ta": 342,
-		"./ta.js": 342,
-		"./te": 343,
-		"./te.js": 343,
-		"./th": 344,
-		"./th.js": 344,
-		"./tl-ph": 345,
-		"./tl-ph.js": 345,
-		"./tlh": 346,
-		"./tlh.js": 346,
-		"./tr": 347,
-		"./tr.js": 347,
-		"./tzl": 348,
-		"./tzl.js": 348,
-		"./tzm": 349,
-		"./tzm-latn": 350,
-		"./tzm-latn.js": 350,
-		"./tzm.js": 349,
-		"./uk": 351,
-		"./uk.js": 351,
-		"./uz": 352,
-		"./uz.js": 352,
-		"./vi": 353,
-		"./vi.js": 353,
-		"./x-pseudo": 354,
-		"./x-pseudo.js": 354,
-		"./zh-cn": 355,
-		"./zh-cn.js": 355,
-		"./zh-tw": 356,
-		"./zh-tw.js": 356
+		"./af": 263,
+		"./af.js": 263,
+		"./ar": 264,
+		"./ar-ma": 265,
+		"./ar-ma.js": 265,
+		"./ar-sa": 266,
+		"./ar-sa.js": 266,
+		"./ar-tn": 267,
+		"./ar-tn.js": 267,
+		"./ar.js": 264,
+		"./az": 268,
+		"./az.js": 268,
+		"./be": 269,
+		"./be.js": 269,
+		"./bg": 270,
+		"./bg.js": 270,
+		"./bn": 271,
+		"./bn.js": 271,
+		"./bo": 272,
+		"./bo.js": 272,
+		"./br": 273,
+		"./br.js": 273,
+		"./bs": 274,
+		"./bs.js": 274,
+		"./ca": 275,
+		"./ca.js": 275,
+		"./cs": 276,
+		"./cs.js": 276,
+		"./cv": 277,
+		"./cv.js": 277,
+		"./cy": 278,
+		"./cy.js": 278,
+		"./da": 279,
+		"./da.js": 279,
+		"./de": 280,
+		"./de-at": 281,
+		"./de-at.js": 281,
+		"./de.js": 280,
+		"./dv": 282,
+		"./dv.js": 282,
+		"./el": 283,
+		"./el.js": 283,
+		"./en-au": 284,
+		"./en-au.js": 284,
+		"./en-ca": 285,
+		"./en-ca.js": 285,
+		"./en-gb": 286,
+		"./en-gb.js": 286,
+		"./en-ie": 287,
+		"./en-ie.js": 287,
+		"./en-nz": 288,
+		"./en-nz.js": 288,
+		"./eo": 289,
+		"./eo.js": 289,
+		"./es": 290,
+		"./es.js": 290,
+		"./et": 291,
+		"./et.js": 291,
+		"./eu": 292,
+		"./eu.js": 292,
+		"./fa": 293,
+		"./fa.js": 293,
+		"./fi": 294,
+		"./fi.js": 294,
+		"./fo": 295,
+		"./fo.js": 295,
+		"./fr": 296,
+		"./fr-ca": 297,
+		"./fr-ca.js": 297,
+		"./fr-ch": 298,
+		"./fr-ch.js": 298,
+		"./fr.js": 296,
+		"./fy": 299,
+		"./fy.js": 299,
+		"./gd": 300,
+		"./gd.js": 300,
+		"./gl": 301,
+		"./gl.js": 301,
+		"./he": 302,
+		"./he.js": 302,
+		"./hi": 303,
+		"./hi.js": 303,
+		"./hr": 304,
+		"./hr.js": 304,
+		"./hu": 305,
+		"./hu.js": 305,
+		"./hy-am": 306,
+		"./hy-am.js": 306,
+		"./id": 307,
+		"./id.js": 307,
+		"./is": 308,
+		"./is.js": 308,
+		"./it": 309,
+		"./it.js": 309,
+		"./ja": 310,
+		"./ja.js": 310,
+		"./jv": 311,
+		"./jv.js": 311,
+		"./ka": 312,
+		"./ka.js": 312,
+		"./kk": 313,
+		"./kk.js": 313,
+		"./km": 314,
+		"./km.js": 314,
+		"./ko": 315,
+		"./ko.js": 315,
+		"./ky": 316,
+		"./ky.js": 316,
+		"./lb": 317,
+		"./lb.js": 317,
+		"./lo": 318,
+		"./lo.js": 318,
+		"./lt": 319,
+		"./lt.js": 319,
+		"./lv": 320,
+		"./lv.js": 320,
+		"./me": 321,
+		"./me.js": 321,
+		"./mk": 322,
+		"./mk.js": 322,
+		"./ml": 323,
+		"./ml.js": 323,
+		"./mr": 324,
+		"./mr.js": 324,
+		"./ms": 325,
+		"./ms-my": 326,
+		"./ms-my.js": 326,
+		"./ms.js": 325,
+		"./my": 327,
+		"./my.js": 327,
+		"./nb": 328,
+		"./nb.js": 328,
+		"./ne": 329,
+		"./ne.js": 329,
+		"./nl": 330,
+		"./nl.js": 330,
+		"./nn": 331,
+		"./nn.js": 331,
+		"./pa-in": 332,
+		"./pa-in.js": 332,
+		"./pl": 333,
+		"./pl.js": 333,
+		"./pt": 334,
+		"./pt-br": 335,
+		"./pt-br.js": 335,
+		"./pt.js": 334,
+		"./ro": 336,
+		"./ro.js": 336,
+		"./ru": 337,
+		"./ru.js": 337,
+		"./se": 338,
+		"./se.js": 338,
+		"./si": 339,
+		"./si.js": 339,
+		"./sk": 340,
+		"./sk.js": 340,
+		"./sl": 341,
+		"./sl.js": 341,
+		"./sq": 342,
+		"./sq.js": 342,
+		"./sr": 343,
+		"./sr-cyrl": 344,
+		"./sr-cyrl.js": 344,
+		"./sr.js": 343,
+		"./ss": 345,
+		"./ss.js": 345,
+		"./sv": 346,
+		"./sv.js": 346,
+		"./sw": 347,
+		"./sw.js": 347,
+		"./ta": 348,
+		"./ta.js": 348,
+		"./te": 349,
+		"./te.js": 349,
+		"./th": 350,
+		"./th.js": 350,
+		"./tl-ph": 351,
+		"./tl-ph.js": 351,
+		"./tlh": 352,
+		"./tlh.js": 352,
+		"./tr": 353,
+		"./tr.js": 353,
+		"./tzl": 354,
+		"./tzl.js": 354,
+		"./tzm": 355,
+		"./tzm-latn": 356,
+		"./tzm-latn.js": 356,
+		"./tzm.js": 355,
+		"./uk": 357,
+		"./uk.js": 357,
+		"./uz": 358,
+		"./uz.js": 358,
+		"./vi": 359,
+		"./vi.js": 359,
+		"./x-pseudo": 360,
+		"./x-pseudo.js": 360,
+		"./zh-cn": 361,
+		"./zh-cn.js": 361,
+		"./zh-tw": 362,
+		"./zh-tw.js": 362
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -31802,11 +32657,11 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 256;
+	webpackContext.id = 262;
 
 
 /***/ },
-/* 257 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -31814,7 +32669,7 @@
 	//! author : Werner Mollentze : https://github.com/wernerm
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -31883,7 +32738,7 @@
 	}));
 
 /***/ },
-/* 258 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -31893,7 +32748,7 @@
 	//! Native plural forms: forabi https://github.com/forabi
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -32024,7 +32879,7 @@
 	}));
 
 /***/ },
-/* 259 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -32033,7 +32888,7 @@
 	//! author : Abdel Said : https://github.com/abdelsaid
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -32088,7 +32943,7 @@
 	}));
 
 /***/ },
-/* 260 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -32096,7 +32951,7 @@
 	//! author : Suhail Alkowaileet : https://github.com/xsoh
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -32196,14 +33051,14 @@
 	}));
 
 /***/ },
-/* 261 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
 	//! locale  : Tunisian Arabic (ar-tn)
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -32258,7 +33113,7 @@
 	}));
 
 /***/ },
-/* 262 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -32266,7 +33121,7 @@
 	//! author : topchiyev : https://github.com/topchiyev
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -32367,7 +33222,7 @@
 	}));
 
 /***/ },
-/* 263 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -32377,7 +33232,7 @@
 	//! Author : Menelion Elensúle : https://github.com/Oire
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -32505,7 +33360,7 @@
 	}));
 
 /***/ },
-/* 264 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -32513,7 +33368,7 @@
 	//! author : Krasen Borisov : https://github.com/kraz
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -32599,7 +33454,7 @@
 	}));
 
 /***/ },
-/* 265 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -32607,7 +33462,7 @@
 	//! author : Kaushik Gandhi : https://github.com/kaushikgandhi
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -32722,7 +33577,7 @@
 	}));
 
 /***/ },
-/* 266 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -32730,7 +33585,7 @@
 	//! author : Thupten N. Chakrishar : https://github.com/vajradog
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -32845,7 +33700,7 @@
 	}));
 
 /***/ },
-/* 267 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -32853,7 +33708,7 @@
 	//! author : Jean-Baptiste Le Duigou : https://github.com/jbleduigou
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -32957,7 +33812,7 @@
 	}));
 
 /***/ },
-/* 268 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -32966,7 +33821,7 @@
 	//! based on (hr) translation by Bojan Marković
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -33104,7 +33959,7 @@
 	}));
 
 /***/ },
-/* 269 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -33112,7 +33967,7 @@
 	//! author : Juan G. Hurtado : https://github.com/juanghurtado
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -33189,7 +34044,7 @@
 	}));
 
 /***/ },
-/* 270 */
+/* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -33197,7 +34052,7 @@
 	//! author : petrbela : https://github.com/petrbela
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -33364,7 +34219,7 @@
 	}));
 
 /***/ },
-/* 271 */
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -33372,7 +34227,7 @@
 	//! author : Anatoly Mironov : https://github.com/mirontoli
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -33431,7 +34286,7 @@
 	}));
 
 /***/ },
-/* 272 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -33439,7 +34294,7 @@
 	//! author : Robert Allen
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -33515,7 +34370,7 @@
 	}));
 
 /***/ },
-/* 273 */
+/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -33523,7 +34378,7 @@
 	//! author : Ulrik Nielsen : https://github.com/mrbase
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -33579,7 +34434,7 @@
 	}));
 
 /***/ },
-/* 274 */
+/* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -33589,7 +34444,7 @@
 	//! author : Mikolaj Dadela : https://github.com/mik01aj
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -33661,7 +34516,7 @@
 	}));
 
 /***/ },
-/* 275 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -33672,7 +34527,7 @@
 	//! author : Mikolaj Dadela : https://github.com/mik01aj
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -33744,7 +34599,7 @@
 	}));
 
 /***/ },
-/* 276 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -33752,7 +34607,7 @@
 	//! author : Jawish Hameed : https://github.com/jawish
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -33847,7 +34702,7 @@
 	}));
 
 /***/ },
-/* 277 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -33855,7 +34710,7 @@
 	//! author : Aggelos Karalias : https://github.com/mehiel
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -33949,14 +34804,14 @@
 	}));
 
 /***/ },
-/* 278 */
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
 	//! locale : australian english (en-au)
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -34019,7 +34874,7 @@
 	}));
 
 /***/ },
-/* 279 */
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -34027,7 +34882,7 @@
 	//! author : Jonathan Abourbih : https://github.com/jonbca
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -34086,7 +34941,7 @@
 	}));
 
 /***/ },
-/* 280 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -34094,7 +34949,7 @@
 	//! author : Chris Gedrim : https://github.com/chrisgedrim
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -34157,7 +35012,7 @@
 	}));
 
 /***/ },
-/* 281 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -34165,7 +35020,7 @@
 	//! author : Chris Cartlidge : https://github.com/chriscartlidge
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -34228,14 +35083,14 @@
 	}));
 
 /***/ },
-/* 282 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
 	//! locale : New Zealand english (en-nz)
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -34298,7 +35153,7 @@
 	}));
 
 /***/ },
-/* 283 */
+/* 289 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -34308,7 +35163,7 @@
 	//!          Se ne, bonvolu korekti kaj avizi min por ke mi povas lerni!
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -34375,7 +35230,7 @@
 	}));
 
 /***/ },
-/* 284 */
+/* 290 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -34383,7 +35238,7 @@
 	//! author : Julio Napurí : https://github.com/julionc
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -34460,7 +35315,7 @@
 	}));
 
 /***/ },
-/* 285 */
+/* 291 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -34469,7 +35324,7 @@
 	//! improvements : Illimar Tambek : https://github.com/ragulka
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -34544,7 +35399,7 @@
 	}));
 
 /***/ },
-/* 286 */
+/* 292 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -34552,7 +35407,7 @@
 	//! author : Eneko Illarramendi : https://github.com/eillarra
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -34614,7 +35469,7 @@
 	}));
 
 /***/ },
-/* 287 */
+/* 293 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -34622,7 +35477,7 @@
 	//! author : Ebrahim Byagowi : https://github.com/ebraminio
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -34724,7 +35579,7 @@
 	}));
 
 /***/ },
-/* 288 */
+/* 294 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -34732,7 +35587,7 @@
 	//! author : Tarmo Aidantausta : https://github.com/bleadof
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -34835,7 +35690,7 @@
 	}));
 
 /***/ },
-/* 289 */
+/* 295 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -34843,7 +35698,7 @@
 	//! author : Ragnar Johannesen : https://github.com/ragnar123
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -34899,7 +35754,7 @@
 	}));
 
 /***/ },
-/* 290 */
+/* 296 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -34907,7 +35762,7 @@
 	//! author : John Fischer : https://github.com/jfroffice
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -34967,7 +35822,7 @@
 	}));
 
 /***/ },
-/* 291 */
+/* 297 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -34975,7 +35830,7 @@
 	//! author : Jonathan Abourbih : https://github.com/jonbca
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -35031,7 +35886,7 @@
 	}));
 
 /***/ },
-/* 292 */
+/* 298 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -35039,7 +35894,7 @@
 	//! author : Gaspard Bucher : https://github.com/gaspard
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -35099,7 +35954,7 @@
 	}));
 
 /***/ },
-/* 293 */
+/* 299 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -35107,7 +35962,7 @@
 	//! author : Robin van der Vliet : https://github.com/robin0van0der0v
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -35176,7 +36031,7 @@
 	}));
 
 /***/ },
-/* 294 */
+/* 300 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -35184,7 +36039,7 @@
 	//! author : Jon Ashdown : https://github.com/jonashdown
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -35256,7 +36111,7 @@
 	}));
 
 /***/ },
-/* 295 */
+/* 301 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -35264,7 +36119,7 @@
 	//! author : Juan G. Hurtado : https://github.com/juanghurtado
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -35337,7 +36192,7 @@
 	}));
 
 /***/ },
-/* 296 */
+/* 302 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -35347,7 +36202,7 @@
 	//! author : Tal Ater : https://github.com/TalAter
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -35440,7 +36295,7 @@
 	}));
 
 /***/ },
-/* 297 */
+/* 303 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -35448,7 +36303,7 @@
 	//! author : Mayank Singhal : https://github.com/mayanksinghal
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -35568,7 +36423,7 @@
 	}));
 
 /***/ },
-/* 298 */
+/* 304 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -35576,7 +36431,7 @@
 	//! author : Bojan Marković : https://github.com/bmarkovic
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -35717,7 +36572,7 @@
 	}));
 
 /***/ },
-/* 299 */
+/* 305 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -35725,7 +36580,7 @@
 	//! author : Adam Brunner : https://github.com/adambrunner
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -35830,7 +36685,7 @@
 	}));
 
 /***/ },
-/* 300 */
+/* 306 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -35838,7 +36693,7 @@
 	//! author : Armendarabyan : https://github.com/armendarabyan
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -35929,7 +36784,7 @@
 	}));
 
 /***/ },
-/* 301 */
+/* 307 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -35938,7 +36793,7 @@
 	//! reference: http://id.wikisource.org/wiki/Pedoman_Umum_Ejaan_Bahasa_Indonesia_yang_Disempurnakan
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -36016,7 +36871,7 @@
 	}));
 
 /***/ },
-/* 302 */
+/* 308 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -36024,7 +36879,7 @@
 	//! author : Hinrik Örn Sigurðsson : https://github.com/hinrik
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -36147,7 +37002,7 @@
 	}));
 
 /***/ },
-/* 303 */
+/* 309 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -36156,7 +37011,7 @@
 	//! author: Mattia Larentis: https://github.com/nostalgiaz
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -36221,7 +37076,7 @@
 	}));
 
 /***/ },
-/* 304 */
+/* 310 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -36229,7 +37084,7 @@
 	//! author : LI Long : https://github.com/baryon
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -36301,7 +37156,7 @@
 	}));
 
 /***/ },
-/* 305 */
+/* 311 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -36310,7 +37165,7 @@
 	//! reference: http://jv.wikipedia.org/wiki/Basa_Jawa
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -36388,7 +37243,7 @@
 	}));
 
 /***/ },
-/* 306 */
+/* 312 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -36396,7 +37251,7 @@
 	//! author : Irakli Janiashvili : https://github.com/irakli-janiashvili
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -36481,7 +37336,7 @@
 	}));
 
 /***/ },
-/* 307 */
+/* 313 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -36489,7 +37344,7 @@
 	//! authors : Nurlan Rakhimzhanov : https://github.com/nurlan
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -36572,7 +37427,7 @@
 	}));
 
 /***/ },
-/* 308 */
+/* 314 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -36580,7 +37435,7 @@
 	//! author : Kruy Vanna : https://github.com/kruyvanna
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -36634,7 +37489,7 @@
 	}));
 
 /***/ },
-/* 309 */
+/* 315 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -36646,7 +37501,7 @@
 	//! - Jeeeyul Lee <jeeeyul@gmail.com>
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -36706,7 +37561,7 @@
 	}));
 
 /***/ },
-/* 310 */
+/* 316 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -36714,7 +37569,7 @@
 	//! author : Chyngyz Arystan uulu : https://github.com/chyngyz
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -36798,7 +37653,7 @@
 	}));
 
 /***/ },
-/* 311 */
+/* 317 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -36806,7 +37661,7 @@
 	//! author : mweimerskirch : https://github.com/mweimerskirch, David Raison : https://github.com/kwisatz
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -36938,7 +37793,7 @@
 	}));
 
 /***/ },
-/* 312 */
+/* 318 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -36946,7 +37801,7 @@
 	//! author : Ryan Hart : https://github.com/ryanhart2
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37012,7 +37867,7 @@
 	}));
 
 /***/ },
-/* 313 */
+/* 319 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37020,7 +37875,7 @@
 	//! author : Mindaugas Mozūras : https://github.com/mmozuras
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37132,7 +37987,7 @@
 	}));
 
 /***/ },
-/* 314 */
+/* 320 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37141,7 +37996,7 @@
 	//! author : Jānis Elmeris : https://github.com/JanisE
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37233,7 +38088,7 @@
 	}));
 
 /***/ },
-/* 315 */
+/* 321 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37241,7 +38096,7 @@
 	//! author : Miodrag Nikač <miodrag@restartit.me> : https://github.com/miodragnikac
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37348,7 +38203,7 @@
 	}));
 
 /***/ },
-/* 316 */
+/* 322 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37356,7 +38211,7 @@
 	//! author : Borislav Mickov : https://github.com/B0k0
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37442,7 +38297,7 @@
 	}));
 
 /***/ },
-/* 317 */
+/* 323 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37450,7 +38305,7 @@
 	//! author : Floyd Pink : https://github.com/floydpink
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37527,7 +38382,7 @@
 	}));
 
 /***/ },
-/* 318 */
+/* 324 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37536,7 +38391,7 @@
 	//! author : Vivek Athalye : https://github.com/vnathalye
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37690,7 +38545,7 @@
 	}));
 
 /***/ },
-/* 319 */
+/* 325 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37698,7 +38553,7 @@
 	//! author : Weldan Jamili : https://github.com/weldan
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37776,7 +38631,7 @@
 	}));
 
 /***/ },
-/* 320 */
+/* 326 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37784,7 +38639,7 @@
 	//! author : Weldan Jamili : https://github.com/weldan
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37862,7 +38717,7 @@
 	}));
 
 /***/ },
-/* 321 */
+/* 327 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37870,7 +38725,7 @@
 	//! author : Squar team, mysquar.com
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -37959,7 +38814,7 @@
 	}));
 
 /***/ },
-/* 322 */
+/* 328 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -37968,7 +38823,7 @@
 	//!           Sigurd Gartmann : https://github.com/sigurdga
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38026,7 +38881,7 @@
 	}));
 
 /***/ },
-/* 323 */
+/* 329 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38034,7 +38889,7 @@
 	//! author : suvash : https://github.com/suvash
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38153,7 +39008,7 @@
 	}));
 
 /***/ },
-/* 324 */
+/* 330 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38161,7 +39016,7 @@
 	//! author : Joris Röling : https://github.com/jjupiter
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38230,7 +39085,7 @@
 	}));
 
 /***/ },
-/* 325 */
+/* 331 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38238,7 +39093,7 @@
 	//! author : https://github.com/mechuwind
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38294,7 +39149,7 @@
 	}));
 
 /***/ },
-/* 326 */
+/* 332 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38302,7 +39157,7 @@
 	//! author : Harpreet Singh : https://github.com/harpreetkhalsagtbit
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38422,7 +39277,7 @@
 	}));
 
 /***/ },
-/* 327 */
+/* 333 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38430,7 +39285,7 @@
 	//! author : Rafal Hirsz : https://github.com/evoL
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38531,7 +39386,7 @@
 	}));
 
 /***/ },
-/* 328 */
+/* 334 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38539,7 +39394,7 @@
 	//! author : Jefferson : https://github.com/jalex79
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38600,7 +39455,7 @@
 	}));
 
 /***/ },
-/* 329 */
+/* 335 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38608,7 +39463,7 @@
 	//! author : Caio Ribeiro Pereira : https://github.com/caio-ribeiro-pereira
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38665,7 +39520,7 @@
 	}));
 
 /***/ },
-/* 330 */
+/* 336 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38674,7 +39529,7 @@
 	//! author : Valentin Agachi : https://github.com/avaly
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38744,7 +39599,7 @@
 	}));
 
 /***/ },
-/* 331 */
+/* 337 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38754,7 +39609,7 @@
 	//! author : Коренберг Марк : https://github.com/socketpair
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38923,7 +39778,7 @@
 	}));
 
 /***/ },
-/* 332 */
+/* 338 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38931,7 +39786,7 @@
 	//! authors : Bård Rolstad Henriksen : https://github.com/karamell
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -38988,7 +39843,7 @@
 	}));
 
 /***/ },
-/* 333 */
+/* 339 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -38996,7 +39851,7 @@
 	//! author : Sampath Sitinamaluwa : https://github.com/sampathsris
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39063,7 +39918,7 @@
 	}));
 
 /***/ },
-/* 334 */
+/* 340 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39072,7 +39927,7 @@
 	//! based on work of petrbela : https://github.com/petrbela
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39217,7 +40072,7 @@
 	}));
 
 /***/ },
-/* 335 */
+/* 341 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39225,7 +40080,7 @@
 	//! author : Robert Sedovšek : https://github.com/sedovsek
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39383,7 +40238,7 @@
 	}));
 
 /***/ },
-/* 336 */
+/* 342 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39393,7 +40248,7 @@
 	//! author : Oerd Cukalla : https://github.com/oerd (fixes)
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39457,7 +40312,7 @@
 	}));
 
 /***/ },
-/* 337 */
+/* 343 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39465,7 +40320,7 @@
 	//! author : Milan Janačković<milanjanackovic@gmail.com> : https://github.com/milan-j
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39571,7 +40426,7 @@
 	}));
 
 /***/ },
-/* 338 */
+/* 344 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39579,7 +40434,7 @@
 	//! author : Milan Janačković<milanjanackovic@gmail.com> : https://github.com/milan-j
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39685,7 +40540,7 @@
 	}));
 
 /***/ },
-/* 339 */
+/* 345 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39693,7 +40548,7 @@
 	//! author : Nicolai Davies<mail@nicolai.io> : https://github.com/nicolaidavies
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39778,7 +40633,7 @@
 	}));
 
 /***/ },
-/* 340 */
+/* 346 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39786,7 +40641,7 @@
 	//! author : Jens Alm : https://github.com/ulmus
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39851,7 +40706,7 @@
 	}));
 
 /***/ },
-/* 341 */
+/* 347 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39859,7 +40714,7 @@
 	//! author : Fahad Kassim : https://github.com/fadsel
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -39914,7 +40769,7 @@
 	}));
 
 /***/ },
-/* 342 */
+/* 348 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -39922,7 +40777,7 @@
 	//! author : Arjunkumar Krishnamoorthy : https://github.com/tk120404
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40047,7 +40902,7 @@
 	}));
 
 /***/ },
-/* 343 */
+/* 349 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40055,7 +40910,7 @@
 	//! author : Krishna Chaitanya Thota : https://github.com/kcthota
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40140,7 +40995,7 @@
 	}));
 
 /***/ },
-/* 344 */
+/* 350 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40148,7 +41003,7 @@
 	//! author : Kridsada Thanabulpong : https://github.com/sirn
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40211,7 +41066,7 @@
 	}));
 
 /***/ },
-/* 345 */
+/* 351 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40219,7 +41074,7 @@
 	//! author : Dan Hagman
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40277,7 +41132,7 @@
 	}));
 
 /***/ },
-/* 346 */
+/* 352 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40285,7 +41140,7 @@
 	//! author : Dominika Kruk : https://github.com/amaranthrose
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40401,7 +41256,7 @@
 	}));
 
 /***/ },
-/* 347 */
+/* 353 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40410,7 +41265,7 @@
 	//!           Burak Yiğit Kaya: https://github.com/BYK
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40495,7 +41350,7 @@
 	}));
 
 /***/ },
-/* 348 */
+/* 354 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40503,7 +41358,7 @@
 	//! author : Robin van der Vliet : https://github.com/robin0van0der0v with the help of Iustì Canun
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40590,7 +41445,7 @@
 	}));
 
 /***/ },
-/* 349 */
+/* 355 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40598,7 +41453,7 @@
 	//! author : Abdel Said : https://github.com/abdelsaid
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40652,7 +41507,7 @@
 	}));
 
 /***/ },
-/* 350 */
+/* 356 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40660,7 +41515,7 @@
 	//! author : Abdel Said : https://github.com/abdelsaid
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40714,7 +41569,7 @@
 	}));
 
 /***/ },
-/* 351 */
+/* 357 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40723,7 +41578,7 @@
 	//! Author : Menelion Elensúle : https://github.com/Oire
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40864,7 +41719,7 @@
 	}));
 
 /***/ },
-/* 352 */
+/* 358 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40872,7 +41727,7 @@
 	//! author : Sardor Muminov : https://github.com/muminoff
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -40926,7 +41781,7 @@
 	}));
 
 /***/ },
-/* 353 */
+/* 359 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -40934,7 +41789,7 @@
 	//! author : Bang Nguyen : https://github.com/bangnk
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41009,7 +41864,7 @@
 	}));
 
 /***/ },
-/* 354 */
+/* 360 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -41017,7 +41872,7 @@
 	//! author : Andrew Hood : https://github.com/andrewhood125
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41081,7 +41936,7 @@
 	}));
 
 /***/ },
-/* 355 */
+/* 361 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -41090,7 +41945,7 @@
 	//! author : Zeno Zeng : https://github.com/zenozeng
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41212,7 +42067,7 @@
 	}));
 
 /***/ },
-/* 356 */
+/* 362 */
 /***/ function(module, exports, __webpack_require__) {
 
 	//! moment.js locale configuration
@@ -41220,7 +42075,7 @@
 	//! author : Ben : https://github.com/ben-lin
 	
 	;(function (global, factory) {
-	    true ? factory(__webpack_require__(254)) :
+	    true ? factory(__webpack_require__(260)) :
 	   typeof define === 'function' && define.amd ? define(['moment'], factory) :
 	   factory(global.moment)
 	}(this, function (moment) { 'use strict';
@@ -41317,7 +42172,356 @@
 	}));
 
 /***/ },
-/* 357 */
+/* 363 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var React = __webpack_require__(1);
+	
+	var Dropdown = React.createClass({
+	  displayName: "Dropdown",
+	
+	  render: function render() {
+	    return React.createElement(
+	      "div",
+	      { className: "dropdown" },
+	      React.createElement(
+	        "div",
+	        { className: "dropdown-header" },
+	        React.createElement(
+	          "div",
+	          { className: "dropdown-label" },
+	          this.props.label
+	        ),
+	        React.createElement("div", { className: "dropdown-caret fa fa-chevron-down" })
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = Dropdown;
+
+/***/ },
+/* 364 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var React = __webpack_require__(1);
+	
+	var SmallSearchUnit = React.createClass({
+	  displayName: "SmallSearchUnit",
+	
+	  onAddMember: function onAddMember(key) {
+	
+	    this.props.onAddMember(key);
+	  },
+	  onDeleteMember: function onDeleteMember(key, e) {
+	    e.stopPropagation();
+	    this.props.onDeleteMember(key);
+	  },
+	  render: function render() {
+	
+	    return React.createElement(
+	      "div",
+	      { onClick: this.onAddMember.bind(this, this.props.theKey), className: "detail-result" },
+	      React.createElement(
+	        "div",
+	        { className: "result-picture" },
+	        React.createElement("img", { src: "http://placehold.it/350x350" })
+	      ),
+	      React.createElement(
+	        "span",
+	        { className: "result-name" },
+	        this.props.title
+	      ),
+	      this.props.addable ? React.createElement("span", { className: "result-add fa fa-plus" }) : '',
+	      this.props.closable ? React.createElement("span", { className: "result-remove fa fa-times", onClick: this.onDeleteMember.bind(this, this.props.theKey) }) : ''
+	    );
+	  }
+	});
+	
+	module.exports = SmallSearchUnit;
+
+/***/ },
+/* 365 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var SmallSearchUnit = __webpack_require__(364);
+	
+	var SmallSearchPicked = React.createClass({
+	  displayName: 'SmallSearchPicked',
+	
+	  addMember: function addMember() {
+	    console.log("YOU CLICKED!!!");
+	  },
+	  render: function render() {
+	    var that = this;
+	    var members = this.props.members;
+	    return React.createElement(
+	      'div',
+	      { className: 'search-picked' },
+	      members.map(function (member) {
+	        var memberName = member.firstName;
+	        return React.createElement(SmallSearchUnit, { onDeleteMember: that.props.onDeleteMember, key: member.userId, title: memberName, addable: false, closable: true, onClick: that.addMember });
+	      })
+	    );
+	  }
+	});
+	
+	module.exports = SmallSearchPicked;
+
+/***/ },
+/* 366 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var SmallSearchUnit = __webpack_require__(364);
+	
+	var SmallSearchSuggested = React.createClass({
+	  displayName: 'SmallSearchSuggested',
+	
+	  render: function render() {
+	    var that = this;
+	    return React.createElement(
+	      'div',
+	      { className: 'search-suggested' },
+	      this.props.listy.map(function (item) {
+	        return React.createElement(SmallSearchUnit, { theKey: item.id, onAddMember: that.props.onAddMember, title: item.firstName, closable: false, addable: true });
+	      })
+	    );
+	  }
+	});
+	
+	module.exports = SmallSearchSuggested;
+
+/***/ },
+/* 367 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	var React = __webpack_require__(1);
+	var moment = __webpack_require__(260);
+	moment().format();
+	
+	var EventDateSet = React.createClass({
+	  displayName: 'EventDateSet',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      selectEndDateActive: false,
+	      from_hours: "",
+	      from_minutes: "",
+	      to_hours: "",
+	      to_minutes: "",
+	      nextDay: false
+	
+	    };
+	  },
+	  handleClickEndDate: function handleClickEndDate() {
+	    if (this.state.selectEndDateActive === true) {
+	      this.state.selectEndDateActive = false;
+	    } else if (this.state.selectEndDateActive === false) {
+	      this.state.selectEndDateActive = true;
+	    }
+	  },
+	  onDeleteDate: function onDeleteDate(date) {
+	    this.props.onDeleteDate(date);
+	  },
+	  handleInputChange: function handleInputChange(input, e) {
+	    this.setState(_defineProperty({}, input, e.target.value));
+	    this.props.onSetFromTime(this.props.date, { fromHour: this.state.from_hours, fromMinutes: this.state.from_minutes, toHours: this.state.to_hours, toMinutes: this.state.to_minutes }, this.state.nextDay);
+	  },
+	  handleNextTo: function handleNextTo() {
+	    var checker = !this.state.nextDay;
+	    this.props.onCheckNext(checker, this.props.date);
+	    this.setState({
+	      nextDay: !this.state.nextDay
+	    });
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'div',
+	      { className: 'create-date-set' },
+	      React.createElement(
+	        'div',
+	        { className: 'date-value' },
+	        React.createElement(
+	          'div',
+	          { className: 'value-literal' },
+	          this.props.date.date.format("MMMM DD YYYY")
+	        ),
+	        React.createElement('div', { onClick: this.onDeleteDate.bind(this, this.props.date), className: 'remove-date fa fa-times' })
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'date-hours' },
+	        React.createElement(
+	          'div',
+	          { className: 'hour-set' },
+	          React.createElement(
+	            'div',
+	            { className: 'set-label' },
+	            'From:'
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'set-options' },
+	            React.createElement('input', { onChange: this.handleInputChange.bind(this, "from_hours"), ref: 'from_hours', type: 'text', placeholder: '00', className: 'hour' }),
+	            ':',
+	            React.createElement('input', { onChange: this.handleInputChange.bind(this, "from_minutes"), ref: 'from_minutes', type: 'text', placeholder: '00', className: 'minutes' })
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'hour-set' },
+	          React.createElement(
+	            'div',
+	            { className: 'set-label' },
+	            'To:'
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'set-options' },
+	            React.createElement('input', { onChange: this.handleInputChange.bind(this, "to_hours"), ref: 'to_hours', type: 'text', placeholder: '00', className: 'hour' }),
+	            ':',
+	            React.createElement('input', { onChange: this.handleInputChange.bind(this, "to_minutes"), ref: 'to_minutes', type: 'text', placeholder: '00', className: 'minutes' })
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'until-date' },
+	          React.createElement(
+	            'div',
+	            { className: 'set-label' },
+	            'Ends:'
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'set-options' },
+	            React.createElement(
+	              'div',
+	              { className: 'add-until-date' },
+	              React.createElement(
+	                'div',
+	                { onClick: this.handleNextTo, className: 'select-date-trigger before' },
+	                this.props.date.end ? moment.unix(this.props.date.end).format('MMMM DD YYYY') : this.props.date.date.format('MMMM DD YYYY')
+	              )
+	            )
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = EventDateSet;
+
+/***/ },
+/* 368 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var ChatBarUser = __webpack_require__(369);
+	var axios = __webpack_require__(226);
+	
+	var ChatBar = React.createClass({
+	  displayName: 'ChatBar',
+	
+	  getInitialState: function getInitialState() {
+	    return {
+	      user: '',
+	      userFriends: []
+	    };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    var that = this;
+	    axios({
+	      method: 'get',
+	      url: '/getUserChatFriends'
+	    }).then(function (response) {
+	      if (response.data) {
+	        that.setState({
+	          userFriends: response.data
+	        });
+	      }
+	    });
+	  },
+	  render: function render() {
+	    return React.createElement(
+	      'aside',
+	      { className: 'site-chat-bar' },
+	      React.createElement(
+	        'div',
+	        { className: 'chat-bar-primary' },
+	        React.createElement(
+	          'div',
+	          { className: 'chat-bar-users' },
+	          this.state.userFriends.map(function (friend) {
+	            return React.createElement(ChatBarUser, { key: friend.id, name: friend.firstName });
+	          })
+	        ),
+	        React.createElement(
+	          'ul',
+	          { className: 'chat-bar-options' },
+	          React.createElement(
+	            'li',
+	            { className: 'option-search' },
+	            React.createElement('input', { type: 'text', placeholder: 'Search...' })
+	          ),
+	          React.createElement(
+	            'li',
+	            { className: 'option-status' },
+	            React.createElement('span', { className: 'status-tick' })
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = ChatBar;
+
+/***/ },
+/* 369 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var React = __webpack_require__(1);
+	
+	var ChatBar = React.createClass({
+	  displayName: "ChatBar",
+	
+	  render: function render() {
+	    return React.createElement(
+	      "div",
+	      { className: "chat-bar-user" },
+	      React.createElement("div", { className: "user-picture" }),
+	      React.createElement(
+	        "span",
+	        { className: "user-name" },
+	        this.props.name
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = ChatBar;
+
+/***/ },
+/* 370 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -41343,7 +42547,7 @@
 	module.exports = MainHeader;
 
 /***/ },
-/* 358 */
+/* 371 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -41369,24 +42573,43 @@
 	module.exports = Home;
 
 /***/ },
-/* 359 */
+/* 372 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var MainHeader = __webpack_require__(357);
-	var Calendar = __webpack_require__(251);
+	var MainHeader = __webpack_require__(370);
+	var Calendar = __webpack_require__(256);
+	
+	var axios = __webpack_require__(226);
 	
 	var Schedule = React.createClass({
 	  displayName: 'Schedule',
 	
+	  getInitialState: function getInitialState() {
+	    return {
+	      events: []
+	    };
+	  },
+	  componentDidMount: function componentDidMount() {
+	    var that = this;
+	    axios({
+	      method: 'get',
+	      url: '/getUserEvents/' + this.props.params.userId
+	    }).then(function (events) {
+	      console.log(events.data);
+	      that.setState({
+	        events: events.data
+	      });
+	    });
+	  },
 	  render: function render() {
 	    return React.createElement(
 	      'main',
 	      { className: 'site-main' },
 	      React.createElement(MainHeader, { title: 'Charles Jackson' }),
-	      React.createElement(Calendar, null)
+	      React.createElement(Calendar, { events: this.state.events })
 	    );
 	  }
 	});
@@ -41394,16 +42617,16 @@
 	module.exports = Schedule;
 
 /***/ },
-/* 360 */
+/* 373 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var axios = __webpack_require__(229);
-	var ProfileHero = __webpack_require__(361);
-	var ProfileAbout = __webpack_require__(362);
-	var ProfileMembers = __webpack_require__(366);
+	var axios = __webpack_require__(226);
+	var ProfileHero = __webpack_require__(374);
+	var ProfileAbout = __webpack_require__(375);
+	var ProfileMembers = __webpack_require__(378);
 	
 	var Profile = React.createClass({
 	  displayName: 'Profile',
@@ -41475,7 +42698,7 @@
 	module.exports = Profile;
 
 /***/ },
-/* 361 */
+/* 374 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -41529,14 +42752,14 @@
 	module.exports = ProfileHero;
 
 /***/ },
-/* 362 */
+/* 375 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var ProfileNavigation = __webpack_require__(363);
-	var ProfileAboutAddItem = __webpack_require__(364);
+	var ProfileNavigation = __webpack_require__(376);
+	var ProfileAboutAddItem = __webpack_require__(377);
 	
 	var ProfileAbout = React.createClass({
 	  displayName: 'ProfileAbout',
@@ -41660,7 +42883,7 @@
 	module.exports = ProfileAbout;
 
 /***/ },
-/* 363 */
+/* 376 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -41716,13 +42939,13 @@
 	module.exports = ProfileNavigation;
 
 /***/ },
-/* 364 */
+/* 377 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var Dropdown = __webpack_require__(365);
+	var Dropdown = __webpack_require__(363);
 	
 	var ProfileAboutAddItem = React.createClass({
 	  displayName: 'ProfileAboutAddItem',
@@ -41773,45 +42996,14 @@
 	module.exports = ProfileAboutAddItem;
 
 /***/ },
-/* 365 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var React = __webpack_require__(1);
-	
-	var Dropdown = React.createClass({
-	  displayName: "Dropdown",
-	
-	  render: function render() {
-	    return React.createElement(
-	      "div",
-	      { className: "dropdown" },
-	      React.createElement(
-	        "div",
-	        { className: "dropdown-header" },
-	        React.createElement(
-	          "div",
-	          { className: "dropdown-label" },
-	          this.props.label
-	        ),
-	        React.createElement("div", { className: "dropdown-caret fa fa-chevron-down" })
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = Dropdown;
-
-/***/ },
-/* 366 */
+/* 378 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var ProfileNavigation = __webpack_require__(363);
-	var ProfileMember = __webpack_require__(367);
+	var ProfileNavigation = __webpack_require__(376);
+	var ProfileMember = __webpack_require__(379);
 	
 	var Navigation = React.createClass({
 	  displayName: 'Navigation',
@@ -41847,13 +43039,13 @@
 	module.exports = Navigation;
 
 /***/ },
-/* 367 */
+/* 379 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var ConnectionButton = __webpack_require__(228);
+	var ConnectionButton = __webpack_require__(225);
 	
 	var ProfileMember = React.createClass({
 	  displayName: 'ProfileMember',
@@ -41885,13 +43077,13 @@
 	module.exports = ProfileMember;
 
 /***/ },
-/* 368 */
+/* 380 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var axios = __webpack_require__(229);
+	var axios = __webpack_require__(226);
 	
 	var Register = React.createClass({
 	  displayName: 'Register',
@@ -41901,6 +43093,7 @@
 	      fullName: '',
 	      password: '',
 	      email: '',
+	      network: '',
 	      phone: '',
 	      status: true
 	    };
@@ -41955,6 +43148,7 @@
 	            React.createElement('input', { type: 'text', placeholder: 'Full name', name: 'register-name', value: this.state.fullName, onChange: this.handleChange.bind(this, 'fullName') }),
 	            React.createElement('input', { type: 'password', placeholder: 'Password', name: 'register-password', value: this.state.password, onChange: this.handleChange.bind(this, 'password') }),
 	            React.createElement('input', { type: 'text', placeholder: 'Email address', name: 'register-email', value: this.state.email, onChange: this.handleChange.bind(this, 'email') }),
+	            React.createElement('input', { type: 'text', placeholder: 'Network', name: 'register-network', value: this.state.network, onChange: this.handleChange.bind(this, 'network') }),
 	            React.createElement('input', { type: 'text', placeholder: 'Phone number', name: 'register-phone', value: this.state.phone, onChange: this.handleChange.bind(this, 'phone') })
 	          ),
 	          React.createElement(
@@ -41971,13 +43165,13 @@
 	module.exports = Register;
 
 /***/ },
-/* 369 */
+/* 381 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(1);
-	var axios = __webpack_require__(229);
+	var axios = __webpack_require__(226);
 	
 	var Register = React.createClass({
 	  displayName: 'Register',
@@ -41994,6 +43188,7 @@
 	    this.setState(data);
 	  },
 	  submit: function submit(e) {
+	    console.log(e);
 	    e.preventDefault();
 	    var that = this;
 	    axios({
@@ -42052,7 +43247,7 @@
 	module.exports = Register;
 
 /***/ },
-/* 370 */
+/* 382 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -42072,1180 +43267,6 @@
 	});
 	
 	module.exports = NotFound;
-
-/***/ },
-/* 371 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var React = __webpack_require__(1);
-	
-	var SmallSearchUnit = React.createClass({
-	  displayName: "SmallSearchUnit",
-	
-	  onAddMember: function onAddMember(key) {
-	
-	    this.props.onAddMember(key);
-	  },
-	  onDeleteMember: function onDeleteMember(key, e) {
-	    e.stopPropagation();
-	    this.props.onDeleteMember(key);
-	  },
-	  render: function render() {
-	
-	    return React.createElement(
-	      "div",
-	      { onClick: this.onAddMember.bind(this, this.props.theKey), className: "detail-result" },
-	      React.createElement(
-	        "div",
-	        { className: "result-picture" },
-	        React.createElement("img", { src: "http://placehold.it/350x350" })
-	      ),
-	      React.createElement(
-	        "span",
-	        { className: "result-name" },
-	        this.props.title
-	      ),
-	      this.props.addable ? React.createElement("span", { className: "result-add fa fa-plus" }) : '',
-	      this.props.closable ? React.createElement("span", { className: "result-remove fa fa-times", onClick: this.onDeleteMember.bind(this, this.props.theKey) }) : ''
-	    );
-	  }
-	});
-	
-	module.exports = SmallSearchUnit;
-
-/***/ },
-/* 372 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(1);
-	var SmallSearchUnit = __webpack_require__(371);
-	
-	var SmallSearchPicked = React.createClass({
-	  displayName: 'SmallSearchPicked',
-	
-	  addMember: function addMember() {
-	    console.log("YOU CLICKED!!!");
-	  },
-	  render: function render() {
-	    var that = this;
-	    var members = this.props.members;
-	    return React.createElement(
-	      'div',
-	      { className: 'search-picked' },
-	      members.map(function (member) {
-	        var memberName = member.firstName;
-	        return React.createElement(SmallSearchUnit, { onDeleteMember: that.props.onDeleteMember, key: member.userId, title: memberName, addable: false, closable: true, onClick: that.addMember });
-	      })
-	    );
-	  }
-	});
-	
-	module.exports = SmallSearchPicked;
-
-/***/ },
-/* 373 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(1);
-	var SmallSearchUnit = __webpack_require__(371);
-	
-	var SmallSearchSuggested = React.createClass({
-	  displayName: 'SmallSearchSuggested',
-	
-	  render: function render() {
-	    var that = this;
-	    return React.createElement(
-	      'div',
-	      { className: 'search-suggested' },
-	      this.props.listy.map(function (item) {
-	        return React.createElement(SmallSearchUnit, { theKey: item.id, onAddMember: that.props.onAddMember, title: item.firstName, closable: false, addable: true });
-	      })
-	    );
-	  }
-	});
-	
-	module.exports = SmallSearchSuggested;
-
-/***/ },
-/* 374 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-	
-	var React = __webpack_require__(1);
-	var moment = __webpack_require__(254);
-	moment().format();
-	
-	var EventDateSet = React.createClass({
-	  displayName: 'EventDateSet',
-	
-	  getInitialState: function getInitialState() {
-	    return {
-	      selectEndDateActive: false,
-	      from_hours: "",
-	      from_minutes: "",
-	      to_hours: "",
-	      to_minutes: "",
-	      nextDay: false
-	
-	    };
-	  },
-	  handleClickEndDate: function handleClickEndDate() {
-	    if (this.state.selectEndDateActive === true) {
-	      this.state.selectEndDateActive = false;
-	    } else if (this.state.selectEndDateActive === false) {
-	      this.state.selectEndDateActive = true;
-	    }
-	  },
-	  onDeleteDate: function onDeleteDate(date) {
-	    this.props.onDeleteDate(date);
-	  },
-	  handleInputChange: function handleInputChange(input, e) {
-	    this.setState(_defineProperty({}, input, e.target.value));
-	    this.props.onSetFromTime(this.props.date, { fromHour: this.state.from_hours, fromMinutes: this.state.from_minutes, toHours: this.state.to_hours, toMinutes: this.state.to_minutes }, this.state.nextDay);
-	  },
-	  handleNextTo: function handleNextTo() {
-	    var checker = !this.state.nextDay;
-	    this.props.onCheckNext(checker, this.props.date);
-	    this.setState({
-	      nextDay: !this.state.nextDay
-	    });
-	  },
-	  render: function render() {
-	    return React.createElement(
-	      'div',
-	      { className: 'create-date-set' },
-	      React.createElement(
-	        'div',
-	        { className: 'date-value' },
-	        React.createElement(
-	          'div',
-	          { className: 'value-literal' },
-	          this.props.date.date.format("MMMM DD YYYY")
-	        ),
-	        React.createElement('div', { onClick: this.onDeleteDate.bind(this, this.props.date), className: 'remove-date fa fa-times' })
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'date-hours' },
-	        React.createElement(
-	          'div',
-	          { className: 'hour-set' },
-	          React.createElement(
-	            'div',
-	            { className: 'set-label' },
-	            'From:'
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'set-options' },
-	            React.createElement('input', { onChange: this.handleInputChange.bind(this, "from_hours"), ref: 'from_hours', type: 'text', placeholder: '00', className: 'hour' }),
-	            ':',
-	            React.createElement('input', { onChange: this.handleInputChange.bind(this, "from_minutes"), ref: 'from_minutes', type: 'text', placeholder: '00', className: 'minutes' })
-	          )
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'hour-set' },
-	          React.createElement(
-	            'div',
-	            { className: 'set-label' },
-	            'To:'
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'set-options' },
-	            React.createElement('input', { onChange: this.handleInputChange.bind(this, "to_hours"), ref: 'to_hours', type: 'text', placeholder: '00', className: 'hour' }),
-	            ':',
-	            React.createElement('input', { onChange: this.handleInputChange.bind(this, "to_minutes"), ref: 'to_minutes', type: 'text', placeholder: '00', className: 'minutes' })
-	          )
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'until-date' },
-	          React.createElement(
-	            'div',
-	            { className: 'set-label' },
-	            'Ends:'
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'set-options' },
-	            React.createElement(
-	              'div',
-	              { className: 'add-until-date' },
-	              React.createElement(
-	                'div',
-	                { onClick: this.handleNextTo, className: 'select-date-trigger before' },
-	                this.props.date.end ? moment.unix(this.props.date.end).format('MMMM DD YYYY') : this.props.date.date.format('MMMM DD YYYY')
-	              )
-	            )
-	          )
-	        )
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = EventDateSet;
-
-/***/ },
-/* 375 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var React = __webpack_require__(1);
-	
-	var WeekDayEvent = React.createClass({
-	  displayName: "WeekDayEvent",
-	
-	  render: function render() {
-	    return React.createElement(
-	      "div",
-	      { className: "calendar-weekday-event" },
-	      React.createElement(
-	        "span",
-	        { className: "weekday-event-title" },
-	        this.props.title
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = WeekDayEvent;
-
-/***/ },
-/* 376 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _classnames = __webpack_require__(377);
-	
-	var _classnames2 = _interopRequireDefault(_classnames);
-	
-	var _defaults = __webpack_require__(378);
-	
-	var _defaults2 = _interopRequireDefault(_defaults);
-	
-	var _propTypes = __webpack_require__(379);
-	
-	var _propTypes2 = _interopRequireDefault(_propTypes);
-	
-	var _filterInputAttributes = __webpack_require__(380);
-	
-	var _filterInputAttributes2 = _interopRequireDefault(_filterInputAttributes);
-	
-	var _input = __webpack_require__(381);
-	
-	var _input2 = _interopRequireDefault(_input);
-	
-	var _suggestList = __webpack_require__(382);
-	
-	var _suggestList2 = _interopRequireDefault(_suggestList);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* global window */
-	
-	// Escapes special characters in user input for regex
-	function escapeRegExp(str) {
-	  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
-	}
-	
-	/**
-	 * Entry point for the Geosuggest component
-	 */
-	
-	var Geosuggest = function (_React$Component) {
-	  _inherits(Geosuggest, _React$Component);
-	
-	  /**
-	   * The constructor. Sets the initial state.
-	   * @param  {Object} props The properties object.
-	   */
-	
-	  function Geosuggest(props) {
-	    _classCallCheck(this, Geosuggest);
-	
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Geosuggest).call(this, props));
-	
-	    _this.state = {
-	      isSuggestsHidden: true,
-	      userInput: props.initialValue,
-	      activeSuggest: null,
-	      suggests: [],
-	      timer: null
-	    };
-	    return _this;
-	  }
-	
-	  /**
-	   * Change inputValue if prop changes
-	   * @param {Object} props The new props
-	   */
-	
-	
-	  _createClass(Geosuggest, [{
-	    key: 'componentWillReceiveProps',
-	    value: function componentWillReceiveProps(props) {
-	      if (this.props.initialValue !== props.initialValue) {
-	        this.setState({ userInput: props.initialValue });
-	      }
-	    }
-	
-	    /**
-	     * Called on the client side after component is mounted.
-	     * Google api sdk object will be obtained and cached as a instance property.
-	     * Necessary objects of google api will also be determined and saved.
-	     */
-	
-	  }, {
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      this.setState({ userInput: this.props.initialValue });
-	
-	      var googleMaps = this.props.googleMaps || window.google && // eslint-disable-line no-extra-parens
-	      window.google.maps || this.googleMaps;
-	
-	      if (!googleMaps) {
-	        console.error( // eslint-disable-line no-console
-	        'Google map api was not found in the page.');
-	        return;
-	      }
-	      this.googleMaps = googleMaps;
-	
-	      this.autocompleteService = new googleMaps.places.AutocompleteService();
-	      this.geocoder = new googleMaps.Geocoder();
-	    }
-	
-	    /**
-	     * When the component will unmount
-	     */
-	
-	  }, {
-	    key: 'componentWillUnmount',
-	    value: function componentWillUnmount() {
-	      clearTimeout(this.state.timer);
-	    }
-	
-	    /**
-	     * When the input got changed
-	     * @param {String} userInput The input value of the user
-	     */
-	
-	  }, {
-	    key: 'onInputChange',
-	    value: function onInputChange(userInput) {
-	      var _this2 = this;
-	
-	      this.setState({ userInput: userInput }, function () {
-	        _this2.showSuggests();
-	        _this2.props.onChange(userInput);
-	      });
-	    }
-	
-	    /**
-	     * When the input gets focused
-	     */
-	
-	  }, {
-	    key: 'onInputFocus',
-	    value: function onInputFocus() {
-	      this.props.onFocus();
-	      this.showSuggests();
-	    }
-	
-	    /**
-	     * When the input gets blurred
-	     */
-	
-	  }, {
-	    key: 'onInputBlur',
-	    value: function onInputBlur() {
-	      if (!this.state.ignoreBlur) {
-	        this.hideSuggests();
-	      }
-	    }
-	
-	    /**
-	     * Focus the input
-	     */
-	
-	  }, {
-	    key: 'focus',
-	    value: function focus() {
-	      this.refs.input.focus();
-	    }
-	
-	    /**
-	     * Update the value of the user input
-	     * @param {String} userInput the new value of the user input
-	     */
-	
-	  }, {
-	    key: 'update',
-	    value: function update(userInput) {
-	      this.setState({ userInput: userInput });
-	      this.props.onChange(userInput);
-	    }
-	
-	    /*
-	     * Clear the input and close the suggestion pane
-	     */
-	
-	  }, {
-	    key: 'clear',
-	    value: function clear() {
-	      var _this3 = this;
-	
-	      this.setState({ userInput: '' }, function () {
-	        return _this3.hideSuggests();
-	      });
-	    }
-	
-	    /**
-	     * Search for new suggests
-	     */
-	
-	  }, {
-	    key: 'searchSuggests',
-	    value: function searchSuggests() {
-	      var _this4 = this;
-	
-	      if (!this.state.userInput) {
-	        this.updateSuggests();
-	        return;
-	      }
-	
-	      var options = {
-	        input: this.state.userInput
-	      };
-	
-	      ['location', 'radius', 'bounds', 'types'].forEach(function (option) {
-	        if (_this4.props[option]) {
-	          options[option] = _this4.props[option];
-	        }
-	      });
-	
-	      if (this.props.country) {
-	        options.componentRestrictions = {
-	          country: this.props.country
-	        };
-	      }
-	
-	      this.autocompleteService.getPlacePredictions(options, function (suggestsGoogle) {
-	        _this4.updateSuggests(suggestsGoogle || []); // can be null
-	
-	        if (_this4.props.autoActivateFirstSuggest) {
-	          _this4.activateSuggest('next');
-	        }
-	      });
-	    }
-	
-	    /**
-	     * Update the suggests
-	     * @param  {Array} suggestsGoogle The new google suggests
-	     */
-	
-	  }, {
-	    key: 'updateSuggests',
-	    value: function updateSuggests() {
-	      var _this5 = this;
-	
-	      var suggestsGoogle = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
-	
-	      var suggests = [],
-	          regex = new RegExp(escapeRegExp(this.state.userInput), 'gim'),
-	          skipSuggest = this.props.skipSuggest,
-	          maxFixtures = 10,
-	          fixturesSearched = 0;
-	
-	      this.props.fixtures.forEach(function (suggest) {
-	        if (fixturesSearched >= maxFixtures) {
-	          return;
-	        }
-	
-	        if (!skipSuggest(suggest) && suggest.label.match(regex)) {
-	          fixturesSearched++;
-	
-	          suggest.placeId = suggest.label;
-	          suggests.push(suggest);
-	        }
-	      });
-	
-	      suggestsGoogle.forEach(function (suggest) {
-	        if (!skipSuggest(suggest)) {
-	          suggests.push({
-	            label: _this5.props.getSuggestLabel(suggest),
-	            placeId: suggest.place_id
-	          });
-	        }
-	      });
-	
-	      this.setState({ suggests: suggests });
-	    }
-	
-	    /**
-	     * Show the suggestions
-	     */
-	
-	  }, {
-	    key: 'showSuggests',
-	    value: function showSuggests() {
-	      this.searchSuggests();
-	      this.setState({ isSuggestsHidden: false });
-	    }
-	
-	    /**
-	     * Hide the suggestions
-	     */
-	
-	  }, {
-	    key: 'hideSuggests',
-	    value: function hideSuggests() {
-	      var _this6 = this;
-	
-	      this.props.onBlur();
-	      var timer = setTimeout(function () {
-	        _this6.setState({ isSuggestsHidden: true });
-	      }, 100);
-	
-	      this.setState({ timer: timer });
-	    }
-	
-	    /**
-	     * Activate a new suggest
-	     * @param {String} direction The direction in which to activate new suggest
-	     */
-	
-	  }, {
-	    key: 'activateSuggest',
-	    value: function activateSuggest(direction) {
-	      // eslint-disable-line complexity
-	      if (this.state.isSuggestsHidden) {
-	        this.showSuggests();
-	        return;
-	      }
-	
-	      var suggestsCount = this.state.suggests.length - 1,
-	          next = direction === 'next';
-	      var newActiveSuggest = null,
-	          newIndex = 0,
-	          i = 0;
-	
-	      for (i; i <= suggestsCount; i++) {
-	        if (this.state.suggests[i] === this.state.activeSuggest) {
-	          newIndex = next ? i + 1 : i - 1;
-	        }
-	      }
-	
-	      if (!this.state.activeSuggest) {
-	        newIndex = next ? 0 : suggestsCount;
-	      }
-	
-	      if (newIndex >= 0 && newIndex <= suggestsCount) {
-	        newActiveSuggest = this.state.suggests[newIndex];
-	      }
-	
-	      this.props.onActivateSuggest(newActiveSuggest);
-	
-	      this.setState({ activeSuggest: newActiveSuggest });
-	    }
-	
-	    /**
-	     * When an item got selected
-	     * @param {GeosuggestItem} suggest The selected suggest item
-	     */
-	
-	  }, {
-	    key: 'selectSuggest',
-	    value: function selectSuggest(suggest) {
-	      if (!suggest) {
-	        suggest = {
-	          label: this.state.userInput
-	        };
-	      }
-	
-	      this.setState({
-	        isSuggestsHidden: true,
-	        userInput: suggest.label
-	      });
-	
-	      if (suggest.location) {
-	        this.setState({ ignoreBlur: false });
-	        this.props.onSuggestSelect(suggest);
-	        return;
-	      }
-	
-	      this.geocodeSuggest(suggest);
-	    }
-	
-	    /**
-	     * Geocode a suggest
-	     * @param  {Object} suggest The suggest
-	     */
-	
-	  }, {
-	    key: 'geocodeSuggest',
-	    value: function geocodeSuggest(suggest) {
-	      var _this7 = this;
-	
-	      this.geocoder.geocode(suggest.placeId ? { placeId: suggest.placeId } : { address: suggest.label }, function (results, status) {
-	        if (status !== _this7.googleMaps.GeocoderStatus.OK) {
-	          return;
-	        }
-	
-	        var gmaps = results[0],
-	            location = gmaps.geometry.location;
-	
-	        suggest.gmaps = gmaps;
-	        suggest.location = {
-	          lat: location.lat(),
-	          lng: location.lng()
-	        };
-	
-	        _this7.props.onSuggestSelect(suggest);
-	      });
-	    }
-	
-	    /**
-	     * Render the view
-	     * @return {Function} The React element to render
-	     */
-	
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _this8 = this;
-	
-	      var attributes = (0, _filterInputAttributes2.default)(this.props),
-	          classes = (0, _classnames2.default)('geosuggest', this.props.className);
-	      var input = _react2.default.createElement(_input2.default, _extends({ className: this.props.inputClassName,
-	        ref: 'input',
-	        value: this.state.userInput,
-	        onChange: this.onInputChange.bind(this),
-	        onFocus: this.onInputFocus.bind(this),
-	        onBlur: this.onInputBlur.bind(this),
-	        onNext: function onNext() {
-	          return _this8.activateSuggest('next');
-	        },
-	        onPrev: function onPrev() {
-	          return _this8.activateSuggest('prev');
-	        },
-	        onSelect: function onSelect() {
-	          return _this8.selectSuggest(_this8.state.activeSuggest);
-	        },
-	        onEscape: this.hideSuggests.bind(this) }, attributes)),
-	          suggestionsList = _react2.default.createElement(_suggestList2.default, { isHidden: this.state.isSuggestsHidden,
-	        suggests: this.state.suggests,
-	        activeSuggest: this.state.activeSuggest,
-	        onSuggestMouseDown: function onSuggestMouseDown() {
-	          return _this8.setState({ ignoreBlur: true });
-	        },
-	        onSuggestMouseOut: function onSuggestMouseOut() {
-	          return _this8.setState({ ignoreBlur: false });
-	        },
-	        onSuggestSelect: this.selectSuggest.bind(this) });
-	
-	      return _react2.default.createElement(
-	        'div',
-	        { className: classes },
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'geosuggest__input-wrapper' },
-	          input
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'geosuggest__suggests-wrapper' },
-	          suggestionsList
-	        )
-	      );
-	    }
-	  }]);
-	
-	  return Geosuggest;
-	}(_react2.default.Component);
-	
-	/**
-	 * Types for the properties
-	 * @type {Object}
-	 */
-	
-	
-	Geosuggest.propTypes = _propTypes2.default;
-	
-	/**
-	 * Default values for the properties
-	 * @type {Object}
-	 */
-	Geosuggest.defaultProps = _defaults2.default;
-	
-	exports.default = Geosuggest;
-
-/***/ },
-/* 377 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	  Copyright (c) 2016 Jed Watson.
-	  Licensed under the MIT License (MIT), see
-	  http://jedwatson.github.io/classnames
-	*/
-	/* global define */
-	
-	(function () {
-		'use strict';
-	
-		var hasOwn = {}.hasOwnProperty;
-	
-		function classNames () {
-			var classes = [];
-	
-			for (var i = 0; i < arguments.length; i++) {
-				var arg = arguments[i];
-				if (!arg) continue;
-	
-				var argType = typeof arg;
-	
-				if (argType === 'string' || argType === 'number') {
-					classes.push(arg);
-				} else if (Array.isArray(arg)) {
-					classes.push(classNames.apply(null, arg));
-				} else if (argType === 'object') {
-					for (var key in arg) {
-						if (hasOwn.call(arg, key) && arg[key]) {
-							classes.push(key);
-						}
-					}
-				}
-			}
-	
-			return classes.join(' ');
-		}
-	
-		if (typeof module !== 'undefined' && module.exports) {
-			module.exports = classNames;
-		} else if (true) {
-			// register as 'classnames', consistent with npm package name
-			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
-				return classNames;
-			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-		} else {
-			window.classNames = classNames;
-		}
-	}());
-
-
-/***/ },
-/* 378 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	/**
-	 * Default values
-	 */
-	exports.default = {
-	  fixtures: [],
-	  initialValue: '',
-	  placeholder: 'Search places',
-	  disabled: false,
-	  className: '',
-	  inputClassName: '',
-	  location: null,
-	  radius: null,
-	  bounds: null,
-	  country: null,
-	  types: null,
-	  googleMaps: null,
-	  onActivateSuggest: function onActivateSuggest() {},
-	  onSuggestSelect: function onSuggestSelect() {},
-	  onFocus: function onFocus() {},
-	  onBlur: function onBlur() {},
-	  onChange: function onChange() {},
-	  skipSuggest: function skipSuggest() {},
-	  getSuggestLabel: function getSuggestLabel(suggest) {
-	    return suggest.description;
-	  },
-	  autoActivateFirstSuggest: false
-	};
-
-/***/ },
-/* 379 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	/**
-	 * Default values
-	 */
-	exports.default = {
-	  fixtures: _react2.default.PropTypes.array,
-	  initialValue: _react2.default.PropTypes.string,
-	  placeholder: _react2.default.PropTypes.string,
-	  disabled: _react2.default.PropTypes.bool,
-	  className: _react2.default.PropTypes.string,
-	  inputClassName: _react2.default.PropTypes.string,
-	  location: _react2.default.PropTypes.object,
-	  radius: _react2.default.PropTypes.oneOfType([_react2.default.PropTypes.string, _react2.default.PropTypes.number]),
-	  bounds: _react2.default.PropTypes.object,
-	  country: _react2.default.PropTypes.string,
-	  types: _react2.default.PropTypes.array,
-	  googleMaps: _react2.default.PropTypes.object,
-	  onSuggestSelect: _react2.default.PropTypes.func,
-	  onFocus: _react2.default.PropTypes.func,
-	  onBlur: _react2.default.PropTypes.func,
-	  onChange: _react2.default.PropTypes.func,
-	  skipSuggest: _react2.default.PropTypes.func,
-	  getSuggestLabel: _react2.default.PropTypes.func,
-	  autoActivateFirstSuggest: _react2.default.PropTypes.bool
-	};
-
-/***/ },
-/* 380 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	exports.default = function (props) {
-	  var attributes = {};
-	
-	  allowedAttributes.forEach(function (allowedAttribute) {
-	    if (props[allowedAttribute]) {
-	      attributes[allowedAttribute] = props[allowedAttribute];
-	    }
-	  });
-	
-	  return attributes;
-	};
-	
-	/**
-	 * Attributes allowed on input elements
-	 */
-	var allowedAttributes = ['autoComplete', 'autoFocus', 'disabled', 'form', 'formAction', 'formEncType', 'formMethod', 'formNoValidate', 'formTarget', 'height', 'id', 'inputMode', 'maxLength', 'name', 'pattern', 'placeholder', 'readOnly', 'required', 'size', 'spellCheck', 'tabIndex'];
-	
-	/**
-	 * Filter the properties for only allowed input properties
-	 * @param  {Object} props The properties to filter
-	 * @return {Object} The filtered, allowed properties
-	 */
-
-/***/ },
-/* 381 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _classnames = __webpack_require__(377);
-	
-	var _classnames2 = _interopRequireDefault(_classnames);
-	
-	var _filterInputAttributes = __webpack_require__(380);
-	
-	var _filterInputAttributes2 = _interopRequireDefault(_filterInputAttributes);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // eslint-disable-line no-unused-vars
-	
-	
-	/**
-	 * The input field
-	 * @param {Object} props The component's props
-	 * @return {JSX} The icon component.
-	 */
-	
-	var Input = function (_React$Component) {
-	  _inherits(Input, _React$Component);
-	
-	  function Input() {
-	    _classCallCheck(this, Input);
-	
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Input).apply(this, arguments));
-	  }
-	
-	  _createClass(Input, [{
-	    key: 'onChange',
-	
-	    /**
-	     * When the input got changed
-	     */
-	    value: function onChange() {
-	      this.props.onChange(this.refs.input.value);
-	    }
-	
-	    /**
-	     * When a key gets pressed in the input
-	     * @param  {Event} event The keypress event
-	     */
-	
-	  }, {
-	    key: 'onInputKeyDown',
-	    value: function onInputKeyDown(event) {
-	      switch (event.which) {
-	        case 40:
-	          // DOWN
-	          event.preventDefault();
-	          this.props.onNext();
-	          break;
-	        case 38:
-	          // UP
-	          event.preventDefault();
-	          this.props.onPrev();
-	          break;
-	        case 13:
-	          // ENTER
-	          event.preventDefault();
-	          this.props.onSelect();
-	          break;
-	        case 9:
-	          // TAB
-	          this.props.onSelect();
-	          break;
-	        case 27:
-	          // ESC
-	          this.props.onEscape();
-	          break;
-	        default:
-	          break;
-	      }
-	    }
-	
-	    /**
-	     * Focus the input
-	     */
-	
-	  }, {
-	    key: 'focus',
-	    value: function focus() {
-	      this.refs.input.focus();
-	    }
-	
-	    /**
-	     * Render the view
-	     * @return {Function} The React element to render
-	     */
-	
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var attributes = (0, _filterInputAttributes2.default)(this.props),
-	          classes = (0, _classnames2.default)('geosuggest__input', this.props.className);
-	
-	      return _react2.default.createElement('input', _extends({ className: classes,
-	        ref: 'input',
-	        type: 'text'
-	      }, attributes, {
-	        value: this.props.value,
-	        onKeyDown: this.onInputKeyDown.bind(this),
-	        onChange: this.onChange.bind(this),
-	        onFocus: this.props.onFocus.bind(this),
-	        onBlur: this.props.onBlur.bind(this) }));
-	    }
-	  }]);
-	
-	  return Input;
-	}(_react2.default.Component);
-	
-	/**
-	 * Default values for the properties
-	 * @type {Object}
-	 */
-	
-	
-	Input.defaultProps = {
-	  className: '',
-	  value: '',
-	  onChange: function onChange() {},
-	  onFocus: function onFocus() {},
-	  onBlur: function onBlur() {},
-	  onNext: function onNext() {},
-	  onPrev: function onPrev() {},
-	  onSelect: function onSelect() {},
-	  onEscape: function onEscape() {}
-	};
-	
-	exports.default = Input;
-
-/***/ },
-/* 382 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _classnames = __webpack_require__(377);
-	
-	var _classnames2 = _interopRequireDefault(_classnames);
-	
-	var _suggestItem = __webpack_require__(383);
-	
-	var _suggestItem2 = _interopRequireDefault(_suggestItem);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	/**
-	 * The list with suggestions. Either from an API or provided as fixture
-	 * @param {Object} props The component's props
-	 * @return {JSX} The icon component.
-	 */
-	// eslint-disable-line no-unused-vars
-	
-	exports.default = function (_ref) {
-	  var _ref$isHidden = _ref.isHidden;
-	  var isHidden = _ref$isHidden === undefined ? true : _ref$isHidden;
-	  var _ref$suggests = _ref.suggests;
-	  var suggests = _ref$suggests === undefined ? [] : _ref$suggests;
-	  var activeSuggest = _ref.activeSuggest;
-	  var _ref$onSuggestMouseDo = _ref.onSuggestMouseDown;
-	  var onSuggestMouseDown = _ref$onSuggestMouseDo === undefined ? function () {} : _ref$onSuggestMouseDo;
-	  var _ref$onSuggestMouseOu = _ref.onSuggestMouseOut;
-	  var onSuggestMouseOut = _ref$onSuggestMouseOu === undefined ? function () {} : _ref$onSuggestMouseOu;
-	  var _ref$onSuggestSelect = _ref.onSuggestSelect;
-	  var onSuggestSelect = _ref$onSuggestSelect === undefined ? function () {} : _ref$onSuggestSelect;
-	
-	  var classes = (0, _classnames2.default)('geosuggest__suggests', { 'geosuggest__suggests--hidden': isHidden });
-	
-	  return _react2.default.createElement(
-	    'ul',
-	    { className: classes },
-	    suggests.map(function (suggest) {
-	      var isActive = activeSuggest && suggest.placeId === activeSuggest.placeId;
-	
-	      return _react2.default.createElement(_suggestItem2.default, { key: suggest.placeId,
-	        className: suggest.className,
-	        suggest: suggest,
-	        isActive: isActive,
-	        onMouseDown: onSuggestMouseDown,
-	        onMouseOut: onSuggestMouseOut,
-	        onSelect: function onSelect() {
-	          return onSuggestSelect(suggest);
-	        } });
-	    })
-	  );
-	};
-
-/***/ },
-/* 383 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _classnames = __webpack_require__(377);
-	
-	var _classnames2 = _interopRequireDefault(_classnames);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	/**
-	 * A single Geosuggest item in the list
-	 * @param {Object} props The component's props
-	 * @return {JSX} The icon component.
-	 */
-	
-	exports.default = function (_ref) {
-	  var _ref$isActive = _ref.isActive;
-	  var isActive = _ref$isActive === undefined ? false : _ref$isActive;
-	  var _ref$className = _ref.className;
-	  var className = _ref$className === undefined ? '' : _ref$className;
-	  var _ref$suggest = _ref.suggest;
-	  var suggest = _ref$suggest === undefined ? {} : _ref$suggest;
-	  var _ref$onMouseDown = _ref.onMouseDown;
-	  var onMouseDown = _ref$onMouseDown === undefined ? function () {} : _ref$onMouseDown;
-	  var _ref$onMouseOut = _ref.onMouseOut;
-	  var onMouseOut = _ref$onMouseOut === undefined ? function () {} : _ref$onMouseOut;
-	  var _ref$onSelect = _ref.onSelect;
-	  var onSelect = _ref$onSelect === undefined ? function () {} : _ref$onSelect;
-	
-	  var classes = (0, _classnames2.default)('geosuggest-item', className, { 'geosuggest-item--active': isActive });
-	
-	  return _react2.default.createElement(
-	    'li',
-	    { className: classes,
-	      onMouseDown: onMouseDown,
-	      onMouseOut: onMouseOut,
-	      onClick: function onClick(event) {
-	        event.preventDefault();
-	        onSelect();
-	      } },
-	    suggest.label
-	  );
-	}; // eslint-disable-line no-unused-vars
 
 /***/ }
 /******/ ]);

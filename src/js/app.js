@@ -26,9 +26,9 @@ var routes = (
       <Route path="login" component={Login}/>
 
       <Route component={App}>
-        <Route path="create" component={CreateEvent}/>         
-        <Route path="schedule" component={Schedule}/>
-        <Route path="profile" component={Profile}/>
+        <Route path="create" component={CreateEvent}/>
+        <Route path="schedule/:userId" component={Schedule}/>
+        <Route path="profile/" component={Profile}/>
       </Route>
 
       <Route path="*" component={NotFound}/>

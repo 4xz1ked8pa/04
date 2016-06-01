@@ -6,6 +6,25 @@ var HASH_ROUNDS = 10;
 // Export
 module.exports = function CursuumAPI(conn) {
   return {
+    getUserEvents: function(userId, callback) {
+      conn.query(
+        `SELECT
+          events.id, events.title,
+          dates.startDate AS startDate, dates.endDate AS endDate
+          FROM events
+          JOIN dates ON dates.eventId = events.id
+          WHERE events.userId = ?`,
+        [userId],
+        function(err, result) {
+          if (err) {
+            callback(err);
+          }
+          else {
+            callback(null, result);
+          }
+        }
+      );
+    },
     getUserInfos: function(userId, callback) {
       conn.query(
         `SELECT id, firstName, lastName, email, createdAt, updatedAt FROM users WHERE id = ?`,
@@ -22,6 +41,18 @@ module.exports = function CursuumAPI(conn) {
     getFriendsForUser: function(userId, searchFor, callback) {
       conn.query(
         `SELECT * FROM friends JOIN users ON users.id = friends.friend2Id WHERE friend1Id = ? AND users.firstName COLLATE UTF8_GENERAL_CI LIKE ?`, [userId, '%'+searchFor+'%'], function(err, friends) {
+          if (err) {
+            callback(err);
+          }
+          else {
+            callback(null, friends);
+          }
+        }
+      );
+    },
+    getUserChatFriends: function(userId, callback) {
+      conn.query(
+        `SELECT * FROM friends JOIN users ON users.id = friends.friend2Id WHERE friend1Id = ?`, [userId], function(err, friends) {
           if (err) {
             callback(err);
           }
@@ -62,10 +93,10 @@ module.exports = function CursuumAPI(conn) {
       conn.query(
         `INSERT INTO users (
           firstName,
-          lastName,
           password,
-          email) VALUES (?, '', ?, ?)`,
-          [user.fullName, user.password, user.email],
+          email,
+          network) VALUES (?, ?, ?, ?)`,
+          [user.fullName, user.password, user.email, user.network],
         function(err, result) {
           if (err) {
             callback(err);
@@ -74,9 +105,9 @@ module.exports = function CursuumAPI(conn) {
             conn.query(
               `SELECT id,
                       firstName,
-                      lastName,
                       email,
                       password,
+                      network,
                       createdAt,
                       updatedAt FROM users WHERE id = ?`,
                       [result.insertId],
@@ -109,6 +140,7 @@ module.exports = function CursuumAPI(conn) {
     },
     createSession: function createSession(userId, callback) {
       var token = Math.random();
+
       conn.query('INSERT INTO sessions SET userId = ?, token = ?', [userId, token], function(err, result) {
         if (err) {
           callback(err);
@@ -139,42 +171,68 @@ module.exports = function CursuumAPI(conn) {
           description,
           category,
           location) VALUES (?, ?, ?, ?, ?)`,
-          [eventData.userId, eventData.title, eventData.description, eventData.category, eventData.location],
-        function(err, result) {
+          [eventData.userId, eventData.title, eventData.description, 1, eventData.location],
+        function(err, eventResult) {
           if (err) {
             callback(err);
           }
           else {
+
+            var values = [];
+            var placeholders = [];
+            eventData.dates.forEach(function(date) {
+              placeholders.push('(?, FROM_UNIXTIME(?), FROM_UNIXTIME(?))');
+              values.push(eventResult.insertId);
+              values.push(date.start);
+              values.push(date.end);
+            });
+
             conn.query(
               `INSERT INTO dates (
                 eventId,
                 startDate,
-                endDate) VALUES (?,?,?)`,
-              [result.insertId, eventData.startDate, eventData.endDate],
-              function(err, result) {
-                if (err) {
-                  callback(err);
-                }
-                else {
-                  eventData.members.forEach(function(member) {
+                endDate) VALUES ${placeholders.join(',')}`,
+                values,
+                function(err, result) {
+                  if (err) {
+                    callback(err);
+                  }
+                  else {
+                    var values = [];
+                    var placeholders = [];
+                    eventData.members.forEach(function(membership) {
+                      placeholders.push('(?, ?, ?)');
+                      values.push(eventResult.insertId);
+                      values.push(eventData.userId);
+                      values.push(membership.id);
+                    });
+
                     conn.query(
-                      `INSERT INTO requests (
-                        fromId,
-                        toId,
-                        requestType) VALUES (?,?,?)`,
-                        /* HOW DO I GET MY OWN userId ??????????????????????? */
-                      [member.id, me.userId, 'event'],
+                      `INSERT INTO eventRequests (eventId, fromId, toId) VALUES ${placeholders.join(',')}`,
+                      values,
                       function(err, result) {
                         if (err) {
                           callback(err);
                         }
                         else {
-
+                          conn.query(
+                            `SELECT * FROM events WHERE id = ?`,
+                            [eventResult.insertId],
+                            function(err, result) {
+                              if (err) {
+                                callback(err);
+                              }
+                              else {
+                                callback(null, result[0]);
+                              }
+                            }
+                          );
                         }
-                    });
-                  });
+                      }
+                    )
+                  }
                 }
-              });
+            );
           }
         }
       );
