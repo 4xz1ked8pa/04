@@ -1,3 +1,6 @@
+/* fonts */
+//@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300italic,300,600,400italic,700,600italic,700italic,800,800italic);
+
 /* vendors */
 @import "./vendors/bourbon/app/assets/stylesheets/_bourbon.scss";
 @import "./vendors/_normalize.scss";
@@ -36,6 +39,7 @@
   height:100%;
   background: HSLA(0, 0%, 97%, 1);
   font-family:'Helvetica';
+  //font-family:'Open Sans';
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow:hidden;
@@ -54,6 +58,7 @@
     padding-top:40px;
     padding-left:180px + 15px;
     padding-right:180px + 13px;
+    z-index:1;
     >div {
       display: flex;
       flex-grow:1;
@@ -63,11 +68,31 @@
     }
     .site-main-header {
       display: flex;
-      color:darken(white,70%);
+      color:darken(white,77%);
       font-size:18px;
       font-weight:500;
       margin-top:16px;
       margin-bottom:10px;
+      .header-title {
+        width:100%;
+        span, >div {
+          display: inline-block;
+        }
+        >div {
+          &:hover {
+            cursor: pointer;
+          }
+          &:before {
+            content: ',';
+            margin-right:8px;
+          }
+          &:first-child {
+            &:before {
+              content: '';
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -123,8 +148,10 @@
     color:darken(white,60%);
     font-size:14px;
     font-weight:400;
+    line-height: 1.4;
     margin-top:1px;
     margin-right:auto;
+    @include ellipsis(80%);
   }
   .result-remove, .result-add {
     color:#D4D4D4;
@@ -146,14 +173,14 @@
 
 /* added members */
 .friend-suggest {
-  position: absolute;
-  top:108px; left:0;
   width:180px;
-  padding:0 7px;
   z-index: 10;
   .suggest-wrap {
     position: relative;
     width:100%;
+    .search-suggested {
+      top:39px;
+    }
     .search-field {
       width: 100%;
       background-color: darken(white,2%);
@@ -163,6 +190,27 @@
       border: 1px solid lighten(#dbdbdb,2%);
       border-radius: 1px;
       box-shadow: 0 1px 0 rgba(0, 0, 0, 0.01);
+    }
+  }
+}
+
+/* compare members */
+.compare-schedules {
+  width:100%;
+  height:auto;
+  .search-field {
+    width: 100%;
+    background-color: darken(white,2%);
+    color: #4d4d4d;
+    font-weight: 400;
+    padding: 8px 5px 4px 5px;
+    border: 1px solid lighten(#dbdbdb,2%);
+    border-radius: 1px;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.01);
+    margin-top:5px;
+    margin-bottom:3px;
+    &:focus {
+      background: darken(white,0.5%);
     }
   }
 }

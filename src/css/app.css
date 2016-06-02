@@ -1,4 +1,5 @@
 @charset "UTF-8";
+/* fonts */
 /* vendors */
 /* ./vendors/_normalize.scss */
 /* http://meyerweb.com/eric/tools/css/reset/
@@ -139,6 +140,8 @@ textarea {
 /* ./components/_Navigation.scss */
 .site-navigation {
   position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 40px;
   background: HSLA(122, 22%, 25%, 1);
@@ -199,8 +202,7 @@ textarea {
           font-size: 13px;
           font-weight: 500;
           padding: 0 7px 4px 7px;
-          border-bottom: 1px solid HSLA(0, 0%, 84%, 1);
-          margin-bottom: 4px; }
+          border-bottom: 1px solid HSLA(0, 0%, 84%, 1); }
           .site-side-navigation .side-navigation-primary .site-modules .module .module-header .header-title {
             color: #1a1a1a;
             font-size: 15px;
@@ -213,7 +215,7 @@ textarea {
             align-items: center;
             width: 100%;
             color: #4d4d4d;
-            padding: 6px 7px 5px 7px; }
+            padding: 8px 7px 5px 7px; }
             .site-side-navigation .side-navigation-primary .site-modules .module .module-features .feature .feature-label {
               font-size: 13px;
               font-weight: 500;
@@ -232,20 +234,6 @@ textarea {
             .site-side-navigation .side-navigation-primary .site-modules .module .module-features .feature:hover {
               background: #f2f2f2;
               cursor: pointer; }
-            .site-side-navigation .side-navigation-primary .site-modules .module .module-features .feature .compare-schedules {
-              width: 100%;
-              margin-top: 6px; }
-              .site-side-navigation .side-navigation-primary .site-modules .module .module-features .feature .compare-schedules .search-field {
-                width: 100%;
-                background-color: #fafafa;
-                color: #4d4d4d;
-                font-weight: 400;
-                padding: 4px 5px 4px 5px;
-                border: 1px solid #e0e0e0;
-                border-radius: 1px;
-                box-shadow: 0 1px 0 rgba(0, 0, 0, 0.01); }
-                .site-side-navigation .side-navigation-primary .site-modules .module .module-features .feature .compare-schedules .search-field:focus {
-                  background: #fefefe; }
     .site-side-navigation .side-navigation-primary .site-options {
       display: flex;
       align-self: flex-end;
@@ -1094,6 +1082,7 @@ textarea {
         overflow-y: auto; }
 
 .site-calendar {
+  position: relative;
   display: flex;
   width: 100%;
   height: 100%; }
@@ -1171,9 +1160,31 @@ textarea {
         .site-calendar .calendar-month .calendar-week .calendar-weekday .weekday-events {
           flex-wrap: wrap;
           flex-direction: row;
-          display: flex; }
+          display: flex;
+          margin-top: 10px; }
           .site-calendar .calendar-month .calendar-week .calendar-weekday .weekday-events .event {
-            font-size: 12px; }
+            width: 100%;
+            color: #4d4d4d;
+            font-size: 12.5px;
+            font-weight: 500;
+            line-height: 1.4;
+            padding-top: 4px;
+            padding-bottom: 4px;
+            margin-top: 0px;
+            display: inline-block;
+            max-width: 92%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            word-wrap: normal; }
+            .site-calendar .calendar-month .calendar-week .calendar-weekday .weekday-events .event:before {
+              display: inline-block;
+              width: 5px;
+              height: 5px;
+              background-color: #e6e6e6;
+              border-radius: 5000px; }
+            .site-calendar .calendar-month .calendar-week .calendar-weekday .weekday-events .event:first-of-type {
+              margin-top: 0; }
         .site-calendar .calendar-month .calendar-week .calendar-weekday:first-child {
           border-left: none; }
         .site-calendar .calendar-month .calendar-week .calendar-weekday.different-month {
@@ -1183,6 +1194,20 @@ textarea {
           cursor: pointer; }
       .site-calendar .calendar-month .calendar-week:first-child .calendar-weekday {
         border-top: none; }
+
+/* main calendar */
+.main-calendar {
+  position: relative; }
+  .main-calendar .calendar-month {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll; }
+    .main-calendar .calendar-month .calendar-week {
+      height: auto; }
+      .main-calendar .calendar-month .calendar-week .calendar-weekday {
+        height: 16.5vh; }
 
 .site-authenticate {
   display: flex;
@@ -1346,7 +1371,8 @@ textarea {
     height: 100%;
     padding-top: 40px;
     padding-left: 195px;
-    padding-right: 193px; }
+    padding-right: 193px;
+    z-index: 1; }
     #root .site-main > div {
       display: flex;
       flex-grow: 1;
@@ -1355,11 +1381,22 @@ textarea {
       flex-direction: column; }
     #root .site-main .site-main-header {
       display: flex;
-      color: #4d4d4d;
+      color: #3b3b3b;
       font-size: 18px;
       font-weight: 500;
       margin-top: 16px;
       margin-bottom: 10px; }
+      #root .site-main .site-main-header .header-title {
+        width: 100%; }
+        #root .site-main .site-main-header .header-title span, #root .site-main .site-main-header .header-title > div {
+          display: inline-block; }
+        #root .site-main .site-main-header .header-title > div:hover {
+          cursor: pointer; }
+        #root .site-main .site-main-header .header-title > div:before {
+          content: ',';
+          margin-right: 8px; }
+        #root .site-main .site-main-header .header-title > div:first-child:before {
+          content: ''; }
 
 /* place this */
 .search-field {
@@ -1416,8 +1453,15 @@ textarea {
     color: #666666;
     font-size: 14px;
     font-weight: 400;
+    line-height: 1.4;
     margin-top: 1px;
-    margin-right: auto; }
+    margin-right: auto;
+    display: inline-block;
+    max-width: 80%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: normal; }
   .detail-result .result-remove, .detail-result .result-add {
     color: #D4D4D4;
     font-size: 12px;
@@ -1432,15 +1476,13 @@ textarea {
 
 /* added members */
 .friend-suggest {
-  position: absolute;
-  top: 108px;
-  left: 0;
   width: 180px;
-  padding: 0 7px;
   z-index: 10; }
   .friend-suggest .suggest-wrap {
     position: relative;
     width: 100%; }
+    .friend-suggest .suggest-wrap .search-suggested {
+      top: 39px; }
     .friend-suggest .suggest-wrap .search-field {
       width: 100%;
       background-color: #fafafa;
@@ -1450,5 +1492,23 @@ textarea {
       border: 1px solid #e0e0e0;
       border-radius: 1px;
       box-shadow: 0 1px 0 rgba(0, 0, 0, 0.01); }
+
+/* compare members */
+.compare-schedules {
+  width: 100%;
+  height: auto; }
+  .compare-schedules .search-field {
+    width: 100%;
+    background-color: #fafafa;
+    color: #4d4d4d;
+    font-weight: 400;
+    padding: 8px 5px 4px 5px;
+    border: 1px solid #e0e0e0;
+    border-radius: 1px;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.01);
+    margin-top: 5px;
+    margin-bottom: 3px; }
+    .compare-schedules .search-field:focus {
+      background: #fefefe; }
 
 /*# sourceMappingURL=app.css.map */

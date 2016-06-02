@@ -2,28 +2,46 @@ var React = require('react');
 var CreateEvent = require("./CreateEvent.js");
 var SmallSearchPicked = require('./CreateEvent/SmallSearchPicked.js');
 var SmallSearchSuggested = require('./CreateEvent/SmallSearchSuggested.js');
+var handleEvents = require('./event-emitter.js');
+
 
 var SideNavigation = React.createClass({
   getInitialState: function(){
-    return {createEvent: false}
+    return {createEvent: false, handleSchedules: {}}
   },
   showCreateEvent: function(e){
       e ? e.stopPropagation() : null
       this.setState({createEvent: !this.state.createEvent})
       var that = this;
   },
+  componentDidMount: function () {
+    var that = this;
+    handleEvents.on("updateScheduleSubjects", function(data){
+      console.log(data, "MY STUFF IS HERE FROM SCHEDULE")
+      that.setState({handleSchedules: data})
+    })
+  },
   render: function() {
+    var that = this;
+    console.log(this.state, "THI IS THE STATE")
     return (
       <aside className="site-side-navigation">
         <div className="side-navigation-primary">
           <ul className="site-modules">
-            <li className="module">
+            <li className="module compare-schedules">
               <header className="module-header">
                 <div className="header-label">SCHEDULES</div>
               </header>
               <ul className="module-features">
-                <li className="feature compare-schedules">
+                <li className="feature">
                   <span className="feature-label">Compare</span>
+                  <div className="friend-suggest">
+
+                  <div className="suggest-wrap">
+                    <input onChange={this.state.handleSchedules.handleMembersSearch} type="text" placeholder="Search schedules" className="search-field" />
+                    {(this.state.handleSchedules.searchMembersLength > 0) ? <SmallSearchSuggested onAddMember={this.state.handleSchedules.addMemeber} listy={this.state.handleSchedules.listy} /> : ''}
+                  </div>
+                  </div>
                 </li>
               </ul>
             </li>

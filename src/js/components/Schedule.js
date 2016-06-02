@@ -2,7 +2,7 @@ var React = require('react');
 var MainHeader = require('./MainHeader.js');
 var Calendar = require('./Calendar.js');
 var SmallSearchSuggested = require('./CreateEvent/SmallSearchSuggested.js');
-
+var handleEvents = require('./event-emitter.js');
 var axios = require('axios')
 
 var Schedule = React.createClass({
@@ -15,7 +15,16 @@ var Schedule = React.createClass({
     };
   },
   componentDidMount: function() {
+    var that = this;
     this.loadData();
+    handleEvents.on('newMemberList', function(first){
+      that.deleteMemberFromSchedule(first);
+    })
+    handleEvents.emit("updateScheduleSubjects", {addMemeber: this.addMember, listy: this.state.searchMembers, handleMembersSearch: this.handleMembersSearch, searchMembersLength: this.state.searchMembers.length})
+  },
+  componentDidUpdate: function(){
+    handleEvents.emit("getMembersAndEvents", this.state.additionalMembers);
+    handleEvents.emit("updateScheduleSubjects", {addMemeber: this.addMember, listy: this.state.searchMembers, handleMembersSearch: this.handleMembersSearch, searchMembersLength: this.state.searchMembers.length})
   },
   loadData: function() {
     var that = this;
@@ -64,6 +73,21 @@ var Schedule = React.createClass({
       return events.data;
     });
   },
+  deleteMemberFromSchedule: function(memberName){
+
+    var found;
+      this.state.additionalMembers.forEach(function(m, i){
+
+        if(m.firstName === memberName){
+          found = i;
+        }
+      })
+      if(found || found === 0){
+
+        this.state.additionalMembers.splice(found, 1);
+      }
+      this.forceUpdate();
+  },
   handleMembersSearch: function(e) {
     var that = this;
     if (e.target.value.length > 0 && e.target.value != ' ') {
@@ -89,6 +113,7 @@ var Schedule = React.createClass({
     if (!addedMember) {
       return;
     }
+    handleEvents.emit("updateScheduleSubjects", {addMemeber: this.addMember, listy: this.state.searchMembers, handleMembersSearch: this.handleMembersSearch, searchMembersLength: this.state.searchMembers.length})
 
     if (this.state.additionalMembers.findIndex(function(member) {return member.id === addedMember.id}) >= 0) {
       this.setState({searchMembers: []});
@@ -103,13 +128,10 @@ var Schedule = React.createClass({
     }
   },
   render: function() {
+    console.log(this.state.additionalMembers, "THE ADDITIONAL MEMEBERS IN SCHEDULE")
     return (
-      <main className="site-main">
+      <main className="site-main main-calendar">
         <MainHeader user={this.state.user} members={this.state.additionalMembers} />
-        {this.state.user && <div className="friend-suggest">
-          <input onChange={this.handleMembersSearch} type="text" placeholder="Invite members" className="search-field" />
-          {(this.state.searchMembers.length > 0) ? <SmallSearchSuggested onAddMember={this.addMember} listy={this.state.searchMembers} /> : ''}
-        </div>}
         <Calendar events={this.state.events} members={this.state.additionalMembers} />
       </main>
     );
@@ -117,3 +139,12 @@ var Schedule = React.createClass({
 });
 
 module.exports = Schedule;
+
+
+//
+// {this.state.user && <div className="friend-suggest">
+// <div className="suggest-wrap">
+//   <input onChange={this.handleMembersSearch} type="text" placeholder="Invite members" className="search-field" />
+//   {(this.state.searchMembers.length > 0) ? <SmallSearchSuggested onAddMember={this.addMember} listy={this.state.searchMembers} /> : ''}
+// </div>
+// </div>}

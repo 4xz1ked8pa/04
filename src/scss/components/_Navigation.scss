@@ -1,6 +1,7 @@
 /* ./components/_Navigation.scss */
 .site-navigation {
   position: fixed;
+  top:0; left:0;
   width:100%;
   height:40px;
   background: HSLA(122, 22%, 25%, 1);

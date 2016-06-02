@@ -3,6 +3,7 @@ var SmallSearchUnit = require('./SmallSearchUnit.js');
 
 var SmallSearchSuggested = React.createClass({
   render: function() {
+    console.log(this.props, "THERE SHOULD BE PROPS HERE BRO")
     var that = this;
     return (
       <div className="search-suggested">

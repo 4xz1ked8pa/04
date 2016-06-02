@@ -26657,19 +26657,29 @@
 	var CreateEvent = __webpack_require__(243);
 	var SmallSearchPicked = __webpack_require__(361);
 	var SmallSearchSuggested = __webpack_require__(362);
+	var handleEvents = __webpack_require__(380);
 	
 	var SideNavigation = React.createClass({
 	  displayName: 'SideNavigation',
 	
 	  getInitialState: function getInitialState() {
-	    return { createEvent: false };
+	    return { createEvent: false, handleSchedules: {} };
 	  },
 	  showCreateEvent: function showCreateEvent(e) {
 	    e ? e.stopPropagation() : null;
 	    this.setState({ createEvent: !this.state.createEvent });
 	    var that = this;
 	  },
+	  componentDidMount: function componentDidMount() {
+	    var that = this;
+	    handleEvents.on("updateScheduleSubjects", function (data) {
+	      console.log(data, "MY STUFF IS HERE FROM SCHEDULE");
+	      that.setState({ handleSchedules: data });
+	    });
+	  },
 	  render: function render() {
+	    var that = this;
+	    console.log(this.state, "THI IS THE STATE");
 	    return React.createElement(
 	      'aside',
 	      { className: 'site-side-navigation' },
@@ -26681,7 +26691,7 @@
 	          { className: 'site-modules' },
 	          React.createElement(
 	            'li',
-	            { className: 'module' },
+	            { className: 'module compare-schedules' },
 	            React.createElement(
 	              'header',
 	              { className: 'module-header' },
@@ -26696,11 +26706,21 @@
 	              { className: 'module-features' },
 	              React.createElement(
 	                'li',
-	                { className: 'feature compare-schedules' },
+	                { className: 'feature' },
 	                React.createElement(
 	                  'span',
 	                  { className: 'feature-label' },
 	                  'Compare'
+	                ),
+	                React.createElement(
+	                  'div',
+	                  { className: 'friend-suggest' },
+	                  React.createElement(
+	                    'div',
+	                    { className: 'suggest-wrap' },
+	                    React.createElement('input', { onChange: this.state.handleSchedules.handleMembersSearch, type: 'text', placeholder: 'Search schedules', className: 'search-field' }),
+	                    this.state.handleSchedules.searchMembersLength > 0 ? React.createElement(SmallSearchSuggested, { onAddMember: this.state.handleSchedules.addMemeber, listy: this.state.handleSchedules.listy }) : ''
+	                  )
 	                )
 	              )
 	            )
@@ -28245,12 +28265,44 @@
 	
 	var React = __webpack_require__(1);
 	var WeekDayEvent = __webpack_require__(255);
+	var handleEvents = __webpack_require__(380);
 	
 	var Week = React.createClass({
 	  displayName: 'Week',
 	
-	  getEventsForDay: function getEventsForDay(day) {},
+	  getInitialState: function getInitialState() {
+	    return {
+	      members: []
+	    };
+	  },
+	  getEventsForDay: function getEventsForDay(day) {
+	    var counter = 0;
+	    this.state.members.forEach(function (m) {
+	      if (m.length > 0) {
+	        m.events.forEach(function (e) {
+	          var newE = Date.parse(e).getTime() / 1000;
+	          console.log(newE);
+	          if (day === newE) {
+	            counter++;
+	          }
+	        });
+	      }
+	    });
+	    console.log(counter);
+	  },
+	  componentDidMount: function componentDidMount() {
+	    var that = this;
+	    handleEvents.on("getMembersAndEvents", function (members) {
+	      that.setState({ members: members });
+	    });
+	  },
+	  getCurrentEvents: function getCurrentEvents(member) {
+	    if (member.events.length > 0) {
+	      return "green";
+	    }
+	  },
 	  render: function render() {
+	
 	    var days = [],
 	        date = this.props.date,
 	        month = this.props.month;
@@ -28263,6 +28315,10 @@
 	        isToday: date.isSame(new Date(), "day"),
 	        date: date
 	      };
+	
+	      if (this.state.members.length > 0) {
+	        this.getEventsForDay(day.date.toString());
+	      }
 	
 	      var todayEvents = [];
 	
@@ -28282,18 +28338,18 @@
 	            'span',
 	            { className: 'header-count' },
 	            day.number
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'weekday-events' },
-	            todayEvents.map(function (evt) {
-	              return React.createElement(
-	                'div',
-	                { className: 'event' },
-	                evt.title
-	              );
-	            })
 	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'weekday-events' },
+	          todayEvents.map(function (evt) {
+	            return React.createElement(
+	              'div',
+	              { className: 'event' },
+	              evt.title
+	            );
+	          })
 	        )
 	      ));
 	      date = date.clone();
@@ -42245,6 +42301,7 @@
 	  displayName: 'SmallSearchSuggested',
 	
 	  render: function render() {
+	    console.log(this.props, "THERE SHOULD BE PROPS HERE BRO");
 	    var that = this;
 	    return React.createElement(
 	      'div',
@@ -42481,24 +42538,33 @@
 /* 366 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	var React = __webpack_require__(1);
+	var handleEvents = __webpack_require__(380);
 	
 	var MainHeader = React.createClass({
-	  displayName: "MainHeader",
+	  displayName: 'MainHeader',
 	
+	  handleDelete: function handleDelete(firstName) {
+	    handleEvents.emit("deleteMemberFromSchedule", firstName);
+	  },
 	  render: function render() {
+	    var that = this;
 	    return React.createElement(
-	      "header",
-	      { className: "site-main-header" },
+	      'header',
+	      { className: 'site-main-header' },
 	      React.createElement(
-	        "h1",
-	        { className: "header-title" },
+	        'h1',
+	        { className: 'header-title' },
 	        this.props.user ? this.props.user.firstName : null,
-	        this.props.members && this.props.members.length ? ', ' + this.props.members.map(function (m) {
-	          return m.firstName;
-	        }).join(', ') : null
+	        this.props.members && this.props.members.length ? this.props.members.map(function (m) {
+	          return React.createElement(
+	            'div',
+	            { onClick: that.handleDelete.bind(that, m.firstName), key: m.firstName + Math.random() },
+	            m.firstName
+	          );
+	        }) : null
 	      )
 	    );
 	  }
@@ -42542,7 +42608,7 @@
 	var MainHeader = __webpack_require__(366);
 	var Calendar = __webpack_require__(252);
 	var SmallSearchSuggested = __webpack_require__(362);
-	
+	var handleEvents = __webpack_require__(380);
 	var axios = __webpack_require__(222);
 	
 	var Schedule = React.createClass({
@@ -42557,7 +42623,16 @@
 	    };
 	  },
 	  componentDidMount: function componentDidMount() {
+	    var that = this;
 	    this.loadData();
+	    handleEvents.on('newMemberList', function (first) {
+	      that.deleteMemberFromSchedule(first);
+	    });
+	    handleEvents.emit("updateScheduleSubjects", { addMemeber: this.addMember, listy: this.state.searchMembers, handleMembersSearch: this.handleMembersSearch, searchMembersLength: this.state.searchMembers.length });
+	  },
+	  componentDidUpdate: function componentDidUpdate() {
+	    handleEvents.emit("getMembersAndEvents", this.state.additionalMembers);
+	    handleEvents.emit("updateScheduleSubjects", { addMemeber: this.addMember, listy: this.state.searchMembers, handleMembersSearch: this.handleMembersSearch, searchMembersLength: this.state.searchMembers.length });
 	  },
 	  loadData: function loadData() {
 	    var that = this;
@@ -42602,6 +42677,21 @@
 	      return events.data;
 	    });
 	  },
+	  deleteMemberFromSchedule: function deleteMemberFromSchedule(memberName) {
+	
+	    var found;
+	    this.state.additionalMembers.forEach(function (m, i) {
+	
+	      if (m.firstName === memberName) {
+	        found = i;
+	      }
+	    });
+	    if (found || found === 0) {
+	
+	      this.state.additionalMembers.splice(found, 1);
+	    }
+	    this.forceUpdate();
+	  },
 	  handleMembersSearch: function handleMembersSearch(e) {
 	    var that = this;
 	    if (e.target.value.length > 0 && e.target.value != ' ') {
@@ -42625,6 +42715,7 @@
 	    if (!addedMember) {
 	      return;
 	    }
+	    handleEvents.emit("updateScheduleSubjects", { addMemeber: this.addMember, listy: this.state.searchMembers, handleMembersSearch: this.handleMembersSearch, searchMembersLength: this.state.searchMembers.length });
 	
 	    if (this.state.additionalMembers.findIndex(function (member) {
 	      return member.id === addedMember.id;
@@ -42640,22 +42731,25 @@
 	    }
 	  },
 	  render: function render() {
+	    console.log(this.state.additionalMembers, "THE ADDITIONAL MEMEBERS IN SCHEDULE");
 	    return React.createElement(
 	      'main',
-	      { className: 'site-main' },
+	      { className: 'site-main main-calendar' },
 	      React.createElement(MainHeader, { user: this.state.user, members: this.state.additionalMembers }),
-	      this.state.user && React.createElement(
-	        'div',
-	        { className: 'friend-suggest' },
-	        React.createElement('input', { onChange: this.handleMembersSearch, type: 'text', placeholder: 'Invite members', className: 'search-field' }),
-	        this.state.searchMembers.length > 0 ? React.createElement(SmallSearchSuggested, { onAddMember: this.addMember, listy: this.state.searchMembers }) : ''
-	      ),
 	      React.createElement(Calendar, { events: this.state.events, members: this.state.additionalMembers })
 	    );
 	  }
 	});
 	
 	module.exports = Schedule;
+	
+	//
+	// {this.state.user && <div className="friend-suggest">
+	// <div className="suggest-wrap">
+	//   <input onChange={this.handleMembersSearch} type="text" placeholder="Invite members" className="search-field" />
+	//   {(this.state.searchMembers.length > 0) ? <SmallSearchSuggested onAddMember={this.addMember} listy={this.state.searchMembers} /> : ''}
+	// </div>
+	// </div>}
 
 /***/ },
 /* 369 */
@@ -43345,8 +43439,11 @@
 	
 	var handleEvents = new Events.EventEmitter();
 	
-	handleEvents.on('updateNotifications', function (members) {
-	  handleEvents.emit("notifyMembers", members);
+	handleEvents.on('updateScheduleSubjects', function (members) {
+	  handleEvents.emit("newScheduleList", members);
+	});
+	handleEvents.on('deleteMemberFromSchedule', function (firstName) {
+	  handleEvents.emit('newMemberList', firstName);
 	});
 	
 	module.exports = handleEvents;
