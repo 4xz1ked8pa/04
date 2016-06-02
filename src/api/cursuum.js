@@ -6,6 +6,35 @@ var HASH_ROUNDS = 10;
 // Export
 module.exports = function CursuumAPI(conn) {
   return {
+    getUser: function(userId, callback) {
+      conn.query('SELECT * FROM users WHERE id = ?', [userId], function(err, res) {
+        if (err) {
+          callback(err)
+        }
+        else {
+          callback(null, res[0]);
+        }
+      })
+    },
+    userEventsCount: function(userId, date, callback) {
+      var startDate = date.startDate;
+      var endDate = date.endDate;
+      conn.query(
+        `SELECT COUNT(*)
+        FROM events
+        JOIN dates ON dates.eventId = events.id
+        WHERE events.userId = ? AND dates.startDate >= startDate AND dates.endDate <= endDate`,
+        [userId, startDate, endDate],
+        function(err, result) {
+          if (err) {
+            callback(err);
+          }
+          else {
+            callback(result);
+          }
+        }
+      );
+    },
     getUserEvents: function(userId, callback) {
       conn.query(
         `SELECT

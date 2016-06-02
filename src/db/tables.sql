@@ -67,6 +67,6 @@ CREATE TABLE attendances (
   id INT PRIMARY KEY AUTO_INCREMENT,
   userId INT,
   eventId INT,
-  attendance INT,
+  attendance BOOLEAN,
   FOREIGN KEY (userId) REFERENCES Users(id)
 );

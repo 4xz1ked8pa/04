@@ -91,6 +91,7 @@ var CreateEvent  = React.createClass({
       data: this.state.eventData
     }).then(
       function(result) {
+        console.log(result, "THIS SHOUD BE THE EVENT")
         that.props.hideCreateEvent();
       }
     );

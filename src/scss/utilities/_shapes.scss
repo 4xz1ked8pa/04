@@ -21,7 +21,7 @@
     left: 21px;
 
     /* If 1px darken stroke slightly */
-    border-top-color: #666666;
+    border-top-color: lighten(#666666,31%);
     border-width: 9px;
   }
 

@@ -1,5 +1,7 @@
 var React = require('react');
 var CreateEvent = require("./CreateEvent.js");
+var SmallSearchPicked = require('./CreateEvent/SmallSearchPicked.js');
+var SmallSearchSuggested = require('./CreateEvent/SmallSearchSuggested.js');
 
 var SideNavigation = React.createClass({
   getInitialState: function(){
@@ -20,7 +22,7 @@ var SideNavigation = React.createClass({
                 <div className="header-label">SCHEDULES</div>
               </header>
               <ul className="module-features">
-                <li className="feature">
+                <li className="feature compare-schedules">
                   <span className="feature-label">Compare</span>
                 </li>
               </ul>

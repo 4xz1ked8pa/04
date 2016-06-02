@@ -1,15 +1,11 @@
-.site-notify-result {
+.site-search-result {
   position: relative;
   display: flex;
   padding:0 5.5px;
   margin-bottom:5.5px;
-  .connection-button {
-    position: absolute;
-    top:9px; right:6px;
-  }
   .result-picture {
-    width:41px;
-    height:41px;
+    width:37px;
+    height:37px;
     background: #BFBFBF;
     margin-right:5px;
   }
@@ -19,7 +15,7 @@
     flex-wrap: wrap;
     .detail-title {
       width:100%;
-      color:darken(white,70%);
+      color:darken(white,75%);
       font-size:15px;
       font-weight:500;
     }

@@ -4,6 +4,7 @@ var express = require('express');
 var app = express();
 var mysql = require('mysql');
 
+
 var conn = mysql.createConnection({
   user: 'root',
   password: '',
@@ -56,7 +57,9 @@ app.get('/getUserEvents/:userId', function(req, res) {
 });
 
 app.get('/getUserChatFriends', function(req, res) {
+  console.log(req.loggedInUser, "THE USER")
   CursuumAPI.getUserChatFriends(req.loggedInUser.id, function(err, chatFriends) {
+
     if (err) {
       res.status(500).send(err);
     }
@@ -90,6 +93,16 @@ app.get('/me', function(req, res) {
   else {
     res.send(null);
   }
+})
+app.get('/user/:id', function(req, res) {
+  CursuumAPI.getUser(req.params.id, function(err, user) {
+    if (err) {
+      res.status(500).send(err.stack);
+    }
+    else {
+      res.send(user)
+    }
+  })
 })
 app.post('/register', function(req, res) {
   // Validate data
@@ -163,6 +176,7 @@ app.post('/createEvent', function(request, response) {
         response.status(500).send(err.stack);
       }
       else {
+        console.log(request.body.members)
         response.send(event);
       }
     });

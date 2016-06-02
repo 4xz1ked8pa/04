@@ -34,7 +34,7 @@ var Week = React.createClass({
                 <div className="weekday-header">
                   <span className="header-count">{day.number}</span>
                   <div className="weekday-events">
-                    {todayEvents.map(evt => <div>{evt.title}</div>)}
+                    {todayEvents.map(evt => <div className='event'>{evt.title}</div>)}
                   </div>
                 </div>
               </div>);

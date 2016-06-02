@@ -1,10 +1,15 @@
+.result-buttons {
+  position: absolute;
+  top:7px; right:6px;
+}
 .site-search-result {
+  position: relative;
   display: flex;
   padding:0 5.5px;
   margin-bottom:5.5px;
   .result-picture {
-    width:41px;
-    height:41px;
+    width:37px;
+    height:37px;
     background: #BFBFBF;
     margin-right:5px;
   }
@@ -14,8 +19,8 @@
     flex-wrap: wrap;
     .detail-title {
       width:100%;
-      color:darken(white,70%);
-      font-size:14px;
+      color:darken(white,75%);
+      font-size:15px;
       font-weight:500;
     }
     .detail-network {
@@ -29,5 +34,11 @@
   &:hover {
     background: darken(white,3%);
     cursor: pointer;
+  }
+  &.notifications {
+
+  }
+  &.search-all {
+
   }
 }
