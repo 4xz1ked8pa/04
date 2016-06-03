@@ -39,9 +39,11 @@ module.exports = function CursuumAPI(conn) {
       conn.query(
         `SELECT
           events.id, events.title,
-          dates.startDate AS startDate, dates.endDate AS endDate
+          dates.startDate AS startDate, dates.endDate AS endDate,
+          users.id AS userId 
           FROM events
           JOIN dates ON dates.eventId = events.id
+          JOIN users ON users.id = events.userId
           WHERE events.userId = ?`,
         [userId],
         function(err, result) {

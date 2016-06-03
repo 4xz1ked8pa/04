@@ -8,9 +8,10 @@
   padding:0 5.5px;
   margin-bottom:5.5px;
   .result-picture {
-    width:37px;
-    height:37px;
-    background: #BFBFBF;
+    width:36px;
+    height:36px;
+    background: darken(white,50%);
+    border-radius:.5px;
     margin-right:5px;
   }
   .result-details {
@@ -19,7 +20,7 @@
     flex-wrap: wrap;
     .detail-title {
       width:100%;
-      color:darken(white,75%);
+      color:darken(white,65%);
       font-size:15px;
       font-weight:500;
     }

@@ -5,7 +5,7 @@ var connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: '',
-  database: 'cursuum'
+  database: 'cursuum_test'
 });
 
 var cursuumAPI = new cursuum(connection);
@@ -24,15 +24,14 @@ var cursuumAPI = new cursuum(connection);
 //   }
 // });
 
-
-cursuumAPI.createFriendship(1,6, function(err, friendship) {
-  if (err) {
-    console.log(err.stack);
-  }
-  else {
-    console.log(friendship);
-  }
-});
+// cursuumAPI.createFriendship(1,2, function(err, friendship) {
+//   if (err) {
+//     console.log(err.stack);
+//   }
+//   else {
+//     console.log(friendship);
+//   }
+// });
 
 // cursuumAPI.getFriendsForUser(14, function(err, friends) {
 //   if (err) {

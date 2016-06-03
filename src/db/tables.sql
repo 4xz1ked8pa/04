@@ -5,7 +5,7 @@ CREATE DATABASE cursuum;
 CREATE TABLE sessions (
   `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `userId` INT NOT NULL,
-  `token` DECIMAL(40,40) NOT NULL
+  `token` DECIMAL(30,30) NOT NULL
 );
 
 -- This creates the Users table --

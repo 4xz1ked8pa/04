@@ -26553,10 +26553,17 @@
 	
 	var React = __webpack_require__(1);
 	var SearchResult = __webpack_require__(241);
+	// not using an ES6 transpiler
+	var Router = __webpack_require__(159).Router;
+	var Route = __webpack_require__(159).Route;
+	var Link = __webpack_require__(159).Link;
 	
 	var SearchResults = React.createClass({
 	  displayName: 'SearchResults',
 	
+	  handleRedirect: function handleRedirect(id) {
+	    this.props.history.push('/schedule/' + id);
+	  },
 	  render: function render() {
 	    var that = this;
 	    return React.createElement(
@@ -26574,13 +26581,18 @@
 	            'PEOPLE'
 	          ),
 	          this.props.list.map(function (item) {
-	            return React.createElement(SearchResult, { theKey: item.id, title: item.firstName, network: item.network });
+	            var itemId = item.id;
+	            return React.createElement(
+	              Link,
+	              { to: '/schedule/' + item.id, onClick: that.handleRedirect.bind(that, itemId) },
+	              React.createElement(SearchResult, { theKey: item.id, title: item.firstName, network: item.network })
+	            );
 	          })
 	        ),
 	        React.createElement(
 	          'div',
 	          { className: 'load-all-results' },
-	          'SEE ALL'
+	          'SEE MORE'
 	        )
 	      )
 	    );
@@ -28267,32 +28279,43 @@
 	var WeekDayEvent = __webpack_require__(255);
 	var handleEvents = __webpack_require__(380);
 	var moment = __webpack_require__(256);
+	var axios = __webpack_require__(222);
 	
 	var Week = React.createClass({
 	  displayName: 'Week',
 	
+	
 	  getInitialState: function getInitialState() {
 	    return {
+	      user: null,
 	      members: []
 	    };
 	  },
-	  // getEventsForDay: function(day) {
-	  //   var counter = 0;
-	  //   this.state.members.forEach(function(m){
-	  //     if(m.length > 0){
-	  //       m.events.forEach(function(e){
-	  //         var newE = Date.parse(e).getTime()/1000
-	  //         if(day === newE){
-	  //             counter++;
-	  //         }
-	  //       })
-	  //     }
-	  //   })
-	  // },
+	  getEventsForDay: function getEventsForDay(day) {
+	    var counter = 0;
+	    this.state.members.forEach(function (m) {
+	      if (m.length > 0) {
+	        m.events.forEach(function (e) {
+	          var newE = Date.parse(e).getTime() / 1000;
+	          if (day === newE) {
+	            counter++;
+	          }
+	        });
+	      }
+	    });
+	  },
 	  componentDidMount: function componentDidMount() {
 	    var that = this;
 	    handleEvents.on("getMembersAndEvents", function (members) {
 	      that.setState({ members: members });
+	    });
+	    axios({
+	      method: 'get',
+	      url: '/me'
+	    }).then(function (user) {
+	      that.setState({
+	        user: user.data
+	      });
 	    });
 	  },
 	  getCurrentEvents: function getCurrentEvents(member) {
@@ -28301,7 +28324,9 @@
 	    }
 	  },
 	  render: function render() {
-	
+	    var that = this;
+	    console.log('the events!', this.state.events);
+	    // console.log('THESE ARE THE EVENTS FOR TODAY....',);
 	    var days = [],
 	        date = this.props.date,
 	        month = this.props.month;
@@ -28320,7 +28345,7 @@
 	      }
 	      var todayEvents = [];
 	      this.props.events.forEach(function (evt) {
-	
+	        //console.log(evt);
 	        if (date.unix() >= moment(evt.startDate).unix() && date.unix() <= moment(evt.endDate).unix()) {
 	          todayEvents.push(evt);
 	        }
