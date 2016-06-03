@@ -213,7 +213,7 @@ module.exports = function CursuumAPI(conn) {
               placeholders.push('(?, FROM_UNIXTIME(?), FROM_UNIXTIME(?))');
               values.push(eventResult.insertId);
               values.push(date.start);
-              values.push(date.end);
+              values.push(date.end + 1);
             });
 
             conn.query(

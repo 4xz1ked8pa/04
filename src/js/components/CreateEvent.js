@@ -52,7 +52,6 @@ var CreateEvent  = React.createClass({
     this.setState({
       eventData: newEvenData
     })
-      console.log(e.label)
   },
   deleteMember: function(key) {
     var foundMember = this.state.eventData.members.find(function(member) {
@@ -84,14 +83,12 @@ var CreateEvent  = React.createClass({
   },
   createEvent: function() {
     var that = this;
-    console.log('EVENT CREATED!',this.state.eventData);
     axios({
       method: 'post',
       url: '/createEvent',
       data: this.state.eventData
     }).then(
       function(result) {
-        console.log(result, "THIS SHOUD BE THE EVENT")
         that.props.hideCreateEvent();
       }
     );
@@ -105,7 +102,6 @@ var CreateEvent  = React.createClass({
 
       newDate.forEach(function(d){
         if(d.id === that.state.selectedDate.id)
-          // console.log("MATCH FOUND")
           var stop = date.date.unix();
           d.end = stop;
       })
@@ -139,7 +135,6 @@ var CreateEvent  = React.createClass({
   },
   setFromTime: function(data, hours, nextDay, nextDate){
     var that = this;
-    // console.log(nextDay, "THESE ARE THE TIMES COMMING IN")
     var newEvenData = this.state.eventData;
     var newDates = newEvenData.dates;
 
@@ -199,7 +194,6 @@ addMember: function(memberId){
   this.setState(this.state)
 },
   render: function() {
-    console.log(this.state.eventData.members, "MEMBERS IN STATE")
     var that = this;
     // console.log(this.props, "HERE BE PROPS")
     return (

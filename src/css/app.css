@@ -1207,6 +1207,7 @@ textarea {
     .main-calendar .calendar-month .calendar-week {
       height: auto; }
       .main-calendar .calendar-month .calendar-week .calendar-weekday {
+        width: 14.28571%;
         height: 16.5vh; }
 
 .site-authenticate {

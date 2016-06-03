@@ -17,13 +17,11 @@ var SideNavigation = React.createClass({
   componentDidMount: function () {
     var that = this;
     handleEvents.on("updateScheduleSubjects", function(data){
-      console.log(data, "MY STUFF IS HERE FROM SCHEDULE")
       that.setState({handleSchedules: data})
     })
   },
   render: function() {
     var that = this;
-    console.log(this.state, "THI IS THE STATE")
     return (
       <aside className="site-side-navigation">
         <div className="side-navigation-primary">

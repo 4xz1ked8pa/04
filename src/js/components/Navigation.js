@@ -62,8 +62,8 @@ var Navigation = React.createClass({
             </div>
           </div>
           <div className="site-search">
-            <input type="text" className="search-field" placeholder="Search for schedules, people, events and more..." />
-            <SearchResults />
+            <input onChange={this.handleMembersSearch} type="text" placeholder="Search for schedules, people, events and more..." className="search-field" />
+
           </div>
         </div>
       </nav>

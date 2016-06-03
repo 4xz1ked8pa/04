@@ -143,6 +143,7 @@
     .calendar-week {
       height:auto;
       .calendar-weekday {
+        width:percentage(1/7);
         height:16.5vh;
       }
     }

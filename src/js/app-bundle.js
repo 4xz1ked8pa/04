@@ -25342,8 +25342,7 @@
 	        React.createElement(
 	          'div',
 	          { className: 'site-search' },
-	          React.createElement('input', { type: 'text', className: 'search-field', placeholder: 'Search for schedules, people, events and more...' }),
-	          React.createElement(SearchResults, null)
+	          React.createElement('input', { onChange: this.handleMembersSearch, type: 'text', placeholder: 'Search for schedules, people, events and more...', className: 'search-field' })
 	        )
 	      )
 	    );
@@ -26673,13 +26672,11 @@
 	  componentDidMount: function componentDidMount() {
 	    var that = this;
 	    handleEvents.on("updateScheduleSubjects", function (data) {
-	      console.log(data, "MY STUFF IS HERE FROM SCHEDULE");
 	      that.setState({ handleSchedules: data });
 	    });
 	  },
 	  render: function render() {
 	    var that = this;
-	    console.log(this.state, "THI IS THE STATE");
 	    return React.createElement(
 	      'aside',
 	      { className: 'site-side-navigation' },
@@ -26946,7 +26943,6 @@
 	    this.setState({
 	      eventData: newEvenData
 	    });
-	    console.log(e.label);
 	  },
 	  deleteMember: function deleteMember(key) {
 	    var foundMember = this.state.eventData.members.find(function (member) {
@@ -26978,13 +26974,11 @@
 	  },
 	  createEvent: function createEvent() {
 	    var that = this;
-	    console.log('EVENT CREATED!', this.state.eventData);
 	    axios({
 	      method: 'post',
 	      url: '/createEvent',
 	      data: this.state.eventData
 	    }).then(function (result) {
-	      console.log(result, "THIS SHOUD BE THE EVENT");
 	      that.props.hideCreateEvent();
 	    });
 	  },
@@ -26996,9 +26990,7 @@
 	    if (this.state.checkNext) {
 	
 	      newDate.forEach(function (d) {
-	        if (d.id === that.state.selectedDate.id)
-	          // console.log("MATCH FOUND")
-	          var stop = date.date.unix();
+	        if (d.id === that.state.selectedDate.id) var stop = date.date.unix();
 	        d.end = stop;
 	      });
 	
@@ -27030,7 +27022,6 @@
 	  },
 	  setFromTime: function setFromTime(data, hours, nextDay, nextDate) {
 	    var that = this;
-	    // console.log(nextDay, "THESE ARE THE TIMES COMMING IN")
 	    var newEvenData = this.state.eventData;
 	    var newDates = newEvenData.dates;
 	
@@ -27090,7 +27081,6 @@
 	    this.setState(this.state);
 	  },
 	  render: function render() {
-	    console.log(this.state.eventData.members, "MEMBERS IN STATE");
 	    var that = this;
 	    // console.log(this.props, "HERE BE PROPS")
 	    return React.createElement(
@@ -28266,6 +28256,7 @@
 	var React = __webpack_require__(1);
 	var WeekDayEvent = __webpack_require__(255);
 	var handleEvents = __webpack_require__(380);
+	var moment = __webpack_require__(256);
 	
 	var Week = React.createClass({
 	  displayName: 'Week',
@@ -28275,21 +28266,19 @@
 	      members: []
 	    };
 	  },
-	  getEventsForDay: function getEventsForDay(day) {
-	    var counter = 0;
-	    this.state.members.forEach(function (m) {
-	      if (m.length > 0) {
-	        m.events.forEach(function (e) {
-	          var newE = Date.parse(e).getTime() / 1000;
-	          console.log(newE);
-	          if (day === newE) {
-	            counter++;
-	          }
-	        });
-	      }
-	    });
-	    console.log(counter);
-	  },
+	  // getEventsForDay: function(day) {
+	  //   var counter = 0;
+	  //   this.state.members.forEach(function(m){
+	  //     if(m.length > 0){
+	  //       m.events.forEach(function(e){
+	  //         var newE = Date.parse(e).getTime()/1000
+	  //         if(day === newE){
+	  //             counter++;
+	  //         }
+	  //       })
+	  //     }
+	  //   })
+	  // },
 	  componentDidMount: function componentDidMount() {
 	    var that = this;
 	    handleEvents.on("getMembersAndEvents", function (members) {
@@ -28319,15 +28308,13 @@
 	      if (this.state.members.length > 0) {
 	        this.getEventsForDay(day.date.toString());
 	      }
-	
 	      var todayEvents = [];
-	
 	      this.props.events.forEach(function (evt) {
-	        if (date.toISOString() >= evt.startDate && date.toISOString() <= evt.endDate) {
+	
+	        if (date.unix() >= moment(evt.startDate).unix() && date.unix() <= moment(evt.endDate).unix()) {
 	          todayEvents.push(evt);
 	        }
 	      });
-	
 	      days.push(React.createElement(
 	        'div',
 	        { onClick: this.props.select.bind(null, day, this.props.checkNext), key: day.date.toString(), className: "calendar-weekday" + (day.isToday ? " today" : "") + (day.isCurrentMonth ? "" : " different-month") + (day.date.isSame(this.props.selected) ? " selected" : "") },
@@ -42659,7 +42646,6 @@
 	    });
 	
 	    Promise.all(allMemberEvents).then(function (memberEvents) {
-	      console.log(memberEvents);
 	      memberEvents.forEach(function (events, i) {
 	        that.state.additionalMembers[i].events = events;
 	      });
@@ -42731,7 +42717,6 @@
 	    }
 	  },
 	  render: function render() {
-	    console.log(this.state.additionalMembers, "THE ADDITIONAL MEMEBERS IN SCHEDULE");
 	    return React.createElement(
 	      'main',
 	      { className: 'site-main main-calendar' },

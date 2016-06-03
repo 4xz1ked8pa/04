@@ -54,7 +54,6 @@ var Schedule = React.createClass({
 
     Promise.all(allMemberEvents).then(
       function(memberEvents) {
-        console.log(memberEvents);
         memberEvents.forEach(function(events, i) {
           that.state.additionalMembers[i].events = events;
         });
@@ -128,7 +127,6 @@ var Schedule = React.createClass({
     }
   },
   render: function() {
-    console.log(this.state.additionalMembers, "THE ADDITIONAL MEMEBERS IN SCHEDULE")
     return (
       <main className="site-main main-calendar">
         <MainHeader user={this.state.user} members={this.state.additionalMembers} />
