@@ -3,19 +3,25 @@ var axios = require('axios')
 var SearchResults = require('./SearchResults.js');
 var SearchResult = require('./SearchResult.js');
 var handleEvents = require('./event-emitter.js');
+var SmallSearchSuggested = require('./CreateEvent/SmallSearchSuggested.js');
 
 var Navigation = React.createClass({
   getInitialState: function() {
     return {
-      searchMembers: [
-        {
-          name: 'Charles Gaudreau Jackson',
-          network: 'Cursuum'
-        }
-      ],
       name: '',
+      searchMembers: [],
+      searchParameter: "",
       TEST: {}
     }
+  },
+  componentWillMount: function(){
+    var that = this;
+    axios({
+      method: 'get',
+      url: '/me'
+    }).then(function(user){
+      that.setState({user: user.data})
+    })
   },
   componentDidMount: function() {
 
@@ -36,8 +42,18 @@ var Navigation = React.createClass({
       }
     });
   },
-  handleSearch: function() {
-
+  handleMembersSearch: function(e) {
+    var that = this;
+    if (e.target.value.length > 0 && e.target.value != ' ') {
+      axios({
+        method: 'get',
+        url: `/getUserFriends/${that.state.user.id}/${e.target.value}`
+      }).then(function(res){
+        that.setState({searchMembers: res.data})
+      })
+} else {
+  this.setState({searchMembers: []})
+}
   },
   render: function() {
     console.log('THIS BE THE NAME:',this.state.name);
@@ -63,7 +79,7 @@ var Navigation = React.createClass({
           </div>
           <div className="site-search">
             <input onChange={this.handleMembersSearch} type="text" placeholder="Search for schedules, people, events and more..." className="search-field" />
-
+            {(this.state.searchMembers.length > 0) ? <SearchResults list={this.state.searchMembers} /> : ''}
           </div>
         </div>
       </nav>

@@ -646,7 +646,6 @@ textarea {
     .site-search .search-field:-ms-input-placeholder {
       color: HSLA(216, 13%, 50%, 1); }
   .site-search .site-search-results {
-    display: none;
     position: absolute;
     top: 100%;
     left: 0;

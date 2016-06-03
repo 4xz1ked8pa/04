@@ -25254,19 +25254,27 @@
 	var SearchResults = __webpack_require__(240);
 	var SearchResult = __webpack_require__(241);
 	var handleEvents = __webpack_require__(380);
+	var SmallSearchSuggested = __webpack_require__(362);
 	
 	var Navigation = React.createClass({
 	  displayName: 'Navigation',
 	
 	  getInitialState: function getInitialState() {
 	    return {
-	      searchMembers: [{
-	        name: 'Charles Gaudreau Jackson',
-	        network: 'Cursuum'
-	      }],
 	      name: '',
+	      searchMembers: [],
+	      searchParameter: "",
 	      TEST: {}
 	    };
+	  },
+	  componentWillMount: function componentWillMount() {
+	    var that = this;
+	    axios({
+	      method: 'get',
+	      url: '/me'
+	    }).then(function (user) {
+	      that.setState({ user: user.data });
+	    });
 	  },
 	  componentDidMount: function componentDidMount() {
 	
@@ -25287,7 +25295,19 @@
 	      }
 	    });
 	  },
-	  handleSearch: function handleSearch() {},
+	  handleMembersSearch: function handleMembersSearch(e) {
+	    var that = this;
+	    if (e.target.value.length > 0 && e.target.value != ' ') {
+	      axios({
+	        method: 'get',
+	        url: '/getUserFriends/' + that.state.user.id + '/' + e.target.value
+	      }).then(function (res) {
+	        that.setState({ searchMembers: res.data });
+	      });
+	    } else {
+	      this.setState({ searchMembers: [] });
+	    }
+	  },
 	  render: function render() {
 	    console.log('THIS BE THE NAME:', this.state.name);
 	    return React.createElement(
@@ -25342,7 +25362,8 @@
 	        React.createElement(
 	          'div',
 	          { className: 'site-search' },
-	          React.createElement('input', { onChange: this.handleMembersSearch, type: 'text', placeholder: 'Search for schedules, people, events and more...', className: 'search-field' })
+	          React.createElement('input', { onChange: this.handleMembersSearch, type: 'text', placeholder: 'Search for schedules, people, events and more...', className: 'search-field' }),
+	          this.state.searchMembers.length > 0 ? React.createElement(SearchResults, { list: this.state.searchMembers }) : ''
 	        )
 	      )
 	    );
@@ -26537,6 +26558,7 @@
 	  displayName: 'SearchResults',
 	
 	  render: function render() {
+	    var that = this;
 	    return React.createElement(
 	      'div',
 	      { className: 'site-search-results' },
@@ -26551,21 +26573,9 @@
 	            { className: 'results-header' },
 	            'PEOPLE'
 	          ),
-	          React.createElement(SearchResult, { title: 'Nathan Holt', network: 'Concordia University' }),
-	          React.createElement(SearchResult, { title: 'Deborah Miller', network: 'University of Montreal' }),
-	          React.createElement(SearchResult, { title: 'Julian Dennis', network: 'Thirdshelf' })
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'list-events' },
-	          React.createElement(
-	            'header',
-	            { className: 'results-header' },
-	            'EVENTS'
-	          ),
-	          React.createElement(SearchResult, { title: 'Work session with Codrin', network: '2 attending' }),
-	          React.createElement(SearchResult, { title: 'Conference at WeWork', network: '52 attending' }),
-	          React.createElement(SearchResult, { title: 'Dinner with some friends', network: '7 attending' })
+	          this.props.list.map(function (item) {
+	            return React.createElement(SearchResult, { theKey: item.id, title: item.firstName, network: item.network });
+	          })
 	        ),
 	        React.createElement(
 	          'div',
@@ -26611,7 +26621,7 @@
 	      ),
 	      React.createElement(
 	        "div",
-	        { className: "result-buttons" },
+	        { className: "result-buttons hide" },
 	        React.createElement(
 	          "div",
 	          { className: "connection-button no" },
